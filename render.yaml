@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: roletrando-backend
+    env: docker
+    dockerContext: backend
+    dockerfilePath: backend/Dockerfile
+    plan: free
+    region: ohio
+    envVars:
+      - key: QUARKUS_HTTP_CORS_ORIGINS
+        value: "*" # To be restricted after Vercel gives a URL
+      - key: JAVA_OPTS
+        value: "-Xmx512m" # Aligning with Render Free Tier limits

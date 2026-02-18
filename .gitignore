@@ -1,0 +1,11 @@
+# Dependências e Logs
+**/node_modules/
+**/target/
+**/*.gz
+**/*.log
+
+# IDEs e Sistema
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
