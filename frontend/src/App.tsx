@@ -49,7 +49,7 @@ const App: React.FC = () => {
       setSolveInput("");
     } catch (err: any) {
       console.error("Critical error starting game", err);
-      setError(`Erro de conexão: ${err.message}.`);
+      setError(`Erro de conexão (${API_URL}): ${err.message}. Verifique se a URL da API está correta no Vercel.`);
     } finally {
       console.groupEnd();
     }
