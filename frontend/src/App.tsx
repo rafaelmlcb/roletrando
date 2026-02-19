@@ -30,7 +30,9 @@ const App: React.FC = () => {
   const [isSolving, setIsSolving] = useState(false);
 
   // Use environment variable for API URL (required for production)
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api/game';
+  // Ensure it ends with /api/game correctly
+  const rawApiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080/api/game';
+  const API_URL = rawApiUrl.endsWith('/api/game') ? rawApiUrl : `${rawApiUrl}/api/game`;
 
   /**
    * Starts a new game by calling the backend API.
