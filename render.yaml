@@ -2,7 +2,7 @@ services:
   - type: web
     name: roletrando-backend
     env: docker
-    dockerContext: .
+    dockerContext: backend
     dockerfilePath: backend/Dockerfile
     plan: free
     region: ohio
