@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
     ArrowLeft, Trophy, CheckCircle, XCircle, ChevronRight,
-    Triangle, Square, Circle, Star, User, RotateCcw, Play, Users
+    Triangle, Square, Circle, Star, RotateCcw, Play, Users
 } from 'lucide-react';
 import { QUIZ_QUESTIONS } from '../data/quizData';
 import { useSound } from '../hooks/useSound';
@@ -16,7 +16,6 @@ interface Player {
     name: string;
     totalScore: number;
     lastQuestionScore: number;
-    avatar: string;
 }
 
 const GENERATED_NAMES = [
@@ -46,8 +45,7 @@ const Quiz: React.FC = () => {
             id: 'you',
             name: userName || 'Você',
             totalScore: 0,
-            lastQuestionScore: 0,
-            avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${userName || 'You'}`
+            lastQuestionScore: 0
         }]);
     }, [userName]);
 
@@ -61,8 +59,7 @@ const Quiz: React.FC = () => {
                         id: Math.random().toString(36).substr(2, 9),
                         name: `${name}_${Math.floor(Math.random() * 99)}`,
                         totalScore: 0,
-                        lastQuestionScore: 0,
-                        avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${Math.random()}`
+                        lastQuestionScore: 0
                     };
                     setPlayers(prev => [...prev, newPlayer]);
                 }
@@ -97,7 +94,6 @@ const Quiz: React.FC = () => {
     }, [playSound]);
 
     const simulateOthersResults = useCallback(() => {
-        const question = QUIZ_QUESTIONS[currentStep];
         setPlayers(prev => prev.map(p => {
             if (p.id === 'you') return p;
 
@@ -222,25 +218,26 @@ const Quiz: React.FC = () => {
                                 <h1 className="text-5xl font-black mb-2 uppercase text-[#46178f] italic tracking-tighter">MULTIPLAYER</h1>
                                 <p className="text-slate-400 font-bold mb-10 text-sm uppercase tracking-widest">Aguardando desafiantes...</p>
 
-                                {/* Avatars Cloud */}
-                                <div className="flex flex-wrap justify-center gap-3 mb-10 min-h-[120px]">
-                                    <AnimatePresence>
-                                        {players.slice(-15).map((p) => (
-                                            <motion.img
-                                                key={p.id}
-                                                initial={{ scale: 0, opacity: 0, rotate: -20 }}
-                                                animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                                                src={p.avatar}
-                                                alt="av"
-                                                className="w-12 h-12 rounded-full border-2 border-[#46178f]/10 p-1 bg-slate-50 shadow-sm"
-                                            />
-                                        ))}
-                                    </AnimatePresence>
-                                    {players.length > 15 && (
-                                        <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-[#46178f] font-black text-xs border-2 border-[#46178f]/10">
-                                            +{players.length - 15}
-                                        </div>
-                                    )}
+                                {/* Name Cloud */}
+                                <div className="relative h-48 mb-8 overflow-hidden bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200">
+                                    <div className="absolute inset-0 p-4">
+                                        <AnimatePresence>
+                                            {players.slice(-20).map((p, i) => (
+                                                <motion.div
+                                                    key={p.id}
+                                                    initial={{ scale: 0, opacity: 0, x: Math.random() * 200 - 100, y: Math.random() * 100 - 50 }}
+                                                    animate={{ scale: 1, opacity: 1, x: (i % 5) * 80 - 160, y: Math.floor(i / 5) * 35 - 70 }}
+                                                    className="absolute font-black text-[#46178f]/40 uppercase text-xs tracking-tighter"
+                                                    style={{ transform: `rotate(${Math.random() * 20 - 10}deg)` }}
+                                                >
+                                                    {p.name}
+                                                </motion.div>
+                                            ))}
+                                        </AnimatePresence>
+                                    </div>
+                                    <div className="absolute bottom-4 right-4 bg-emerald-500 text-white px-3 py-1 rounded-full text-[10px] font-black animate-pulse">
+                                        ONLINE
+                                    </div>
                                 </div>
 
                                 <button onClick={startQuiz} className="group relative w-full py-6 bg-[#46178f] text-white font-black text-3xl rounded-3xl hover:scale-[1.02] active:scale-95 transition-all shadow-2xl flex items-center justify-center gap-4 overflow-hidden">
@@ -270,7 +267,7 @@ const Quiz: React.FC = () => {
                                 {currentQuestion.options.map((option, index) => (
                                     <motion.button
                                         key={index}
-                                        whileHover={{ brightness: 1.1, scale: 1.01 }}
+                                        whileHover={{ filter: "brightness(1.1)", scale: 1.01 }}
                                         whileTap={{ scale: 0.98 }}
                                         onClick={() => handleAnswer(index)}
                                         className={`${optionStyles[index].color} shadow-xl rounded-2xl p-4 sm:p-6 flex items-center gap-4 text-left transition-all relative border-b-8 border-black/20`}
@@ -308,9 +305,8 @@ const Quiz: React.FC = () => {
 
                             <div className="w-full space-y-2 mb-10">
                                 {topByQuestion.map((p, i) => (
-                                    <div key={p.id} className={`flex items-center gap-4 p-3 rounded-2xl transition-all ${p.id === 'you' ? 'bg-[#46178f] text-white' : 'bg-slate-50'}`}>
+                                    <div key={p.id} className={`flex items-center gap-4 p-3 rounded-2xl transition-all ${p.id === 'you' ? 'bg-[#46178f] text-white shadow-lg scale-105' : 'bg-slate-50'}`}>
                                         <span className={`w-8 font-black text-lg ${p.id === 'you' ? 'text-white' : 'text-slate-300'}`}>{i + 1}</span>
-                                        <img src={p.avatar} alt="av" className="w-10 h-10 rounded-full border border-black/5" />
                                         <span className="font-black uppercase flex-grow truncate">{p.name}</span>
                                         <span className="font-black text-xl italic">+{p.lastQuestionScore}</span>
                                     </div>
@@ -334,7 +330,6 @@ const Quiz: React.FC = () => {
                                 {topAccumulated.map((p, i) => (
                                     <div key={p.id} className={`flex items-center gap-4 p-4 rounded-3xl border transition-all ${p.id === 'you' ? 'bg-white text-[#46178f] border-white scale-105 shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'bg-white/5 border-white/5'}`}>
                                         <span className={`w-10 font-black text-2xl ${i === 0 ? 'text-yellow-500' : 'text-slate-500'}`}>{i + 1}º</span>
-                                        <img src={p.avatar} alt="av" className="w-12 h-12 rounded-full border-2 border-white/20" />
                                         <span className="font-black uppercase flex-grow truncate text-lg">{p.name}</span>
                                         <span className="font-black text-2xl text-emerald-400">{p.totalScore.toLocaleString()}</span>
                                     </div>

@@ -45,9 +45,9 @@ const Roletrando: React.FC = () => {
   // Multiplayer state
   const [players, setPlayers] = useState<Player[]>([]);
   const [turnIndex, setTurnIndex] = useState(0);
-  const botTurnTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const botTurnTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api/game';
 
   const initLobby = useCallback(() => {
     const initialPlayers: Player[] = [
@@ -79,7 +79,7 @@ const Roletrando: React.FC = () => {
       }
       setPlayers(finalPlayers);
 
-      const resp = await axios.post(`${API_URL}/api/game/start`);
+      const resp = await axios.get(`${API_URL}/new`);
       setGame(resp.data);
       setGuessedLetters([]);
       setTurnIndex(0);
@@ -110,7 +110,7 @@ const Roletrando: React.FC = () => {
 
     try {
       const oldPhrase = game.obscuredPhrase;
-      const resp = await axios.post(`${API_URL}/api/game/${game.id}/guess?letter=${letter}`);
+      const resp = await axios.post(`${API_URL}/${game.id}/guess?letter=${letter}`);
       setGame(resp.data);
       setGuessedLetters(prev => [...prev, letter]);
 
@@ -136,7 +136,7 @@ const Roletrando: React.FC = () => {
     if (!solution) return;
 
     try {
-      const resp = await axios.post(`${API_URL}/api/game/${game.id}/solve?solution=${solution}`);
+      const resp = await axios.post(`${API_URL}/${game.id}/solve?phrase=${solution}`);
       setGame(resp.data);
       if (resp.data.gameOver) {
         playSound('win');
@@ -200,7 +200,7 @@ const Roletrando: React.FC = () => {
           <div className="space-y-4 mb-10 text-left">
             {players.map((p, i) => (
               <div key={p.id} className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5">
-                <img src={p.avatar} alt="avatar" className="w-12 h-12 rounded-full border-2 border-emerald-400/50" />
+                <img src={p.avatar} alt="avatar" className="w-8 h-8 rounded-full border-2 border-emerald-400/50" />
                 <span className="font-bold text-lg">{p.name} {i === 0 && "(Você)"}</span>
                 <span className="ml-auto flex items-center gap-2 text-emerald-400 animate-pulse">
                   <Play className="w-4 h-4 fill-current" />
@@ -271,7 +271,7 @@ const Roletrando: React.FC = () => {
           {/* Main Game Area */}
           <div className="flex-grow flex flex-col items-center gap-12">
             <div className="bg-slate-900/60 p-8 sm:p-12 rounded-[48px] border border-white/5 backdrop-blur-3xl shadow-2xl w-full">
-              <Board obscuredPhrase={game.obscuredPhrase} category={game.category} />
+              <Board phrase={game.obscuredPhrase} category={game.category} />
             </div>
 
             <div className="flex flex-col md:flex-row items-center gap-16 w-full justify-center">
@@ -337,7 +337,7 @@ const Roletrando: React.FC = () => {
                 {players.map((p, i) => (
                   <div key={p.id} className={`relative flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 ${i === turnIndex ? 'bg-emerald-500/20 border-2 border-emerald-500/50 scale-105 shadow-[0_0_15px_rgba(52,211,153,0.2)]' : 'bg-white/5 border border-white/5 opacity-70'}`}>
                     <div className="relative">
-                      <img src={p.avatar} alt="avatar" className={`w-14 h-14 rounded-full border-2 ${i === turnIndex ? 'border-emerald-400' : 'border-slate-600'}`} />
+                      <img src={p.avatar} alt="avatar" className={`w-10 h-10 rounded-full border-2 ${i === turnIndex ? 'border-emerald-400' : 'border-slate-600'}`} />
                       {i === turnIndex && (
                         <div className="absolute -top-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full border-2 border-[#0a0f1e] flex items-center justify-center">
                           <Play className="w-3 h-3 text-white fill-current" />
