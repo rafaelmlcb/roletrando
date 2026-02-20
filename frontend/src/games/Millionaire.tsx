@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Trophy, Users, Zap, CheckCircle2, XCircle } from 'lucide-react';
+import { ArrowLeft, Trophy, Users, Zap, CheckCircle2, XCircle, User } from 'lucide-react';
 import { MILLIONAIRE_QUESTIONS, PRIZE_LADDER } from '../data/millionaireData';
 import { useSound } from '../hooks/useSound';
+import { useUser } from '../context/UserContext';
 
 const Millionaire: React.FC = () => {
     const navigate = useNavigate();
     const { playSound } = useSound();
+    const { userName } = useUser();
     const [currentLevel, setCurrentLevel] = useState(0);
     const [gameState, setGameState] = useState<'playing' | 'winning' | 'lost' | 'finished'>('playing');
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -131,10 +133,16 @@ const Millionaire: React.FC = () => {
                 {/* Main Content Area */}
                 <main className="flex-grow flex flex-col gap-8 order-2 lg:order-1">
                     <header className="flex justify-between items-center bg-slate-900/40 p-4 rounded-2xl border border-white/5 backdrop-blur-md">
-                        <button onClick={() => navigate('/')} className="p-2 hover:bg-white/10 rounded-lg transition-colors flex items-center gap-2">
-                            <ArrowLeft className="w-5 h-5 text-yellow-500" />
-                            <span className="font-bold hidden sm:inline">Início</span>
-                        </button>
+                        <div className="flex items-center gap-4">
+                            <button onClick={() => navigate('/')} className="p-2 hover:bg-white/10 rounded-lg transition-colors flex items-center gap-2">
+                                <ArrowLeft className="w-5 h-5 text-yellow-500" />
+                                <span className="font-bold hidden sm:inline">Início</span>
+                            </button>
+                            <div className="hidden sm:flex items-center gap-2 px-4 py-1 bg-white/5 rounded-full border border-white/10">
+                                <User className="w-4 h-4 text-yellow-500" />
+                                <span className="text-xs font-black uppercase text-slate-400">{userName}</span>
+                            </div>
+                        </div>
                         <div className="flex items-center gap-4">
                             <div className="flex gap-2">
                                 <button

@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Wheel } from '../components/Wheel';
 import { Board } from '../components/Board';
-import { Coins, Trophy, RefreshCcw, AlertCircle, Lightbulb, ArrowLeft } from 'lucide-react';
+import { Trophy, RefreshCcw, AlertCircle, Lightbulb, ArrowLeft, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useSound } from '../hooks/useSound';
+import { useUser } from '../context/UserContext';
 
 interface GameState {
   id: string;
@@ -21,6 +22,7 @@ const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
 const Roletrando: React.FC = () => {
   const { playSound } = useSound();
+  const { userName } = useUser();
   const [game, setGame] = useState<GameState | null>(null);
   const [isSpinning, setIsSpinning] = useState(false);
   const [currentSpinValue, setCurrentSpinValue] = useState<number | null>(null);
@@ -157,9 +159,10 @@ const Roletrando: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <div className="bg-slate-900 border border-white/10 px-4 py-2 rounded-xl flex items-center gap-2">
-            <Coins className="text-emerald-400 w-5 h-5" />
-            <span className="text-xl sm:text-2xl font-black">{game.score.toLocaleString()}</span>
+          <div className="bg-slate-900 border border-white/10 px-4 py-2 rounded-xl flex items-center gap-3">
+            <User className="w-5 h-5 text-emerald-400" />
+            <span className="text-slate-400 font-bold hidden sm:inline">{userName}:</span>
+            <span className="text-xl sm:text-2xl font-black text-emerald-400">{game.score.toLocaleString()}</span>
           </div>
           <button onClick={startNewGame} className="p-2 hover:bg-white/10 rounded-lg transition-colors">
             <RefreshCcw className="w-6 h-6" />

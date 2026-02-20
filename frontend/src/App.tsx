@@ -4,20 +4,23 @@ import Home from './pages/Home';
 import Roletrando from './games/Roletrando';
 import Millionaire from './games/Millionaire';
 import Quiz from './games/Quiz';
+import { UserProvider } from './context/UserContext';
 import './App.css';
 
 const App: React.FC = () => {
   return (
-    <Router>
-      <div className="app-container">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/roletrando" element={<Roletrando />} />
-          <Route path="/millionaire" element={<Millionaire />} />
-          <Route path="/quiz" element={<Quiz />} />
-        </Routes>
-      </div>
-    </Router>
+    <UserProvider>
+      <Router>
+        <div className="app-container">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/roletrando" element={<Roletrando />} />
+            <Route path="/millionaire" element={<Millionaire />} />
+            <Route path="/quiz" element={<Quiz />} />
+          </Routes>
+        </div>
+      </Router>
+    </UserProvider>
   );
 };
 

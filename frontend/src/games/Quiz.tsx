@@ -3,18 +3,21 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
     ArrowLeft, Trophy, CheckCircle, XCircle, ChevronRight,
-    RotateCcw, Triangle, Square, Circle, Star
+    Triangle, Square, Circle, Star, User, RotateCcw
 } from 'lucide-react';
 import { QUIZ_QUESTIONS } from '../data/quizData';
 import { useSound } from '../hooks/useSound';
+import { useUser } from '../context/UserContext';
 
 const QUIZ_DURATION = 20; // seconds
 
 const Quiz: React.FC = () => {
     const navigate = useNavigate();
     const { playSound } = useSound();
+    const { userName } = useUser();
+
     const [currentStep, setCurrentStep] = useState(0);
-    const [gameState, setGameState] = useState<'lobby' | 'question' | 'feedback' | 'ended'>('lobby');
+    const [gameState, setGameState] = useState<'lobby' | 'question' | 'feedback' | 'ranking' | 'ended'>('lobby');
     const [score, setScore] = useState(0);
     const [timer, setTimer] = useState(QUIZ_DURATION);
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -51,7 +54,7 @@ const Quiz: React.FC = () => {
         if (timerRef.current) clearInterval(timerRef.current);
         if (selectedAnswer === null) {
             playSound('wrong');
-            setSelectedAnswer(-1); // Mark as timed out
+            setSelectedAnswer(-1);
             setLastPoints(0);
             setGameState('feedback');
         }
@@ -66,7 +69,6 @@ const Quiz: React.FC = () => {
         const question = QUIZ_QUESTIONS[currentStep];
         if (index === question.answer) {
             playSound('correct');
-            // Speed scoring: max 1000 points
             const points = Math.floor(1000 * (timer / QUIZ_DURATION));
             setLastPoints(points);
             setScore(prev => prev + points);
@@ -76,6 +78,11 @@ const Quiz: React.FC = () => {
         }
 
         setGameState('feedback');
+    };
+
+    const toRanking = () => {
+        playSound('click');
+        setGameState('ranking');
     };
 
     const nextStep = () => {
@@ -107,233 +114,115 @@ const Quiz: React.FC = () => {
 
     const currentQuestion = QUIZ_QUESTIONS[currentStep];
 
-    // Refined Kahoot-style colors (Red, Blue, Yellow, Green)
     const optionStyles = [
-        {
-            color: 'from-red-500 to-red-600',
-            hover: 'hover:shadow-red-500/40',
-            border: 'border-red-400/30',
-            icon: <Triangle className="w-10 h-10 fill-white/20" />
-        },
-        {
-            color: 'from-sky-500 to-sky-600',
-            hover: 'hover:shadow-sky-500/40',
-            border: 'border-sky-400/30',
-            icon: <Square className="w-10 h-10 fill-white/20" />
-        },
-        {
-            color: 'from-amber-400 to-amber-500',
-            hover: 'hover:shadow-amber-400/40',
-            border: 'border-amber-300/30',
-            icon: <Circle className="w-10 h-10 fill-white/20" />
-        },
-        {
-            color: 'from-green-500 to-green-600',
-            hover: 'hover:shadow-green-500/40',
-            border: 'border-green-400/30',
-            icon: <Star className="w-10 h-10 fill-white/20" />
-        }
+        { color: 'bg-[#e21b3c]', icon: <Triangle className="w-5 h-5 fill-white" /> }, // Red
+        { color: 'bg-[#1368ce]', icon: <Square className="w-5 h-5 fill-white" /> }, // Blue
+        { color: 'bg-[#d89e00]', icon: <Circle className="w-5 h-5 fill-white" /> }, // Yellow
+        { color: 'bg-[#26890c]', icon: <Star className="w-5 h-5 fill-white" /> }    // Green
     ];
 
     return (
-        <div className="min-h-screen w-full bg-[#1e0a3d] text-white flex flex-col items-center overflow-hidden font-sans selection:bg-white/20">
+        <div className="min-h-screen w-full bg-[#46178f] text-white flex flex-col items-center font-sans">
             {/* Header */}
-            <header className="w-full max-w-7xl p-6 flex justify-between items-center z-20">
-                <motion.button
-                    whileHover={{ x: -5 }}
-                    onClick={() => navigate('/')}
-                    className="p-3 bg-white/10 hover:bg-white/20 rounded-2xl transition-all flex items-center gap-3 font-bold backdrop-blur-xl border border-white/10"
-                >
+            <header className="w-full max-w-7xl p-4 flex justify-between items-center z-20">
+                <button onClick={() => navigate('/')} className="p-2 hover:bg-white/10 rounded-xl transition-all flex items-center gap-2 font-bold backdrop-blur-md border border-white/10">
                     <ArrowLeft className="w-5 h-5" />
-                    <span className="hidden sm:inline">Voltar</span>
-                </motion.button>
-                <div className="bg-white group px-8 py-3 rounded-2xl font-black text-2xl text-[#1e0a3d] shadow-xl shadow-black/20 flex items-center gap-3">
-                    <Trophy className="w-6 h-6 text-amber-500 group-hover:scale-125 transition-transform" />
-                    <span>{score.toLocaleString()}</span>
+                    <span>Início</span>
+                </button>
+                <div className="bg-white px-5 py-2 rounded-xl font-black text-lg text-[#46178f] shadow-lg flex items-center gap-3">
+                    <User className="w-4 h-4" />
+                    {userName}: {score.toLocaleString()}
                 </div>
             </header>
 
-            <main className="flex-grow w-full max-w-6xl flex flex-col items-center justify-center p-4 relative">
+            <main className="flex-grow w-full max-w-5xl flex flex-col items-center justify-center p-4 relative">
                 <AnimatePresence mode="wait">
                     {gameState === 'lobby' ? (
-                        <motion.div
-                            key="lobby"
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 1.1 }}
-                            className="bg-white/10 backdrop-blur-3xl p-10 sm:p-16 rounded-[48px] border border-white/10 shadow-3xl flex flex-col items-center text-center max-w-xl w-full"
-                        >
-                            <div className="w-28 h-28 bg-gradient-to-tr from-amber-400 to-amber-600 rounded-[32px] flex items-center justify-center mb-8 shadow-2xl shadow-amber-500/30 -rotate-6">
-                                <Trophy className="w-14 h-14 text-white" />
-                            </div>
-                            <h1 className="text-4xl sm:text-5xl font-black mb-6 uppercase tracking-tighter leading-none">
-                                Desafio de <br /><span className="text-amber-400">Velocidade</span>
-                            </h1>
-                            <p className="text-slate-300 font-semibold mb-12 leading-relaxed max-w-xs">
-                                Responda o mais rápido possível para multiplicar seus pontos!
-                            </p>
-                            <button
-                                onClick={startQuiz}
-                                className="w-full py-6 bg-white text-[#1e0a3d] font-black text-2xl rounded-3xl hover:bg-slate-100 hover:scale-[1.02] active:scale-95 transition-all shadow-2xl shadow-white/10 group flex items-center justify-center gap-3"
-                            >
-                                COMEÇAR
-                                <ChevronRight className="w-8 h-8 group-hover:translate-x-1 transition-transform" />
-                            </button>
+                        <motion.div key="lobby" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="bg-white p-12 rounded-[40px] shadow-3xl flex flex-col items-center text-center max-w-md w-full">
+                            <Trophy className="w-20 h-20 text-[#46178f] mb-6" />
+                            <h1 className="text-4xl font-black mb-4 uppercase text-[#46178f]">Velocidade</h1>
+                            <p className="text-slate-400 font-bold mb-10 text-sm italic">Responda rápido para pontuar!</p>
+                            <button onClick={startQuiz} className="w-full py-5 bg-[#46178f] text-white font-black text-2xl rounded-2xl hover:scale-105 transition-all shadow-xl">JOGAR</button>
                         </motion.div>
                     ) : gameState === 'question' ? (
-                        <motion.div
-                            key="question"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="w-full flex flex-col items-center"
-                        >
-                            {/* Question Card */}
-                            <div className="w-full bg-white/5 backdrop-blur-2xl border-2 border-white/10 p-8 sm:p-12 rounded-[40px] shadow-2xl flex flex-col items-center text-center mb-8 relative group">
-                                <div className="absolute top-0 left-0 w-full h-2 bg-white/10">
-                                    <motion.div
-                                        className="h-full bg-gradient-to-r from-amber-400 to-rose-500"
-                                        initial={{ width: "100%" }}
-                                        animate={{ width: "0%" }}
-                                        transition={{ duration: QUIZ_DURATION, ease: "linear" }}
-                                    />
-                                </div>
-                                <span className="text-white/30 font-black uppercase tracking-widest text-xs mb-4">Questão {currentStep + 1} de {QUIZ_QUESTIONS.length}</span>
-                                <h2 className="text-2xl sm:text-4xl font-black leading-tight max-w-4xl">{currentQuestion.question}</h2>
-
-                                <div className="mt-8 flex items-center justify-center">
-                                    <div className="w-20 h-20 rounded-2xl border-2 border-white/10 flex items-center justify-center relative bg-white/5 overflow-hidden group-hover:scale-110 transition-transform">
-                                        <div className="absolute inset-0 bg-white/5 animate-pulse" />
-                                        <span className="text-3xl font-black text-amber-400 z-10">{Math.ceil(timer)}</span>
-                                    </div>
+                        <motion.div key="question" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full flex flex-col items-center">
+                            <div className="w-full bg-white text-slate-900 p-8 sm:p-12 rounded-[32px] shadow-2xl flex flex-col items-center text-center mb-8 relative">
+                                <span className="text-slate-400 font-black uppercase tracking-widest text-xs mb-4">Questão {currentStep + 1} de {QUIZ_QUESTIONS.length}</span>
+                                <h2 className="text-3xl sm:text-5xl font-black leading-tight mb-8">{currentQuestion.question}</h2>
+                                <div className="w-16 h-16 rounded-full bg-[#46178f] flex items-center justify-center text-white text-2xl font-black shadow-lg">
+                                    {Math.ceil(timer)}
                                 </div>
                             </div>
 
-                            {/* 2x2 Grid Layout */}
-                            <div className="grid grid-cols-2 gap-4 sm:gap-6 w-full max-w-4xl h-[400px] sm:h-[500px]">
+                            {/* Strict 2x2 Grid Layout */}
+                            <div className="grid grid-cols-2 grid-rows-2 gap-4 w-full h-[320px] sm:h-[400px]">
                                 {currentQuestion.options.map((option, index) => (
                                     <motion.button
                                         key={index}
-                                        initial={{ opacity: 0, scale: 0.9 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        transition={{ delay: index * 0.05 }}
-                                        whileHover={{ scale: 1.02 }}
+                                        whileHover={{ filter: "brightness(1.1)", scale: 1.01 }}
                                         whileTap={{ scale: 0.98 }}
                                         onClick={() => handleAnswer(index)}
-                                        className={`bg-gradient-to-br ${optionStyles[index].color} ${optionStyles[index].border} ${optionStyles[index].hover} border-2 shadow-xl rounded-[24px] sm:rounded-[32px] p-4 sm:p-8 flex flex-col items-center justify-center text-center transition-all relative overflow-hidden group`}
+                                        className={`${optionStyles[index].color} shadow-xl rounded-2xl p-4 sm:p-6 flex items-center gap-4 text-left transition-all relative group`}
                                     >
-                                        <div className="mb-4 sm:mb-6 transition-transform group-hover:scale-110 group-hover:rotate-[10deg]">
+                                        <div className="flex-shrink-0 bg-black/20 p-2 rounded-lg">
                                             {optionStyles[index].icon}
                                         </div>
-                                        <span className="text-xl sm:text-3xl font-black text-white drop-shadow-md leading-tight">{option}</span>
-
-                                        {/* Background Decoration */}
-                                        <div className="absolute -bottom-4 -right-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                                            {React.cloneElement(optionStyles[index].icon as React.ReactElement<any>, { size: 120 })}
-                                        </div>
+                                        <span className="text-xl sm:text-2xl font-black text-white">{option}</span>
                                     </motion.button>
                                 ))}
                             </div>
                         </motion.div>
                     ) : gameState === 'feedback' ? (
-                        <motion.div
-                            key="feedback"
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 1.1 }}
-                            className="flex flex-col items-center text-center w-full max-w-2xl px-4"
-                        >
-                            {selectedAnswer === currentQuestion.answer ? (
-                                <div className="w-full">
-                                    <motion.div
-                                        initial={{ scale: 0 }}
-                                        animate={{ scale: 1, rotate: [0, 15, -15, 0] }}
-                                        className="bg-emerald-500 w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-10 shadow-3xl shadow-emerald-500/50"
-                                    >
-                                        <CheckCircle className="w-20 h-20 text-white" />
-                                    </motion.div>
-                                    <h1 className="text-6xl font-black mb-6 uppercase tracking-tighter text-emerald-400">Boa!</h1>
-                                    <div className="bg-white/10 backdrop-blur-xl px-10 py-8 rounded-[40px] border border-white/10 mb-12 shadow-2xl">
-                                        <p className="text-white/40 font-black uppercase tracking-widest text-xs mb-2">Ponto de Velocidade</p>
-                                        <h2 className="text-6xl font-black text-white tracking-tight">+{lastPoints}</h2>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className="w-full">
-                                    <motion.div
-                                        initial={{ scale: 0 }}
-                                        animate={{ scale: 1 }}
-                                        className="bg-rose-500 w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-10 shadow-3xl shadow-rose-500/50"
-                                    >
-                                        <XCircle className="w-20 h-20 text-white" />
-                                    </motion.div>
-                                    <h1 className="text-6xl font-black mb-6 uppercase tracking-tighter text-rose-400">
-                                        {selectedAnswer === -1 ? 'Tempo Esgotado' : 'Errado!'}
-                                    </h1>
-                                    <div className="bg-white/10 backdrop-blur-xl px-10 py-8 rounded-[40px] border border-white/10 mb-12 shadow-2xl">
-                                        <p className="text-white/40 font-black uppercase tracking-widest text-xs mb-4">A Resposta era:</p>
-                                        <h2 className="text-3xl font-black text-white">{currentQuestion.options[currentQuestion.answer]}</h2>
-                                    </div>
-                                </div>
+                        <motion.div key="feedback" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center text-center">
+                            <div className={`p-8 rounded-full mb-8 shadow-2xl ${selectedAnswer === currentQuestion.answer ? 'bg-emerald-500' : 'bg-rose-500'}`}>
+                                {selectedAnswer === currentQuestion.answer ? <CheckCircle className="w-24 h-24 text-white" /> : <XCircle className="w-24 h-24 text-white" />}
+                            </div>
+                            <h1 className="text-6xl font-black mb-4 uppercase italic">
+                                {selectedAnswer === currentQuestion.answer ? 'CORRETO!' : 'ERRADO!'}
+                            </h1>
+                            {selectedAnswer === currentQuestion.answer && (
+                                <h2 className="text-3xl font-black text-emerald-300 mb-8">+{lastPoints} PTS</h2>
                             )}
+                            <button onClick={toRanking} className="px-12 py-5 bg-white text-[#46178f] font-black text-2xl rounded-2xl flex items-center gap-2 hover:scale-105 transition-all shadow-xl">
+                                CONTINUAR <ChevronRight className="w-6 h-6" />
+                            </button>
+                        </motion.div>
+                    ) : gameState === 'ranking' ? (
+                        <motion.div key="ranking" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="bg-white p-12 rounded-[40px] shadow-3xl flex flex-col items-center text-center max-w-lg w-full">
+                            <h2 className="text-[#46178f] text-2xl font-black mb-10 uppercase tracking-widest italic border-b-4 border-[#46178f] pb-2">Placar Atual</h2>
 
-                            <button
-                                onClick={nextStep}
-                                className="w-full py-6 bg-white text-[#1e0a3d] font-black text-2xl rounded-3xl flex items-center justify-center gap-4 hover:scale-[1.02] active:scale-95 transition-all shadow-2xl shadow-black/20"
-                            >
-                                {currentStep < QUIZ_QUESTIONS.length - 1 ? 'PRÓXIMA' : 'VER PLACAR'}
+                            <div className="w-full flex items-center justify-between bg-slate-100 p-6 rounded-2xl mb-12 border-l-8 border-[#46178f]">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 bg-[#46178f] rounded-full flex items-center justify-center text-white font-black">1</div>
+                                    <span className="text-2xl font-black text-slate-800 uppercase">{userName}</span>
+                                </div>
+                                <span className="text-3xl font-black text-[#46178f]">{score.toLocaleString()}</span>
+                            </div>
+
+                            <button onClick={nextStep} className="w-full py-5 bg-[#46178f] text-white font-black text-2xl rounded-2xl hover:scale-105 transition-all shadow-xl flex items-center justify-center gap-3">
+                                {currentStep < QUIZ_QUESTIONS.length - 1 ? 'PRÓXIMA PERGUNTA' : 'RESULTADO FINAL'}
                                 <ChevronRight className="w-8 h-8" />
                             </button>
                         </motion.div>
                     ) : (
-                        <motion.div
-                            key="ended"
-                            initial={{ opacity: 0, y: 50 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="bg-white/10 backdrop-blur-3xl p-12 sm:p-20 rounded-[64px] border border-white/10 shadow-3xl flex flex-col items-center text-center max-w-3xl w-full"
-                        >
-                            <Trophy className="w-32 h-32 text-amber-400 mb-8 drop-shadow-[0_0_30px_rgba(251,191,36,0.3)] animate-bounce" />
-                            <h1 className="text-6xl font-black mb-4 uppercase tracking-tighter leading-none">Fim de Jogo!</h1>
-                            <p className="text-slate-400 font-bold mb-12 text-2xl">Você alcançou:</p>
-
-                            <div className="bg-white/5 border border-white/10 w-full p-12 rounded-[48px] mb-12 relative overflow-hidden group shadow-inner">
-                                <h2 className="text-8xl font-black text-white tracking-tighter">{score.toLocaleString()}</h2>
-                                <p className="text-amber-400 font-black uppercase tracking-[0.3em] mt-4 text-sm">Pontuação Total</p>
+                        <motion.div key="ended" initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} className="bg-white text-slate-900 p-12 rounded-[40px] shadow-3xl flex flex-col items-center text-center max-w-2xl w-full">
+                            <Trophy className="w-24 h-24 text-[#46178f] mb-6" />
+                            <h1 className="text-4xl font-black mb-8 uppercase text-[#46178f]">Fim de Jogo!</h1>
+                            <div className="bg-slate-100 w-full p-10 rounded-[32px] mb-12">
+                                <h2 className="text-7xl font-black text-[#46178f]">{score.toLocaleString()}</h2>
+                                <p className="text-slate-500 font-black uppercase tracking-widest mt-2">{userName}</p>
                             </div>
-
-                            <div className="flex flex-col sm:flex-row gap-5 w-full">
-                                <button
-                                    onClick={resetQuiz}
-                                    className="flex-grow py-6 bg-white text-[#1e0a3d] font-black text-xl rounded-2xl flex items-center justify-center gap-3 hover:bg-slate-100 transition-all"
-                                >
+                            <div className="flex gap-4 w-full">
+                                <button onClick={resetQuiz} className="flex-grow py-5 bg-[#46178f] text-white font-black text-xl rounded-2xl shadow-xl flex items-center justify-center gap-2">
                                     <RotateCcw className="w-6 h-6" />
-                                    JOGAR DE NOVO
+                                    REPETIR
                                 </button>
-                                <button
-                                    onClick={() => navigate('/')}
-                                    className="flex-grow py-6 bg-white/10 text-white font-black text-xl rounded-2xl border border-white/10 transition-all hover:bg-white/20"
-                                >
-                                    SAIR
-                                </button>
+                                <button onClick={() => navigate('/')} className="flex-grow py-5 bg-slate-200 text-slate-700 font-black text-xl rounded-2xl uppercase">SAIR</button>
                             </div>
                         </motion.div>
                     )}
                 </AnimatePresence>
             </main>
-
-            {/* Global Progress */}
-            {gameState !== 'lobby' && gameState !== 'ended' && (
-                <footer className="w-full max-w-7xl px-8 pb-10 flex items-center gap-8 z-20">
-                    <div className="flex-grow h-3 bg-white/5 rounded-full overflow-hidden border border-white/5">
-                        <motion.div
-                            className="h-full bg-gradient-to-r from-amber-400 to-indigo-500"
-                            initial={{ width: 0 }}
-                            animate={{ width: `${((currentStep + (gameState === 'feedback' ? 1 : 0)) / QUIZ_QUESTIONS.length) * 100}%` }}
-                        />
-                    </div>
-                    <span className="font-black text-xl text-white/40">{currentStep + 1}/{QUIZ_QUESTIONS.length}</span>
-                </footer>
-            )}
         </div>
     );
 };
