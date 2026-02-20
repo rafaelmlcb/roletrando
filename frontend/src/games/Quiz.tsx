@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Trophy, CheckCircle, XCircle, ChevronRight, RotateCcw } from 'lucide-react';
+import {
+    ArrowLeft, Trophy, CheckCircle, XCircle, ChevronRight,
+    RotateCcw, Triangle, Square, Circle, Star
+} from 'lucide-react';
 import { QUIZ_QUESTIONS } from '../data/quizData';
 
 const QUIZ_DURATION = 20; // seconds
@@ -91,24 +94,49 @@ const Quiz: React.FC = () => {
 
     const currentQuestion = QUIZ_QUESTIONS[currentStep];
 
-    // Kahoot-style option colors and shapes
+    // Refined Kahoot-style option colors and symbols
     const optionStyles = [
-        { color: 'bg-rose-500', hover: 'hover:bg-rose-600', shadow: 'shadow-rose-900/40', icon: '▲' },
-        { color: 'bg-blue-500', hover: 'hover:bg-blue-600', shadow: 'shadow-blue-900/40', icon: '◆' },
-        { color: 'bg-amber-500', hover: 'hover:bg-amber-600', shadow: 'shadow-amber-900/40', icon: '●' },
-        { color: 'bg-emerald-500', hover: 'hover:bg-emerald-600', shadow: 'shadow-emerald-900/40', icon: '■' }
+        {
+            color: 'from-rose-500 to-rose-600',
+            hover: 'hover:shadow-rose-500/40',
+            border: 'border-rose-400/30',
+            icon: <Triangle className="w-8 h-8 fill-white/20" />
+        },
+        {
+            color: 'from-blue-500 to-blue-600',
+            hover: 'hover:shadow-blue-500/40',
+            border: 'border-blue-400/30',
+            icon: <Square className="w-8 h-8 fill-white/20" />
+        },
+        {
+            color: 'from-amber-400 to-amber-500',
+            hover: 'hover:shadow-amber-400/40',
+            border: 'border-amber-300/30',
+            icon: <Circle className="w-8 h-8 fill-white/20" />
+        },
+        {
+            color: 'from-emerald-500 to-emerald-600',
+            hover: 'hover:shadow-emerald-500/40',
+            border: 'border-emerald-400/30',
+            icon: <Star className="w-8 h-8 fill-white/20" />
+        }
     ];
 
     return (
-        <div className="min-h-screen w-full bg-[#46178f] text-white flex flex-col items-center overflow-hidden font-sans">
+        <div className="min-h-screen w-full bg-[#1e0a3d] text-white flex flex-col items-center overflow-hidden font-sans selection:bg-white/20">
             {/* Header */}
-            <header className="w-full max-w-6xl p-4 flex justify-between items-center z-20">
-                <button onClick={() => navigate('/')} className="p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-all flex items-center gap-2 font-bold backdrop-blur-md">
+            <header className="w-full max-w-7xl p-6 flex justify-between items-center z-20">
+                <motion.button
+                    whileHover={{ x: -5 }}
+                    onClick={() => navigate('/')}
+                    className="p-3 bg-white/10 hover:bg-white/20 rounded-2xl transition-all flex items-center gap-3 font-bold backdrop-blur-xl border border-white/10"
+                >
                     <ArrowLeft className="w-5 h-5" />
-                    <span>Sair</span>
-                </button>
-                <div className="bg-white/10 px-6 py-2 rounded-full font-black text-xl backdrop-blur-md">
-                    {score.toLocaleString()} pts
+                    <span className="hidden sm:inline">Voltar</span>
+                </motion.button>
+                <div className="bg-white group px-8 py-3 rounded-2xl font-black text-2xl text-[#1e0a3d] shadow-xl shadow-black/20 flex items-center gap-3">
+                    <Trophy className="w-6 h-6 text-amber-500 group-hover:scale-125 transition-transform" />
+                    <span>{score.toLocaleString()}</span>
                 </div>
             </header>
 
@@ -117,57 +145,79 @@ const Quiz: React.FC = () => {
                     {gameState === 'lobby' ? (
                         <motion.div
                             key="lobby"
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 1.1 }}
-                            className="bg-white text-slate-900 p-8 sm:p-12 rounded-[32px] shadow-2xl flex flex-col items-center text-center max-w-lg w-full"
+                            className="bg-white/10 backdrop-blur-3xl p-10 sm:p-16 rounded-[48px] border border-white/10 shadow-3xl flex flex-col items-center text-center max-w-xl w-full"
                         >
-                            <div className="w-24 h-24 bg-[#46178f] text-white rounded-3xl flex items-center justify-center mb-6 rotate-12">
-                                <Trophy className="w-12 h-12" />
+                            <div className="w-28 h-28 bg-gradient-to-tr from-amber-400 to-amber-600 rounded-[32px] flex items-center justify-center mb-8 shadow-2xl shadow-amber-500/30 -rotate-6">
+                                <Trophy className="w-14 h-14 text-white" />
                             </div>
-                            <h1 className="text-4xl font-black mb-4 uppercase tracking-tighter text-[#46178f]">Pronto para o Quiz?</h1>
-                            <p className="text-slate-500 font-bold mb-10 leading-relaxed uppercase tracking-wider text-sm">
-                                Responda o mais rápido possível para ganhar mais pontos!
+                            <h1 className="text-4xl sm:text-5xl font-black mb-6 uppercase tracking-tighter leading-none">
+                                Desafio de <br /><span className="text-amber-400">Velocidade</span>
+                            </h1>
+                            <p className="text-slate-300 font-semibold mb-12 leading-relaxed max-w-xs">
+                                Responda o mais rápido possível para multiplicar seus pontos!
                             </p>
                             <button
                                 onClick={startQuiz}
-                                className="w-full py-5 bg-[#46178f] text-white font-black text-2xl rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-indigo-900/30"
+                                className="w-full py-6 bg-white text-[#1e0a3d] font-black text-2xl rounded-3xl hover:bg-slate-100 hover:scale-[1.02] active:scale-95 transition-all shadow-2xl shadow-white/10 group flex items-center justify-center gap-3"
                             >
-                                ESTOU PRONTO!
+                                COMEÇAR
+                                <ChevronRight className="w-8 h-8 group-hover:translate-x-1 transition-transform" />
                             </button>
                         </motion.div>
                     ) : gameState === 'question' ? (
                         <motion.div
                             key="question"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            className="w-full flex flex-col items-center h-full"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="w-full flex flex-col items-center"
                         >
-                            <div className="w-full bg-white text-slate-900 p-8 sm:p-12 rounded-3xl shadow-xl flex flex-col items-center text-center mb-12 relative overflow-hidden">
-                                <div className="absolute top-0 left-0 h-2 bg-[#46178f] transition-all duration-100" style={{ width: `${(timer / QUIZ_DURATION) * 100}%` }} />
-                                <span className="text-slate-400 font-black uppercase tracking-widest text-sm mb-4">Questão {currentStep + 1} de {QUIZ_QUESTIONS.length}</span>
-                                <h2 className="text-2xl sm:text-4xl font-black leading-tight">{currentQuestion.question}</h2>
+                            {/* Question Card */}
+                            <div className="w-full bg-white/5 backdrop-blur-2xl border-2 border-white/10 p-10 sm:p-16 rounded-[48px] shadow-2xl flex flex-col items-center text-center mb-10 relative group">
+                                <div className="absolute top-0 left-0 w-full h-2 bg-white/10">
+                                    <motion.div
+                                        className="h-full bg-gradient-to-r from-amber-400 to-rose-500"
+                                        initial={{ width: "100%" }}
+                                        animate={{ width: "0%" }}
+                                        transition={{ duration: QUIZ_DURATION, ease: "linear" }}
+                                    />
+                                </div>
+                                <span className="text-white/30 font-black uppercase tracking-widest text-xs mb-6">Questão {currentStep + 1} de {QUIZ_QUESTIONS.length}</span>
+                                <h2 className="text-3xl sm:text-5xl font-black leading-tight max-w-4xl">{currentQuestion.question}</h2>
 
-                                <div className="mt-8 flex items-center justify-center">
-                                    <div className="w-20 h-20 rounded-full border-8 border-slate-100 flex items-center justify-center relative">
-                                        <div className="absolute inset-0 rounded-full border-8 border-[#46178f] border-t-transparent animate-spin-slow opacity-20" />
-                                        <span className="text-2xl font-black">{Math.ceil(timer)}</span>
+                                <div className="mt-12 flex items-center justify-center">
+                                    <div className="w-24 h-24 rounded-3xl border-2 border-white/10 flex items-center justify-center relative bg-white/5 overflow-hidden group-hover:scale-110 transition-transform">
+                                        <div className="absolute inset-0 bg-white/5 animate-pulse" />
+                                        <span className="text-4xl font-black text-amber-400 z-10">{Math.ceil(timer)}</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full h-[300px] mb-8">
+                            {/* Options Grid - Perfectly Consistent Layout */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full">
                                 {currentQuestion.options.map((option, index) => (
                                     <motion.button
                                         key={index}
-                                        whileHover={{ scale: 1.02 }}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: index * 0.1 }}
+                                        whileHover={{ scale: 1.03, y: -5 }}
                                         whileTap={{ scale: 0.98 }}
                                         onClick={() => handleAnswer(index)}
-                                        className={`${optionStyles[index].color} ${optionStyles[index].hover} ${optionStyles[index].shadow} shadow-lg rounded-xl p-6 flex items-center gap-6 text-left transition-all relative overflow-hidden group`}
+                                        className={`bg-gradient-to-br ${optionStyles[index].color} ${optionStyles[index].border} ${optionStyles[index].hover} border-2 shadow-xl rounded-[28px] p-8 flex items-center gap-8 text-left transition-all relative overflow-hidden group min-h-[120px]`}
                                     >
-                                        <span className="text-4xl opacity-50 font-black group-hover:scale-125 transition-transform">{optionStyles[index].icon}</span>
-                                        <span className="text-xl sm:text-2xl font-black">{option}</span>
+                                        <div className="flex-shrink-0 w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center transition-transform group-hover:rotate-[15deg] group-hover:scale-110 shadow-inner">
+                                            {optionStyles[index].icon}
+                                        </div>
+                                        <span className="text-2xl sm:text-3xl font-black text-white drop-shadow-md">{option}</span>
+
+                                        {/* Decorative element */}
+                                        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                                            {React.cloneElement(optionStyles[index].icon as React.ReactElement, { className: 'w-24 h-24' })}
+                                        </div>
                                     </motion.button>
                                 ))}
                             </div>
@@ -175,74 +225,85 @@ const Quiz: React.FC = () => {
                     ) : gameState === 'feedback' ? (
                         <motion.div
                             key="feedback"
-                            initial={{ opacity: 0, scale: 0.8 }}
+                            initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 1.2 }}
-                            className="flex flex-col items-center text-center w-full"
+                            exit={{ opacity: 0, scale: 1.1 }}
+                            className="flex flex-col items-center text-center w-full max-w-2xl px-4"
                         >
                             {selectedAnswer === currentQuestion.answer ? (
-                                <>
-                                    <div className="bg-emerald-400 p-8 rounded-full mb-8 shadow-2xl shadow-emerald-500/50">
-                                        <CheckCircle className="w-24 h-24 text-white" />
+                                <div className="w-full">
+                                    <motion.div
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1, rotate: [0, 15, -15, 0] }}
+                                        className="bg-emerald-500 w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-10 shadow-3xl shadow-emerald-500/50"
+                                    >
+                                        <CheckCircle className="w-20 h-20 text-white" />
+                                    </motion.div>
+                                    <h1 className="text-6xl font-black mb-6 uppercase tracking-tighter text-emerald-400">Excelente!</h1>
+                                    <div className="bg-white/10 backdrop-blur-xl px-10 py-8 rounded-[40px] border border-white/10 mb-12 shadow-2xl">
+                                        <p className="text-white/40 font-black uppercase tracking-widest text-xs mb-2">Bônus de Velocidade</p>
+                                        <h2 className="text-6xl font-black text-white tracking-tight">+{lastPoints} <span className="text-2xl text-white/40 italic">Pontos</span></h2>
                                     </div>
-                                    <h1 className="text-5xl font-black mb-4 uppercase tracking-tighter">Resposta Correta!</h1>
-                                    <div className="bg-white/20 px-8 py-4 rounded-3xl backdrop-blur-md mb-12">
-                                        <p className="text-slate-100 font-bold uppercase tracking-widest text-sm mb-1">Você ganhou</p>
-                                        <h2 className="text-4xl font-black text-emerald-300">+{lastPoints} Pontos</h2>
-                                    </div>
-                                </>
+                                </div>
                             ) : (
-                                <>
-                                    <div className="bg-rose-500 p-8 rounded-full mb-8 shadow-2xl shadow-rose-900/50">
-                                        <XCircle className="w-24 h-24 text-white" />
-                                    </div>
-                                    <h1 className="text-5xl font-black mb-4 uppercase tracking-tighter">
-                                        {selectedAnswer === -1 ? 'Acabou o Tempo!' : 'Resposta Errada!'}
+                                <div className="w-full">
+                                    <motion.div
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        className="bg-rose-500 w-32 h-32 rounded-full flex items-center justify-center mx-auto mb-10 shadow-3xl shadow-rose-500/50"
+                                    >
+                                        <XCircle className="w-20 h-20 text-white" />
+                                    </motion.div>
+                                    <h1 className="text-6xl font-black mb-6 uppercase tracking-tighter text-rose-400">
+                                        {selectedAnswer === -1 ? 'Tempo Esgotado' : 'Que Pena!'}
                                     </h1>
-                                    <div className="bg-white/20 px-8 py-4 rounded-3xl backdrop-blur-md mb-12">
-                                        <p className="text-slate-100 font-bold uppercase tracking-widest text-sm mb-1">A resposta correta era</p>
-                                        <h2 className="text-2xl font-black text-white">{currentQuestion.options[currentQuestion.answer]}</h2>
+                                    <div className="bg-white/10 backdrop-blur-xl px-10 py-8 rounded-[40px] border border-white/10 mb-12 shadow-2xl">
+                                        <p className="text-white/40 font-black uppercase tracking-widest text-xs mb-4">A Resposta Correta Era</p>
+                                        <h2 className="text-3xl font-black text-white">{currentQuestion.options[currentQuestion.answer]}</h2>
                                     </div>
-                                </>
+                                </div>
                             )}
 
                             <button
                                 onClick={nextStep}
-                                className="px-12 py-5 bg-white text-[#46178f] font-black text-xl rounded-2xl flex items-center gap-2 hover:scale-105 active:scale-95 transition-all shadow-2xl"
+                                className="w-full py-6 bg-white text-[#1e0a3d] font-black text-2xl rounded-3xl flex items-center justify-center gap-4 hover:scale-[1.02] active:scale-95 transition-all shadow-2xl shadow-black/20"
                             >
-                                {currentStep < QUIZ_QUESTIONS.length - 1 ? 'Próxima Questão' : 'Ver Resultados'}
-                                <ChevronRight className="w-6 h-6" />
+                                {currentStep < QUIZ_QUESTIONS.length - 1 ? 'PRÓXIMA QUESTÃO' : 'RESULTADOS FINAIS'}
+                                <ChevronRight className="w-8 h-8" />
                             </button>
                         </motion.div>
                     ) : (
                         <motion.div
                             key="ended"
-                            initial={{ opacity: 0, y: 40 }}
+                            initial={{ opacity: 0, y: 50 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="bg-white text-slate-900 p-12 rounded-[40px] shadow-2xl flex flex-col items-center text-center max-w-2xl w-full"
+                            className="bg-white/10 backdrop-blur-3xl p-12 sm:p-20 rounded-[64px] border border-white/10 shadow-3xl flex flex-col items-center text-center max-w-3xl w-full"
                         >
-                            <Trophy className="w-24 h-24 text-amber-400 mb-6 drop-shadow-lg" />
-                            <h1 className="text-5xl font-black mb-2 uppercase tracking-tighter text-[#46178f]">Quiz Finalizado!</h1>
-                            <p className="text-slate-400 font-bold mb-10 text-xl">Sua pontuação final foi:</p>
+                            <Trophy className="w-32 h-32 text-amber-400 mb-8 drop-shadow-[0_0_30px_rgba(251,191,36,0.3)] animate-bounce" />
+                            <h1 className="text-6xl font-black mb-4 uppercase tracking-tighter leading-none">Desafio <br />Concluído!</h1>
+                            <p className="text-slate-400 font-bold mb-12 text-2xl italic tracking-tight">Sua performance rendeu:</p>
 
-                            <div className="bg-slate-100 w-full p-8 rounded-3xl mb-12">
-                                <h2 className="text-7xl font-black text-[#46178f]">{score.toLocaleString()}</h2>
-                                <p className="text-slate-500 font-black uppercase tracking-widest mt-2">Pontos Totais</p>
+                            <div className="bg-white/5 border border-white/10 w-full p-12 rounded-[48px] mb-12 relative overflow-hidden group shadow-inner">
+                                <div className="relative z-10">
+                                    <h2 className="text-8xl font-black text-white tracking-tighter">{score.toLocaleString()}</h2>
+                                    <p className="text-amber-400 font-black uppercase tracking-[0.3em] mt-4 text-sm">Pontuação Final</p>
+                                </div>
+                                <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                             </div>
 
-                            <div className="flex flex-col sm:flex-row gap-4 w-full">
+                            <div className="flex flex-col sm:flex-row gap-5 w-full">
                                 <button
                                     onClick={resetQuiz}
-                                    className="flex-grow py-5 bg-[#46178f] text-white font-black text-xl rounded-2xl flex items-center justify-center gap-2 hover:bg-[#35116d] transition-all"
+                                    className="flex-grow py-6 bg-white text-[#1e0a3d] font-black text-xl rounded-2xl flex items-center justify-center gap-3 hover:bg-slate-100 transition-all shadow-xl"
                                 >
                                     <RotateCcw className="w-6 h-6" />
-                                    Jogar Novamente
+                                    JOGAR NOVAMENTE
                                 </button>
                                 <button
                                     onClick={() => navigate('/')}
-                                    className="flex-grow py-5 bg-slate-200 text-slate-700 font-black text-xl rounded-2xl transition-all hover:bg-slate-300"
+                                    className="flex-grow py-6 bg-white/10 text-white font-black text-xl rounded-2xl border border-white/10 transition-all hover:bg-white/20"
                                 >
-                                    Voltar ao Início
+                                    SAIR
                                 </button>
                             </div>
                         </motion.div>
@@ -250,17 +311,20 @@ const Quiz: React.FC = () => {
                 </AnimatePresence>
             </main>
 
-            {/* Bottom Progress Bar */}
+            {/* Bottom Global Progress */}
             {gameState !== 'lobby' && gameState !== 'ended' && (
-                <footer className="w-full max-w-6xl p-6 flex items-center gap-4 z-20">
-                    <div className="flex-grow h-4 bg-white/10 rounded-full overflow-hidden">
+                <footer className="w-full max-w-7xl px-8 pb-10 flex items-center gap-8 z-20">
+                    <div className="flex-grow h-4 bg-white/5 rounded-full overflow-hidden border border-white/5 backdrop-blur-md">
                         <motion.div
-                            className="h-full bg-white"
+                            className="h-full bg-gradient-to-r from-amber-400 via-rose-500 to-indigo-500"
                             initial={{ width: 0 }}
                             animate={{ width: `${((currentStep + (gameState === 'feedback' ? 1 : 0)) / QUIZ_QUESTIONS.length) * 100}%` }}
+                            transition={{ type: "spring", damping: 20 }}
                         />
                     </div>
-                    <span className="font-black opacity-60">{currentStep + 1}/{QUIZ_QUESTIONS.length}</span>
+                    <span className="font-black text-xl text-white/40 tabular-nums">
+                        <span className="text-white">{currentStep + 1}</span>/{QUIZ_QUESTIONS.length}
+                    </span>
                 </footer>
             )}
         </div>
