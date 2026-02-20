@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, type ReactNode } from 'react';
+import Logger from '../utils/logger';
 
 interface UserContextType {
     userName: string | null;
@@ -8,10 +9,15 @@ interface UserContextType {
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
+/**
+ * Global provider for User state.
+ * Syncs the chosen username to localStorage to persist across sessions.
+ */
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [userName, setUserNameState] = useState<string | null>(localStorage.getItem('quiz_user_name'));
 
     const setUserName = (name: string) => {
+        Logger.info('UserProvider', `Setting new username: ${name}`);
         localStorage.setItem('quiz_user_name', name);
         setUserNameState(name);
     };
@@ -25,9 +31,14 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     );
 };
 
+/**
+ * Hook to consume the current User state.
+ * Throw an error if used outside a UserProvider to enforce proper trees.
+ */
 export const useUser = () => {
     const context = useContext(UserContext);
     if (context === undefined) {
+        Logger.error('useUser', 'Hook was called outside a UserProvider context');
         throw new Error('useUser must be used within a UserProvider');
     }
     return context;

@@ -5,6 +5,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import jakarta.enterprise.context.ApplicationScoped;
+import org.jboss.logging.Logger;
 
 /**
  * Core game logic engine.
@@ -12,6 +13,8 @@ import jakarta.enterprise.context.ApplicationScoped;
  */
 @ApplicationScoped
 public class GameEngine {
+
+    private static final Logger LOG = Logger.getLogger(GameEngine.class);
 
     private final String[][] phrases = {
             { "ANIMAIS", "CAVALO MARINHO" },
@@ -76,12 +79,15 @@ public class GameEngine {
         String phrase = GameStore.phrases.get(sessionId);
         GameSession session = GameStore.sessions.get(sessionId);
 
-        if (session == null || phrase == null || session.gameOver)
+        if (session == null || phrase == null || session.gameOver) {
+            LOG.warnf("Ignoring guess for session %s - Session invalid or game over", sessionId);
             return session;
+        }
 
         letter = Character.toUpperCase(letter);
         if (session.guessedLetters.contains(letter)) {
             session.message = "Você já disse essa letra!";
+            LOG.debugf("Player repeated letter '%s' for session %s", letter, sessionId);
             return session;
         }
 
@@ -96,8 +102,11 @@ public class GameEngine {
         if (count > 0) {
             session.score += count * session.currentSpinValue;
             session.message = "Acertou! A letra " + letter + " aparece " + count + " vezes.";
+            LOG.debugf("Correct guess '%s' in %s. Found %d times. New score: %d", letter, sessionId, count,
+                    session.score);
         } else {
             session.message = "Errou! Não tem a letra " + letter + ".";
+            LOG.debugf("Incorrect guess '%s' in %s.", letter, sessionId);
         }
 
         session.obscuredPhrase = obscure(phrase, session.guessedLetters);
@@ -105,6 +114,7 @@ public class GameEngine {
         if (!session.obscuredPhrase.contains("_")) {
             session.gameOver = true;
             session.message = "Parabéns! Você descobriu a frase!";
+            LOG.infof("Session %s completed successfully by guessing all letters!", sessionId);
         }
 
         return session;

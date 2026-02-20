@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Trophy, Users, Zap, CheckCircle2, XCircle, User } from 'lucide-react';
+import {
+    ArrowLeft, Trophy, Users, Zap, CheckCircle2, XCircle, User
+} from 'lucide-react';
+import {
+    Container, Typography, Box, Grid, alpha, Paper, Stack,
+    IconButton, ButtonBase, Avatar, Chip
+} from '@mui/material';
 import { MILLIONAIRE_QUESTIONS, PRIZE_LADDER } from '../data/millionaireData';
 import { useSound } from '../hooks/useSound';
 import { useUser } from '../context/UserContext';
+import { ActionButton } from '../components/shared/ActionButton';
 
 const Millionaire: React.FC = () => {
     const navigate = useNavigate();
@@ -34,7 +41,6 @@ const Millionaire: React.FC = () => {
         setIsConfirmed(true);
         playSound('click');
 
-        // Delay to show confirmation color before moving on or ending
         setTimeout(() => {
             if (selectedAnswer === currentQuestion.answer) {
                 if (currentLevel === MILLIONAIRE_QUESTIONS.length - 1) {
@@ -74,36 +80,29 @@ const Millionaire: React.FC = () => {
 
     const useFiftyFifty = () => {
         if (!lifelines.fiftyFifty || isConfirmed || gameState !== 'playing') return;
-
         const correctAnswer = currentQuestion.answer;
         const wrongAnswers = currentQuestion.options
             .map((_, i) => i)
             .filter(i => i !== correctAnswer);
-
-        // Pick 2 random wrong answers to hide
-        const toHide = [];
+        const toHide: number[] = [];
         const available = [...wrongAnswers];
         for (let i = 0; i < 2; i++) {
             const randomIndex = Math.floor(Math.random() * available.length);
             toHide.push(available.splice(randomIndex, 1)[0]);
         }
-
         setHiddenOptions(toHide);
         setLifelines(prev => ({ ...prev, fiftyFifty: false }));
+        playSound('click');
     };
 
     const useAudience = () => {
         if (!lifelines.audience || isConfirmed || gameState !== 'playing') return;
-
         const correctAnswer = currentQuestion.answer;
         const data = [0, 0, 0, 0];
-
-        // Give the correct answer a higher chance
         let remaining = 100;
         const correctWeight = 50 + Math.floor(Math.random() * 30);
         data[correctAnswer] = correctWeight;
         remaining -= correctWeight;
-
         const wrongIndices = [0, 1, 2, 3].filter(i => i !== correctAnswer);
         wrongIndices.forEach((idx, i) => {
             if (i === 2) {
@@ -114,235 +113,145 @@ const Millionaire: React.FC = () => {
                 remaining -= val;
             }
         });
-
         setAudienceData(data);
         setLifelines(prev => ({ ...prev, audience: false }));
+        playSound('click');
     };
 
     const useSkip = () => {
         if (!lifelines.skip || isConfirmed || gameState !== 'playing') return;
         setLifelines(prev => ({ ...prev, skip: false }));
+        playSound('click');
         nextQuestion();
     };
 
     return (
-        <div className="min-h-screen w-full bg-[#020617] text-white flex flex-col items-center overflow-x-hidden">
-            {/* Prize Ladder Sidebar (Desktop) / Header (Mobile) */}
-            <div className="w-full max-w-6xl flex flex-col lg:flex-row gap-8 p-4 lg:p-8">
+        <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', pb: 8 }}>
+            <Container maxWidth="xl" sx={{ pt: 4 }}>
+                <Paper sx={{
+                    p: 2, mb: 6, borderRadius: 4, bgcolor: alpha('#0f172a', 0.4),
+                    backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.05)',
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+                }}>
+                    <Stack direction="row" spacing={2} alignItems="center">
+                        <IconButton onClick={() => navigate('/')} sx={{ bgcolor: 'rgba(255,255,255,0.05)', borderRadius: 3 }}>
+                            <ArrowLeft />
+                        </IconButton>
+                        <Chip icon={<User size={16} color="#f59e0b" />} label={userName} sx={{ fontWeight: 900, textTransform: 'uppercase', bgcolor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(245,158,11,0.2)' }} />
+                    </Stack>
+                    <Stack direction="row" spacing={2}>
+                        <IconButton onClick={useFiftyFifty} disabled={!lifelines.fiftyFifty || isConfirmed || gameState !== 'playing'} sx={{ border: '2px solid', borderColor: lifelines.fiftyFifty ? alpha('#f59e0b', 0.5) : alpha('#fff', 0.1), color: lifelines.fiftyFifty ? '#f59e0b' : 'text.disabled', '&:hover': { bgcolor: alpha('#f59e0b', 0.1) } }}>
+                            <Box component="span" sx={{ fontSize: '10px', fontWeight: 900 }}>50:50</Box>
+                        </IconButton>
+                        <IconButton onClick={useAudience} disabled={!lifelines.audience || isConfirmed || gameState !== 'playing'} sx={{ border: '2px solid', borderColor: lifelines.audience ? alpha('#f59e0b', 0.5) : alpha('#fff', 0.1), color: lifelines.audience ? '#f59e0b' : 'text.disabled', '&:hover': { bgcolor: alpha('#f59e0b', 0.1) } }}>
+                            <Users size={18} />
+                        </IconButton>
+                        <IconButton onClick={useSkip} disabled={!lifelines.skip || isConfirmed || gameState !== 'playing'} sx={{ border: '2px solid', borderColor: lifelines.skip ? alpha('#f59e0b', 0.5) : alpha('#fff', 0.1), color: lifelines.skip ? '#f59e0b' : 'text.disabled', '&:hover': { bgcolor: alpha('#f59e0b', 0.1) } }}>
+                            <Zap size={18} />
+                        </IconButton>
+                    </Stack>
+                </Paper>
 
-                {/* Main Content Area */}
-                <main className="flex-grow flex flex-col gap-8 order-2 lg:order-1">
-                    <header className="flex justify-between items-center bg-slate-900/40 p-4 rounded-2xl border border-white/5 backdrop-blur-md">
-                        <div className="flex items-center gap-4">
-                            <button onClick={() => navigate('/')} className="p-2 hover:bg-white/10 rounded-lg transition-colors flex items-center gap-2">
-                                <ArrowLeft className="w-5 h-5 text-yellow-500" />
-                                <span className="font-bold hidden sm:inline">Início</span>
-                            </button>
-                            <div className="hidden sm:flex items-center gap-2 px-4 py-1 bg-white/5 rounded-full border border-white/10">
-                                <User className="w-4 h-4 text-yellow-500" />
-                                <span className="text-xs font-black uppercase text-slate-400">{userName}</span>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <div className="flex gap-2">
-                                <button
-                                    onClick={useFiftyFifty}
-                                    disabled={!lifelines.fiftyFifty || isConfirmed || gameState !== 'playing'}
-                                    className={`p-3 rounded-full border-2 transition-all ${lifelines.fiftyFifty ? 'border-yellow-500/50 hover:bg-yellow-500/20 text-yellow-500' : 'border-slate-700 text-slate-700 opacity-50'}`}
-                                >
-                                    <span className="font-black text-xs">50:50</span>
-                                </button>
-                                <button
-                                    onClick={useAudience}
-                                    disabled={!lifelines.audience || isConfirmed || gameState !== 'playing'}
-                                    className={`p-3 rounded-full border-2 transition-all ${lifelines.audience ? 'border-yellow-500/50 hover:bg-yellow-500/20 text-yellow-500' : 'border-slate-700 text-slate-700 opacity-50'}`}
-                                >
-                                    <Users className="w-4 h-4" />
-                                </button>
-                                <button
-                                    onClick={useSkip}
-                                    disabled={!lifelines.skip || isConfirmed || gameState !== 'playing'}
-                                    className={`p-3 rounded-full border-2 transition-all ${lifelines.skip ? 'border-yellow-500/50 hover:bg-yellow-500/20 text-yellow-500' : 'border-slate-700 text-slate-700 opacity-50'}`}
-                                >
-                                    <Zap className="w-4 h-4" />
-                                </button>
-                            </div>
-                        </div>
-                    </header>
-
-                    <div className="flex-grow flex flex-col items-center justify-center min-h-[500px] relative">
+                <Grid container spacing={4}>
+                    <Grid size={{ xs: 12, lg: 8 }}>
                         <AnimatePresence mode="wait">
                             {gameState === 'playing' ? (
-                                <motion.div
-                                    key="playing"
-                                    initial={{ opacity: 0, x: 50 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: -50 }}
-                                    className="w-full flex flex-col items-center gap-12"
-                                >
-                                    {/* Question Card */}
-                                    <div className="w-full bg-slate-900/50 border-2 border-yellow-500/30 p-8 rounded-[40px] text-center shadow-2xl shadow-yellow-500/5">
-                                        <h2 className="text-2xl sm:text-3xl font-black mb-2 italic">PERGUNTA {currentLevel + 1}</h2>
-                                        <div className="h-1 w-24 bg-yellow-500 mx-auto mb-6" />
-                                        <p className="text-xl sm:text-2xl font-bold leading-relaxed">{currentQuestion.question}</p>
-                                    </div>
-
-                                    {/* Audience Chart Overlay */}
+                                <Box component={motion.div} key="playing" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.9 }} sx={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                                    <Paper sx={{ p: { xs: 4, md: 8 }, textAlign: 'center', borderRadius: 10, border: '2px solid', borderColor: alpha('#f59e0b', 0.2), position: 'relative', overflow: 'hidden' }}>
+                                        <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, bgcolor: '#f59e0b' }} />
+                                        <Typography variant="overline" sx={{ fontWeight: 900, color: 'text.secondary', letterSpacing: 2 }}>PERGUNTA {currentLevel + 1}</Typography>
+                                        <Typography variant="h4" sx={{ fontWeight: 900, mt: 2, mb: 1 }}>{currentQuestion.question}</Typography>
+                                    </Paper>
                                     {audienceData.length > 0 && (
-                                        <motion.div
-                                            initial={{ opacity: 0, scale: 0.9 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            className="w-full max-w-sm flex justify-around items-end h-32 gap-2 bg-slate-900/80 p-4 rounded-2xl border border-yellow-500/20"
-                                        >
-                                            {audienceData.map((val, i) => (
-                                                <div key={i} className="flex flex-col items-center w-full">
-                                                    <div
-                                                        className="w-full bg-yellow-500/50 rounded-t-lg transition-all duration-1000"
-                                                        style={{ height: `${val}%` }}
-                                                    />
-                                                    <span className="text-[10px] font-bold mt-1">{String.fromCharCode(65 + i)}</span>
-                                                </div>
-                                            ))}
-                                        </motion.div>
+                                        <Paper sx={{ p: 3, maxWidth: 400, mx: 'auto', borderRadius: 4, bgcolor: alpha('#000', 0.2), border: '1px solid rgba(255,255,255,0.05)' }}>
+                                            <Stack direction="row" spacing={2} alignItems="flex-end" sx={{ height: 100 }}>
+                                                {audienceData.map((val, i) => (
+                                                    <Box key={i} sx={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
+                                                        <Box sx={{ width: '100%', bgcolor: alpha('#f59e0b', 0.5), borderRadius: '4px 4px 0 0', height: `${val}%`, transition: 'height 1s ease-out', borderTop: '2px solid #f59e0b' }} />
+                                                        <Typography variant="caption" sx={{ fontWeight: 900 }}>{String.fromCharCode(65 + i)}</Typography>
+                                                    </Box>
+                                                ))}
+                                            </Stack>
+                                        </Paper>
                                     )}
-
-                                    {/* Options Grid */}
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-                                        {currentQuestion.options.map((option, index) => (
-                                            <button
-                                                key={index}
-                                                onClick={() => handleAnswerClick(index)}
-                                                disabled={hiddenOptions.includes(index) || isConfirmed}
-                                                className={`
-                                                    group relative p-6 rounded-2xl border-2 text-left font-bold transition-all flex items-center gap-4
-                                                    ${hiddenOptions.includes(index) ? 'opacity-0 pointer-events-none' : ''}
-                                                    ${selectedAnswer === index
-                                                        ? (isConfirmed ? (index === currentQuestion.answer ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400' : 'bg-rose-500/20 border-rose-500 text-rose-400') : 'bg-yellow-500/20 border-yellow-500 text-yellow-500')
-                                                        : 'bg-slate-900/40 border-white/10 hover:border-yellow-500/50'
-                                                    }
-                                                `}
-                                            >
-                                                <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-yellow-500 group-hover:text-slate-950 transition-colors">
-                                                    {String.fromCharCode(65 + index)}
-                                                </div>
-                                                <span className="text-lg">{option}</span>
-                                            </button>
-                                        ))}
-                                    </div>
-
-                                    <button
-                                        onClick={confirmAnswer}
-                                        disabled={selectedAnswer === null || isConfirmed}
-                                        className={`px-12 py-4 rounded-full font-black uppercase tracking-widest transition-all ${selectedAnswer !== null && !isConfirmed ? 'bg-yellow-500 text-slate-950 hover:scale-105 shadow-lg shadow-yellow-500/20' : 'bg-slate-800 text-slate-500'}`}
-                                    >
-                                        Confirmar Resposta
-                                    </button>
-                                </motion.div>
+                                    <Grid container spacing={2}>
+                                        {currentQuestion.options.map((option, index) => {
+                                            const isSelected = selectedAnswer === index;
+                                            const isCorrect = index === currentQuestion.answer;
+                                            const isHidden = hiddenOptions.includes(index);
+                                            let stateColor = 'rgba(255,255,255,0.03)';
+                                            let borderColor = 'rgba(255,255,255,0.1)';
+                                            let textColor = 'text.primary';
+                                            if (isSelected) {
+                                                if (isConfirmed) {
+                                                    stateColor = isCorrect ? alpha('#10b981', 0.2) : alpha('#f43f5e', 0.2);
+                                                    borderColor = isCorrect ? '#10b981' : '#f43f5e';
+                                                    textColor = isCorrect ? '#10b981' : '#f43f5e';
+                                                } else {
+                                                    stateColor = alpha('#f59e0b', 0.2);
+                                                    borderColor = '#f59e0b';
+                                                    textColor = '#f59e0b';
+                                                }
+                                            }
+                                            return (
+                                                <Grid size={{ xs: 12, md: 6 }} key={index}>
+                                                    <ButtonBase onClick={() => handleAnswerClick(index)} disabled={isHidden || isConfirmed} sx={{ width: '100%', p: 3, borderRadius: 4, textAlign: 'left', bgcolor: stateColor, border: '2px solid', borderColor: borderColor, opacity: isHidden ? 0 : 1, pointerEvents: isHidden ? 'none' : 'auto', transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: 3, '&:hover': !isConfirmed && !isHidden ? { borderColor: '#f59e0b', bgcolor: alpha('#f59e0b', 0.05) } : {} }}>
+                                                        <Avatar sx={{ bgcolor: isSelected ? 'inherit' : 'rgba(255,255,255,0.05)', color: isSelected ? 'inherit' : 'text.secondary', fontWeight: 900, border: '1px solid currentColor', width: 40, height: 40 }}>{String.fromCharCode(65 + index)}</Avatar>
+                                                        <Typography variant="h6" sx={{ fontWeight: 800, color: textColor }}>{option}</Typography>
+                                                    </ButtonBase>
+                                                </Grid>
+                                            );
+                                        })}
+                                    </Grid>
+                                    <ActionButton fullWidth onClick={confirmAnswer} disabled={selectedAnswer === null || isConfirmed} sx={{ py: 3, fontSize: '1.25rem', bgcolor: '#f59e0b', color: '#000', '&:hover': { bgcolor: '#d97706' } }}>CONFIRMAR RESPOSTA</ActionButton>
+                                </Box>
                             ) : gameState === 'winning' ? (
-                                <motion.div
-                                    key="winning"
-                                    initial={{ scale: 0.8, opacity: 0 }}
-                                    animate={{ scale: 1, opacity: 1 }}
-                                    className="text-center"
-                                >
-                                    <div className="bg-emerald-500/20 p-8 rounded-full mb-8 inline-block">
-                                        <CheckCircle2 className="w-20 h-20 text-emerald-500" />
-                                    </div>
-                                    <h2 className="text-4xl font-black mb-4 uppercase text-emerald-400">RESPOSTA CORRETA!</h2>
-                                    <p className="text-2xl font-bold mb-8 italic">Você faturou {PRIZE_LADDER[currentLevel]}</p>
-                                    <button
-                                        onClick={nextQuestion}
-                                        className="px-10 py-4 bg-emerald-500 text-white font-black rounded-xl uppercase hover:scale-105 active:scale-95 transition-all shadow-xl shadow-emerald-500/20"
-                                    >
-                                        Próxima Pergunta
-                                    </button>
-                                </motion.div>
+                                <Box component={motion.div} key="winning" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} sx={{ textAlign: 'center', py: 8 }}>
+                                    <Box sx={{ width: 120, height: 120, borderRadius: '50%', mx: 'auto', mb: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: alpha('#10b981', 0.1), border: '4px solid #10b981' }}><CheckCircle2 size={64} color="#10b981" /></Box>
+                                    <Typography variant="h2" sx={{ fontWeight: 900, fontStyle: 'italic', mb: 1, color: '#10b981' }}>CORRETO!</Typography>
+                                    <Typography variant="h4" sx={{ fontWeight: 700, mb: 6 }}>Você faturou {PRIZE_LADDER[currentLevel]}</Typography>
+                                    <ActionButton onClick={nextQuestion} sx={{ px: 8, py: 2 }}>PRÓXIMA PERGUNTA</ActionButton>
+                                </Box>
                             ) : gameState === 'lost' ? (
-                                <motion.div
-                                    key="lost"
-                                    initial={{ scale: 0.8, opacity: 0 }}
-                                    animate={{ scale: 1, opacity: 1 }}
-                                    className="text-center"
-                                >
-                                    <div className="bg-rose-500/20 p-8 rounded-full mb-8 inline-block">
-                                        <XCircle className="w-20 h-20 text-rose-500" />
-                                    </div>
-                                    <h2 className="text-4xl font-black mb-4 uppercase text-rose-400">FIM DE JOGO!</h2>
-                                    <p className="text-xl font-bold text-slate-300 mb-8">
-                                        Infelizmente você errou. A resposta correta era: <br />
-                                        <span className="text-yellow-500 uppercase">{currentQuestion.options[currentQuestion.answer]}</span>
-                                    </p>
-                                    <div className="flex gap-4 justify-center">
-                                        <button
-                                            onClick={resetGame}
-                                            className="px-8 py-4 bg-rose-500 text-white font-black rounded-xl uppercase hover:scale-105 transition-all"
-                                        >
-                                            Tentar Novamente
-                                        </button>
-                                        <button
-                                            onClick={() => navigate('/')}
-                                            className="px-8 py-4 bg-slate-800 text-white font-black rounded-xl uppercase hover:bg-slate-700 transition-all"
-                                        >
-                                            Sair
-                                        </button>
-                                    </div>
-                                </motion.div>
+                                <Box component={motion.div} key="lost" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} sx={{ textAlign: 'center', py: 8 }}>
+                                    <Box sx={{ width: 120, height: 120, borderRadius: '50%', mx: 'auto', mb: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: alpha('#f43f5e', 0.1), border: '4px solid #f43f5e' }}><XCircle size={64} color="#f43f5e" /></Box>
+                                    <Typography variant="h2" sx={{ fontWeight: 900, fontStyle: 'italic', mb: 1, color: '#f43f5e' }}>FIM DE JOGO!</Typography>
+                                    <Typography variant="h6" sx={{ color: 'text.secondary', mb: 4 }}>A resposta correta era: <Typography component="span" sx={{ color: '#f59e0b', fontWeight: 900, display: 'block' }}>{currentQuestion.options[currentQuestion.answer]}</Typography></Typography>
+                                    <Stack direction="row" spacing={2} justifyContent="center"><ActionButton onClick={resetGame}>TENTAR NOVAMENTE</ActionButton><ActionButton variant="outlined" color="secondary" onClick={() => navigate('/')}>SAIR</ActionButton></Stack>
+                                </Box>
                             ) : (
-                                <motion.div
-                                    key="finished"
-                                    initial={{ scale: 0.8, opacity: 0 }}
-                                    animate={{ scale: 1, opacity: 1 }}
-                                    className="text-center"
-                                >
-                                    <div className="bg-yellow-500/20 p-10 rounded-full mb-8 inline-block">
-                                        <Trophy className="w-24 h-24 text-yellow-500 animate-bounce" />
-                                    </div>
-                                    <h1 className="text-5xl font-black mb-4 italic text-yellow-500 uppercase">PARABÉNS!</h1>
-                                    <h2 className="text-3xl font-black mb-8 uppercase text-white">VOCÊ É O NOVO MILIONÁRIO!</h2>
-                                    <p className="text-2xl font-bold text-slate-300 mb-12">
-                                        Você completou todos os desafios e ganhou o prêmio máximo de R$ 1.000.000!
-                                    </p>
-                                    <button
-                                        onClick={resetGame}
-                                        className="px-12 py-5 bg-gradient-to-r from-yellow-500 to-yellow-600 text-slate-950 font-black rounded-2xl uppercase hover:scale-105 shadow-2xl shadow-yellow-500/40 transition-all"
-                                    >
-                                        Jogar Novamente
-                                    </button>
-                                </motion.div>
+                                <Box component={motion.div} key="finished" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} sx={{ textAlign: 'center', py: 8 }}>
+                                    <Trophy size={120} color="#f59e0b" style={{ marginBottom: 32 }} className="animate-bounce" />
+                                    <Typography variant="h1" sx={{ fontWeight: 900, fontStyle: 'italic', color: '#f59e0b', mb: 1 }}>PARABÉNS!</Typography>
+                                    <Typography variant="h3" sx={{ fontWeight: 900, mb: 4 }}>VOCÊ É MILIONÁRIO!</Typography>
+                                    <Typography variant="h5" sx={{ color: 'text.secondary', mb: 8 }}>Você completou o desafio e ganhou R$ 1.000.000!</Typography>
+                                    <ActionButton onClick={resetGame} size="large" sx={{ px: 10, py: 3, fontSize: '1.5rem', bgcolor: '#f59e0b', color: '#000' }}>JOGAR NOVAMENTE</ActionButton>
+                                </Box>
                             )}
                         </AnimatePresence>
-                    </div>
-                </main>
-
-                {/* Prize Ladder Sidebar */}
-                <aside className="w-full lg:w-80 flex flex-col gap-2 order-1 lg:order-2 bg-slate-950/20 p-4 rounded-3xl border border-white/5">
-                    <div className="flex items-center gap-2 mb-4 px-2">
-                        <Trophy className="w-5 h-5 text-yellow-500" />
-                        <span className="text-sm font-black uppercase text-slate-400 tracking-widest">Prêmios</span>
-                    </div>
-                    {[...PRIZE_LADDER].reverse().map((prize, idx) => {
-                        const levelIndex = PRIZE_LADDER.length - 1 - idx;
-                        const isCurrent = levelIndex === currentLevel;
-                        const isPast = levelIndex < currentLevel;
-
-                        return (
-                            <div
-                                key={idx}
-                                className={`
-                                    flex justify-between items-center px-4 py-2 rounded-xl transition-all
-                                    ${isCurrent ? 'bg-yellow-500 text-slate-950 font-black scale-105 shadow-lg shadow-yellow-500/20' : ''}
-                                    ${isPast ? 'text-emerald-500 font-bold' : (!isCurrent ? 'text-slate-500 font-medium' : '')}
-                                    ${levelIndex % 5 === 4 && !isCurrent ? 'text-slate-100 font-bold' : ''}
-                                `}
-                            >
-                                <span className="text-xs opacity-50">{levelIndex + 1}</span>
-                                <span className="text-sm">{prize}</span>
-                            </div>
-                        );
-                    })}
-                </aside>
-            </div>
-        </div>
+                    </Grid>
+                    <Grid size={{ xs: 12, lg: 4 }}>
+                        <Paper sx={{ p: 4, borderRadius: 8, bgcolor: alpha('#000', 0.2), border: '1px solid rgba(255,255,255,0.05)' }}>
+                            <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: 4 }}><Trophy size={20} color="#f59e0b" /><Typography variant="button" sx={{ fontWeight: 900, color: 'text.secondary', letterSpacing: 2 }}>PRÊMIOS</Typography></Stack>
+                            <Stack spacing={1}>
+                                {[...PRIZE_LADDER].reverse().map((prize, idx) => {
+                                    const levelIndex = PRIZE_LADDER.length - 1 - idx;
+                                    const isCurrent = levelIndex === currentLevel;
+                                    const isPast = levelIndex < currentLevel;
+                                    return (
+                                        <Box key={idx} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 1.5, borderRadius: 3, bgcolor: isCurrent ? '#f59e0b' : 'transparent', color: isCurrent ? '#000' : (isPast ? '#10b981' : 'text.secondary'), transform: isCurrent ? 'scale(1.05)' : 'none', transition: 'all 0.3s', border: isCurrent ? 'none' : '1px solid transparent', borderColor: isPast ? alpha('#10b981', 0.2) : 'transparent' }}>
+                                            <Typography variant="caption" sx={{ fontWeight: 900, width: 30, opacity: 0.5 }}>{levelIndex + 1}</Typography>
+                                            <Typography sx={{ fontWeight: isCurrent || isPast ? 900 : 500, flex: 1 }}>{prize}</Typography>
+                                            {isPast && <CheckCircle2 size={14} />}
+                                        </Box>
+                                    );
+                                })}
+                            </Stack>
+                        </Paper>
+                    </Grid>
+                </Grid>
+            </Container>
+        </Box>
     );
 };
 
