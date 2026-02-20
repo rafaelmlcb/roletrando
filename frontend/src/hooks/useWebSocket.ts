@@ -1,0 +1,72 @@
+import { useEffect, useRef, useState, useCallback } from 'react';
+import Logger from '../utils/logger';
+
+interface GameMessage {
+    type: string;
+    payload?: any;
+}
+
+export function useWebSocket(roomId: string, playerName: string) {
+    const [status, setStatus] = useState<'CONNECTING' | 'CONNECTED' | 'DISCONNECTED'>('CONNECTING');
+    const [gameState, setGameState] = useState<any>(null);
+    const [currentPlayerTurnId, setCurrentPlayerTurnId] = useState<string>('');
+    const [lastEvent, setLastEvent] = useState<GameMessage | null>(null);
+
+    const ws = useRef<WebSocket | null>(null);
+
+    const connect = useCallback(() => {
+        if (!roomId || !playerName) return;
+
+        const host = window.location.hostname;
+        const wsUrl = `ws://${host}:8080/api/ws/game/${roomId}/${encodeURIComponent(playerName)}`;
+
+        ws.current = new WebSocket(wsUrl);
+
+        ws.current.onopen = () => {
+            Logger.info('useWebSocket', 'Connected to WebSocket server');
+            setStatus('CONNECTED');
+        };
+
+        ws.current.onmessage = (event) => {
+            try {
+                const msg: GameMessage = JSON.parse(event.data);
+
+                if (msg.type === 'STATE_UPDATE') {
+                    setGameState(msg.payload.room);
+                    setCurrentPlayerTurnId(msg.payload.currentPlayerTurnId);
+                } else {
+                    setLastEvent(msg);
+                }
+            } catch (err) {
+                Logger.error('useWebSocket', 'Failed to parse message', err);
+            }
+        };
+
+        ws.current.onclose = () => {
+            Logger.warn('useWebSocket', 'WebSocket disconnected');
+            setStatus('DISCONNECTED');
+        };
+
+        ws.current.onerror = (err) => {
+            Logger.error('useWebSocket', 'WebSocket error', err);
+            setStatus('DISCONNECTED');
+        };
+    }, [roomId, playerName]);
+
+    useEffect(() => {
+        connect();
+        return () => {
+            if (ws.current) ws.current.close();
+        };
+    }, [connect]);
+
+    const sendMessage = useCallback((type: string, payload?: any) => {
+        if (ws.current?.readyState === WebSocket.OPEN) {
+            ws.current.send(JSON.stringify({ type, payload }));
+        } else {
+            Logger.warn('useWebSocket', 'Cannot send message, socket not open');
+        }
+    }, []);
+
+    return { status, gameState, currentPlayerTurnId, lastEvent, sendMessage, setLastEvent };
+}

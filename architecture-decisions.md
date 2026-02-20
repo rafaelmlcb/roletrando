@@ -61,3 +61,10 @@ A comunicação entre eles é inteiramente baseada em JSON sobre HTTP (REST). O 
 **Decisão (Frontend):** Criação de um Singleton `Logger.ts` que suprime mensagens `DEBUG` unicamente com base na flag de build do Vite e encapsula outputs padronizados de níveis (INFO/WARN/ERROR) sem comprometer lints TypeScript de Erasable Syntax Enums (substituído por Objetos constantes literais).
 **Decisão (Backend):** Utilização de SLF4J com formatação transacional e Javadoc detalhado em classes públicas (`GameSession`, `GameEngine`, `GameResource`).
 **Consequência:** Rastreio de bugs direto sem poluição; O nível de segurança subiu por não vazar debug prints em build de Produção.
+
+### ADR 005: Multiplayer em Tempo Real com WebSockets
+**Contexto:** O projeto necessitava de evolução para suportar multi-jogadores simultâneos, abandonando simulações visuais em favor de sincronia real de pontuações, turnos e animações.
+**Decisão (Arquitetura):** Migração do controle de estado do Client (React) para o Server (Quarkus) usando comunicação bidirecional full-duplex sobre WebSockets.
+**Decisão (Backend):** Uso de `quarkus-websockets-next` gerindo um `@ServerEndpoint` e implementando um `RoomManager` thread-safe. O backend torna-se a Fonte Absoluta da Verdade (Source of Truth) emitindo eventos Broadcast.
+**Decisão (Frontend):** Criação de um custom hook `useWebSocket` para reatividade local sem delay. A UI agora é uma projeção da `GameSession` do servidor (espelhando a Roleta, Letras e Placar).
+**Consequência:** Arquitetura robusta para combater trapaças (cheats) e garantir sincronismo perfeito (latência <100ms) em LAN e WAN. Pavimentada a trilha para adicionar o multiplayer no *Quiz* e *Millionaire*.
