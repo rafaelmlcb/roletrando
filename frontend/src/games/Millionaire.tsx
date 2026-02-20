@@ -3,9 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Trophy, Users, Zap, CheckCircle2, XCircle } from 'lucide-react';
 import { MILLIONAIRE_QUESTIONS, PRIZE_LADDER } from '../data/millionaireData';
+import { useSound } from '../hooks/useSound';
 
 const Millionaire: React.FC = () => {
     const navigate = useNavigate();
+    const { playSound } = useSound();
     const [currentLevel, setCurrentLevel] = useState(0);
     const [gameState, setGameState] = useState<'playing' | 'winning' | 'lost' | 'finished'>('playing');
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -28,22 +30,27 @@ const Millionaire: React.FC = () => {
     const confirmAnswer = () => {
         if (selectedAnswer === null || isConfirmed) return;
         setIsConfirmed(true);
+        playSound('click');
 
         // Delay to show confirmation color before moving on or ending
         setTimeout(() => {
             if (selectedAnswer === currentQuestion.answer) {
                 if (currentLevel === MILLIONAIRE_QUESTIONS.length - 1) {
+                    playSound('win');
                     setGameState('finished');
                 } else {
+                    playSound('correct');
                     setGameState('winning');
                 }
             } else {
+                playSound('wrong');
                 setGameState('lost');
             }
         }, 1500);
     };
 
     const nextQuestion = () => {
+        playSound('click');
         setCurrentLevel(prev => prev + 1);
         setSelectedAnswer(null);
         setIsConfirmed(false);
@@ -53,6 +60,7 @@ const Millionaire: React.FC = () => {
     };
 
     const resetGame = () => {
+        playSound('click');
         setCurrentLevel(0);
         setGameState('playing');
         setSelectedAnswer(null);

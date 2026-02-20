@@ -6,11 +6,13 @@ import {
     RotateCcw, Triangle, Square, Circle, Star
 } from 'lucide-react';
 import { QUIZ_QUESTIONS } from '../data/quizData';
+import { useSound } from '../hooks/useSound';
 
 const QUIZ_DURATION = 20; // seconds
 
 const Quiz: React.FC = () => {
     const navigate = useNavigate();
+    const { playSound } = useSound();
     const [currentStep, setCurrentStep] = useState(0);
     const [gameState, setGameState] = useState<'lobby' | 'question' | 'feedback' | 'ended'>('lobby');
     const [score, setScore] = useState(0);
@@ -21,6 +23,7 @@ const Quiz: React.FC = () => {
     const timerRef = useRef<number | null>(null);
 
     const startQuiz = () => {
+        playSound('click');
         setGameState('question');
         startTimer();
     };
@@ -35,6 +38,10 @@ const Quiz: React.FC = () => {
                     handleTimeUp();
                     return 0;
                 }
+                // Play ticker sound every second
+                if (Math.ceil(prev) !== Math.ceil(prev - 0.1)) {
+                    playSound('ticker');
+                }
                 return prev - 0.1;
             });
         }, 100);
@@ -43,6 +50,7 @@ const Quiz: React.FC = () => {
     const handleTimeUp = () => {
         if (timerRef.current) clearInterval(timerRef.current);
         if (selectedAnswer === null) {
+            playSound('wrong');
             setSelectedAnswer(-1); // Mark as timed out
             setLastPoints(0);
             setGameState('feedback');
@@ -57,11 +65,13 @@ const Quiz: React.FC = () => {
 
         const question = QUIZ_QUESTIONS[currentStep];
         if (index === question.answer) {
+            playSound('correct');
             // Speed scoring: max 1000 points
             const points = Math.floor(1000 * (timer / QUIZ_DURATION));
             setLastPoints(points);
             setScore(prev => prev + points);
         } else {
+            playSound('wrong');
             setLastPoints(0);
         }
 
@@ -69,17 +79,20 @@ const Quiz: React.FC = () => {
     };
 
     const nextStep = () => {
+        playSound('click');
         if (currentStep < QUIZ_QUESTIONS.length - 1) {
             setCurrentStep(prev => prev + 1);
             setSelectedAnswer(null);
             setGameState('question');
             startTimer();
         } else {
+            playSound('win');
             setGameState('ended');
         }
     };
 
     const resetQuiz = () => {
+        playSound('click');
         setCurrentStep(0);
         setScore(0);
         setSelectedAnswer(null);
@@ -94,31 +107,31 @@ const Quiz: React.FC = () => {
 
     const currentQuestion = QUIZ_QUESTIONS[currentStep];
 
-    // Refined Kahoot-style option colors and symbols
+    // Refined Kahoot-style colors (Red, Blue, Yellow, Green)
     const optionStyles = [
         {
-            color: 'from-rose-500 to-rose-600',
-            hover: 'hover:shadow-rose-500/40',
-            border: 'border-rose-400/30',
-            icon: <Triangle className="w-8 h-8 fill-white/20" />
+            color: 'from-red-500 to-red-600',
+            hover: 'hover:shadow-red-500/40',
+            border: 'border-red-400/30',
+            icon: <Triangle className="w-10 h-10 fill-white/20" />
         },
         {
-            color: 'from-blue-500 to-blue-600',
-            hover: 'hover:shadow-blue-500/40',
-            border: 'border-blue-400/30',
-            icon: <Square className="w-8 h-8 fill-white/20" />
+            color: 'from-sky-500 to-sky-600',
+            hover: 'hover:shadow-sky-500/40',
+            border: 'border-sky-400/30',
+            icon: <Square className="w-10 h-10 fill-white/20" />
         },
         {
             color: 'from-amber-400 to-amber-500',
             hover: 'hover:shadow-amber-400/40',
             border: 'border-amber-300/30',
-            icon: <Circle className="w-8 h-8 fill-white/20" />
+            icon: <Circle className="w-10 h-10 fill-white/20" />
         },
         {
-            color: 'from-emerald-500 to-emerald-600',
-            hover: 'hover:shadow-emerald-500/40',
-            border: 'border-emerald-400/30',
-            icon: <Star className="w-8 h-8 fill-white/20" />
+            color: 'from-green-500 to-green-600',
+            hover: 'hover:shadow-green-500/40',
+            border: 'border-green-400/30',
+            icon: <Star className="w-10 h-10 fill-white/20" />
         }
     ];
 
@@ -176,7 +189,7 @@ const Quiz: React.FC = () => {
                             className="w-full flex flex-col items-center"
                         >
                             {/* Question Card */}
-                            <div className="w-full bg-white/5 backdrop-blur-2xl border-2 border-white/10 p-10 sm:p-16 rounded-[48px] shadow-2xl flex flex-col items-center text-center mb-10 relative group">
+                            <div className="w-full bg-white/5 backdrop-blur-2xl border-2 border-white/10 p-8 sm:p-12 rounded-[40px] shadow-2xl flex flex-col items-center text-center mb-8 relative group">
                                 <div className="absolute top-0 left-0 w-full h-2 bg-white/10">
                                     <motion.div
                                         className="h-full bg-gradient-to-r from-amber-400 to-rose-500"
@@ -185,38 +198,38 @@ const Quiz: React.FC = () => {
                                         transition={{ duration: QUIZ_DURATION, ease: "linear" }}
                                     />
                                 </div>
-                                <span className="text-white/30 font-black uppercase tracking-widest text-xs mb-6">Questão {currentStep + 1} de {QUIZ_QUESTIONS.length}</span>
-                                <h2 className="text-3xl sm:text-5xl font-black leading-tight max-w-4xl">{currentQuestion.question}</h2>
+                                <span className="text-white/30 font-black uppercase tracking-widest text-xs mb-4">Questão {currentStep + 1} de {QUIZ_QUESTIONS.length}</span>
+                                <h2 className="text-2xl sm:text-4xl font-black leading-tight max-w-4xl">{currentQuestion.question}</h2>
 
-                                <div className="mt-12 flex items-center justify-center">
-                                    <div className="w-24 h-24 rounded-3xl border-2 border-white/10 flex items-center justify-center relative bg-white/5 overflow-hidden group-hover:scale-110 transition-transform">
+                                <div className="mt-8 flex items-center justify-center">
+                                    <div className="w-20 h-20 rounded-2xl border-2 border-white/10 flex items-center justify-center relative bg-white/5 overflow-hidden group-hover:scale-110 transition-transform">
                                         <div className="absolute inset-0 bg-white/5 animate-pulse" />
-                                        <span className="text-4xl font-black text-amber-400 z-10">{Math.ceil(timer)}</span>
+                                        <span className="text-3xl font-black text-amber-400 z-10">{Math.ceil(timer)}</span>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Options Grid - Perfectly Consistent Layout */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full">
+                            {/* 2x2 Grid Layout */}
+                            <div className="grid grid-cols-2 gap-4 sm:gap-6 w-full max-w-4xl h-[400px] sm:h-[500px]">
                                 {currentQuestion.options.map((option, index) => (
                                     <motion.button
                                         key={index}
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: index * 0.1 }}
-                                        whileHover={{ scale: 1.03, y: -5 }}
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        transition={{ delay: index * 0.05 }}
+                                        whileHover={{ scale: 1.02 }}
                                         whileTap={{ scale: 0.98 }}
                                         onClick={() => handleAnswer(index)}
-                                        className={`bg-gradient-to-br ${optionStyles[index].color} ${optionStyles[index].border} ${optionStyles[index].hover} border-2 shadow-xl rounded-[28px] p-8 flex items-center gap-8 text-left transition-all relative overflow-hidden group min-h-[120px]`}
+                                        className={`bg-gradient-to-br ${optionStyles[index].color} ${optionStyles[index].border} ${optionStyles[index].hover} border-2 shadow-xl rounded-[24px] sm:rounded-[32px] p-4 sm:p-8 flex flex-col items-center justify-center text-center transition-all relative overflow-hidden group`}
                                     >
-                                        <div className="flex-shrink-0 w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center transition-transform group-hover:rotate-[15deg] group-hover:scale-110 shadow-inner">
+                                        <div className="mb-4 sm:mb-6 transition-transform group-hover:scale-110 group-hover:rotate-[10deg]">
                                             {optionStyles[index].icon}
                                         </div>
-                                        <span className="text-2xl sm:text-3xl font-black text-white drop-shadow-md">{option}</span>
+                                        <span className="text-xl sm:text-3xl font-black text-white drop-shadow-md leading-tight">{option}</span>
 
-                                        {/* Decorative element */}
-                                        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                            {React.cloneElement(optionStyles[index].icon as React.ReactElement, { className: 'w-24 h-24' })}
+                                        {/* Background Decoration */}
+                                        <div className="absolute -bottom-4 -right-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                                            {React.cloneElement(optionStyles[index].icon as React.ReactElement<any>, { size: 120 })}
                                         </div>
                                     </motion.button>
                                 ))}
@@ -239,10 +252,10 @@ const Quiz: React.FC = () => {
                                     >
                                         <CheckCircle className="w-20 h-20 text-white" />
                                     </motion.div>
-                                    <h1 className="text-6xl font-black mb-6 uppercase tracking-tighter text-emerald-400">Excelente!</h1>
+                                    <h1 className="text-6xl font-black mb-6 uppercase tracking-tighter text-emerald-400">Boa!</h1>
                                     <div className="bg-white/10 backdrop-blur-xl px-10 py-8 rounded-[40px] border border-white/10 mb-12 shadow-2xl">
-                                        <p className="text-white/40 font-black uppercase tracking-widest text-xs mb-2">Bônus de Velocidade</p>
-                                        <h2 className="text-6xl font-black text-white tracking-tight">+{lastPoints} <span className="text-2xl text-white/40 italic">Pontos</span></h2>
+                                        <p className="text-white/40 font-black uppercase tracking-widest text-xs mb-2">Ponto de Velocidade</p>
+                                        <h2 className="text-6xl font-black text-white tracking-tight">+{lastPoints}</h2>
                                     </div>
                                 </div>
                             ) : (
@@ -255,10 +268,10 @@ const Quiz: React.FC = () => {
                                         <XCircle className="w-20 h-20 text-white" />
                                     </motion.div>
                                     <h1 className="text-6xl font-black mb-6 uppercase tracking-tighter text-rose-400">
-                                        {selectedAnswer === -1 ? 'Tempo Esgotado' : 'Que Pena!'}
+                                        {selectedAnswer === -1 ? 'Tempo Esgotado' : 'Errado!'}
                                     </h1>
                                     <div className="bg-white/10 backdrop-blur-xl px-10 py-8 rounded-[40px] border border-white/10 mb-12 shadow-2xl">
-                                        <p className="text-white/40 font-black uppercase tracking-widest text-xs mb-4">A Resposta Correta Era</p>
+                                        <p className="text-white/40 font-black uppercase tracking-widest text-xs mb-4">A Resposta era:</p>
                                         <h2 className="text-3xl font-black text-white">{currentQuestion.options[currentQuestion.answer]}</h2>
                                     </div>
                                 </div>
@@ -268,7 +281,7 @@ const Quiz: React.FC = () => {
                                 onClick={nextStep}
                                 className="w-full py-6 bg-white text-[#1e0a3d] font-black text-2xl rounded-3xl flex items-center justify-center gap-4 hover:scale-[1.02] active:scale-95 transition-all shadow-2xl shadow-black/20"
                             >
-                                {currentStep < QUIZ_QUESTIONS.length - 1 ? 'PRÓXIMA QUESTÃO' : 'RESULTADOS FINAIS'}
+                                {currentStep < QUIZ_QUESTIONS.length - 1 ? 'PRÓXIMA' : 'VER PLACAR'}
                                 <ChevronRight className="w-8 h-8" />
                             </button>
                         </motion.div>
@@ -280,24 +293,21 @@ const Quiz: React.FC = () => {
                             className="bg-white/10 backdrop-blur-3xl p-12 sm:p-20 rounded-[64px] border border-white/10 shadow-3xl flex flex-col items-center text-center max-w-3xl w-full"
                         >
                             <Trophy className="w-32 h-32 text-amber-400 mb-8 drop-shadow-[0_0_30px_rgba(251,191,36,0.3)] animate-bounce" />
-                            <h1 className="text-6xl font-black mb-4 uppercase tracking-tighter leading-none">Desafio <br />Concluído!</h1>
-                            <p className="text-slate-400 font-bold mb-12 text-2xl italic tracking-tight">Sua performance rendeu:</p>
+                            <h1 className="text-6xl font-black mb-4 uppercase tracking-tighter leading-none">Fim de Jogo!</h1>
+                            <p className="text-slate-400 font-bold mb-12 text-2xl">Você alcançou:</p>
 
                             <div className="bg-white/5 border border-white/10 w-full p-12 rounded-[48px] mb-12 relative overflow-hidden group shadow-inner">
-                                <div className="relative z-10">
-                                    <h2 className="text-8xl font-black text-white tracking-tighter">{score.toLocaleString()}</h2>
-                                    <p className="text-amber-400 font-black uppercase tracking-[0.3em] mt-4 text-sm">Pontuação Final</p>
-                                </div>
-                                <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <h2 className="text-8xl font-black text-white tracking-tighter">{score.toLocaleString()}</h2>
+                                <p className="text-amber-400 font-black uppercase tracking-[0.3em] mt-4 text-sm">Pontuação Total</p>
                             </div>
 
                             <div className="flex flex-col sm:flex-row gap-5 w-full">
                                 <button
                                     onClick={resetQuiz}
-                                    className="flex-grow py-6 bg-white text-[#1e0a3d] font-black text-xl rounded-2xl flex items-center justify-center gap-3 hover:bg-slate-100 transition-all shadow-xl"
+                                    className="flex-grow py-6 bg-white text-[#1e0a3d] font-black text-xl rounded-2xl flex items-center justify-center gap-3 hover:bg-slate-100 transition-all"
                                 >
                                     <RotateCcw className="w-6 h-6" />
-                                    JOGAR NOVAMENTE
+                                    JOGAR DE NOVO
                                 </button>
                                 <button
                                     onClick={() => navigate('/')}
@@ -311,20 +321,17 @@ const Quiz: React.FC = () => {
                 </AnimatePresence>
             </main>
 
-            {/* Bottom Global Progress */}
+            {/* Global Progress */}
             {gameState !== 'lobby' && gameState !== 'ended' && (
                 <footer className="w-full max-w-7xl px-8 pb-10 flex items-center gap-8 z-20">
-                    <div className="flex-grow h-4 bg-white/5 rounded-full overflow-hidden border border-white/5 backdrop-blur-md">
+                    <div className="flex-grow h-3 bg-white/5 rounded-full overflow-hidden border border-white/5">
                         <motion.div
-                            className="h-full bg-gradient-to-r from-amber-400 via-rose-500 to-indigo-500"
+                            className="h-full bg-gradient-to-r from-amber-400 to-indigo-500"
                             initial={{ width: 0 }}
                             animate={{ width: `${((currentStep + (gameState === 'feedback' ? 1 : 0)) / QUIZ_QUESTIONS.length) * 100}%` }}
-                            transition={{ type: "spring", damping: 20 }}
                         />
                     </div>
-                    <span className="font-black text-xl text-white/40 tabular-nums">
-                        <span className="text-white">{currentStep + 1}</span>/{QUIZ_QUESTIONS.length}
-                    </span>
+                    <span className="font-black text-xl text-white/40">{currentStep + 1}/{QUIZ_QUESTIONS.length}</span>
                 </footer>
             )}
         </div>

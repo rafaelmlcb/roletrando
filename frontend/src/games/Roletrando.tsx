@@ -5,6 +5,7 @@ import { Board } from '../components/Board';
 import { Coins, Trophy, RefreshCcw, AlertCircle, Lightbulb, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useSound } from '../hooks/useSound';
 
 interface GameState {
   id: string;
@@ -19,6 +20,7 @@ interface GameState {
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
 const Roletrando: React.FC = () => {
+  const { playSound } = useSound();
   const [game, setGame] = useState<GameState | null>(null);
   const [isSpinning, setIsSpinning] = useState(false);
   const [currentSpinValue, setCurrentSpinValue] = useState<number | null>(null);
@@ -50,6 +52,7 @@ const Roletrando: React.FC = () => {
   }, []);
 
   const handleSpinStart = () => {
+    playSound('spin');
     setIsSpinning(true);
     setCurrentSpinValue(null);
     setIsSolving(false);
@@ -65,6 +68,7 @@ const Roletrando: React.FC = () => {
       if (value > 0) {
         setCurrentSpinValue(value);
       } else {
+        playSound('wrong'); // Bankrupt or Lose Turn usually 0 or negative
         setCurrentSpinValue(null);
       }
     } catch (err: any) {
@@ -79,8 +83,16 @@ const Roletrando: React.FC = () => {
     if (!game || currentSpinValue === null || isSpinning) return;
 
     try {
+      const oldPhrase = game.obscuredPhrase;
       const resp = await axios.post(`${API_URL}/${game.id}/guess?letter=${letter}`);
       setGame(resp.data);
+
+      if (resp.data.obscuredPhrase !== oldPhrase) {
+        playSound('correct');
+      } else {
+        playSound('wrong');
+      }
+
       setCurrentSpinValue(null);
     } catch (err: any) {
       if (err.response?.status === 404) {
@@ -97,8 +109,11 @@ const Roletrando: React.FC = () => {
       const resp = await axios.post(`${API_URL}/${game.id}/solve?phrase=${encodeURIComponent(solveInput)}`);
       setGame(resp.data);
       if (resp.data.gameOver) {
+        playSound('win');
         setCurrentSpinValue(null);
         setIsSolving(false);
+      } else {
+        playSound('wrong');
       }
     } catch (err: any) {
       if (err.response?.status === 404) {
