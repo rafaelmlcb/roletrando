@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Trophy, Users, Zap, HelpCircle, CheckCircle2, XCircle, Timer } from 'lucide-react';
-import { MILLIONAIRE_QUESTIONS, PRIZE_LADDER, Question } from '../data/millionaireData';
+import { ArrowLeft, Trophy, Users, Zap, CheckCircle2, XCircle } from 'lucide-react';
+import { MILLIONAIRE_QUESTIONS, PRIZE_LADDER } from '../data/millionaireData';
 
 const Millionaire: React.FC = () => {
     const navigate = useNavigate();

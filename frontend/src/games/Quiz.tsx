@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Trophy, Timer, CheckCircle, XCircle, ChevronRight, RotateCcw } from 'lucide-react';
-import { QUIZ_QUESTIONS, QuizQuestion } from '../data/quizData';
+import { ArrowLeft, Trophy, CheckCircle, XCircle, ChevronRight, RotateCcw } from 'lucide-react';
+import { QUIZ_QUESTIONS } from '../data/quizData';
 
 const QUIZ_DURATION = 20; // seconds
 
