@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import { useState, useImperativeHandle, forwardRef } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 
 interface WheelProps {
     onSpinEnd: (value: number) => void;
     onSpinStart: () => void;
     isSpinning: boolean;
+}
+
+export interface WheelHandle {
+    spin: () => void;
 }
 
 const SEGMENTS = [
@@ -20,7 +24,7 @@ const SEGMENTS = [
     { value: 400, color: '#5AC8FA', label: '400' },
 ];
 
-export const Wheel: React.FC<WheelProps> = ({ onSpinEnd, onSpinStart, isSpinning }) => {
+export const Wheel = forwardRef<WheelHandle, WheelProps>(({ onSpinEnd, onSpinStart, isSpinning }, ref) => {
     const controls = useAnimation();
     const [rotation, setRotation] = useState(0);
 
@@ -46,6 +50,10 @@ export const Wheel: React.FC<WheelProps> = ({ onSpinEnd, onSpinStart, isSpinning
 
         onSpinEnd(SEGMENTS[index % SEGMENTS.length].value);
     };
+
+    useImperativeHandle(ref, () => ({
+        spin
+    }));
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -108,4 +116,4 @@ export const Wheel: React.FC<WheelProps> = ({ onSpinEnd, onSpinStart, isSpinning
             </button>
         </div>
     );
-};
+});
