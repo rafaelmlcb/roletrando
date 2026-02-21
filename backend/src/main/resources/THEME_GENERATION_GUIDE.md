@@ -1,6 +1,6 @@
 # Guia para Geração de Novos Temas (Prompt LLM)
 
-Use este guia como prompt para gerar novos arquivos de dados para o jogo. O objetivo é transformar um conjunto de fatos ou textos em arquivos JSON compatíveis com o sistema.
+Use este guia como prompt para gerar novos arquivos de dados para o jogo.
 
 ---
 
@@ -13,20 +13,19 @@ Use este guia como prompt para gerar novos arquivos de dados para o jogo. O obje
 ---
 
 ### 1. Estrutura Roletrando (`wheel.json`)
-Array de objetos com "category" e "phrase". Mínimo 15 frases.
-Categorias sugeridas: ANIMAIS, LUGARES, ESPORTES, FILMES, COMIDA, OBJETOS.
+Array com `"category"` e `"phrase"`. Mínimo 15 frases. Frases em MAIÚSCULO.
 ```json
 [
-  { "category": "CATEGORIA", "phrase": "FRASE EM MAIUSCULO" }
+  { "category": "ANIMAIS", "phrase": "CAVALO MARINHO" }
 ]
 ```
 
 ---
 
 ### 2. Estrutura Show do Milhão (`millionaire.json`)
-Objeto raiz com campo `"levels"` contendo **exatamente 10 níveis**.
-Cada nível tem: `level` (int, 1 a 10), `prize` (string), e `questions` (array com **mínimo 10 perguntas**).
-Dificuldade cresce com o nível: nível 1 fácil, nível 10 muito difícil.
+Objeto com campo `"levels"` contendo **exatamente 10 níveis** (level 1 a 10).
+Cada nível tem `level`, `prize` e `questions` com **mínimo 10 perguntas** (`question`, `options`[4], `answer` índice 0-3).
+Dificuldade cresce com o nível.
 
 ```json
 {
@@ -35,17 +34,8 @@ Dificuldade cresce com o nível: nível 1 fácil, nível 10 muito difícil.
       "level": 1,
       "prize": "R$ 1.000",
       "questions": [
-        {
-          "question": "Pergunta fácil sobre o tema?",
-          "options": ["Opção A", "Opção B", "Opção C", "Opção D"],
-          "answer": 1
-        }
+        { "question": "Pergunta fácil?", "options": ["A", "B", "C", "D"], "answer": 0 }
       ]
-    },
-    {
-      "level": 2,
-      "prize": "R$ 5.000",
-      "questions": [...]
     },
     ...
     {
@@ -57,35 +47,48 @@ Dificuldade cresce com o nível: nível 1 fácil, nível 10 muito difícil.
 }
 ```
 
-Prêmios sugeridos:
-- Nível 1: R$ 1.000 | 2: R$ 5.000 | 3: R$ 10.000 | 4: R$ 25.000 | 5: R$ 50.000
-- Nível 6: R$ 100.000 | 7: R$ 200.000 | 8: R$ 300.000 | 9: R$ 500.000 | 10: R$ 1.000.000
-
-> **Regra do campo `answer`:** É o **índice** (0 a 3) da opção correta no array `options`.
+**Prêmios:** N1: R$ 1.000 | N2: R$ 5.000 | N3: R$ 10.000 | N4: R$ 25.000 | N5: R$ 50.000 | N6: R$ 100.000 | N7: R$ 200.000 | N8: R$ 300.000 | N9: R$ 500.000 | N10: R$ 1.000.000
 
 ---
 
 ### 3. Estrutura Quiz (`quiz.json`)
-Array de 10 a 20 perguntas rápidas com `id`, `question`, `options` e `answer`.
+Objeto com campo `"levels"` contendo **3 níveis** de dificuldade.
+Cada nível tem `level` (1-3), `label` ("Fácil"/"Médio"/"Difícil") e `questions` com **mínimo 10 perguntas**.
+
 ```json
-[
-  {
-    "id": 1,
-    "question": "Pergunta?",
-    "options": ["Opção 0", "Opção 1", "Opção 2", "Opção 3"],
-    "answer": 2
-  }
-]
+{
+  "levels": [
+    {
+      "level": 1,
+      "label": "Fácil",
+      "questions": [
+        { "question": "Pergunta?", "options": ["A", "B", "C", "D"], "answer": 2 }
+      ]
+    },
+    {
+      "level": 2,
+      "label": "Médio",
+      "questions": [...]
+    },
+    {
+      "level": 3,
+      "label": "Difícil",
+      "questions": [...]
+    }
+  ]
+}
 ```
+
+> **Regra do campo `answer`:** índice (0 a 3) da opção correta no array `options`.
 
 ---
 
 ## 📁 Como Aplicar o Tema no Projeto
 
-1. Crie uma nova pasta em `backend/src/main/resources/data/{nome-do-tema}/`
-2. Salve os três arquivos JSON (`wheel.json`, `millionaire.json`, `quiz.json`) dentro dela.
-3. Em `backend/src/main/resources/application.properties`, altere a propriedade:
+1. Crie a pasta `backend/src/main/resources/data/{nome-do-tema}/`
+2. Salve os três arquivos (`wheel.json`, `millionaire.json`, `quiz.json`) dentro dela.
+3. Em `backend/src/main/resources/application.properties`, configure:
    ```
    game.theme={nome-do-tema}
    ```
-4. Reinicie o backend. Os dados do novo tema serão carregados automaticamente.
+4. Reinicie o backend — os dados do novo tema serão carregados automaticamente.

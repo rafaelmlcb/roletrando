@@ -4,7 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rafael.model.MillionaireData;
 import com.rafael.model.MillionaireLevel;
-import com.rafael.model.QuizQuestion;
+import com.rafael.model.QuizData;
+import com.rafael.model.QuizLevel;
 import com.rafael.model.WheelPhrase;
 import io.quarkus.runtime.StartupEvent;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -30,20 +31,20 @@ public class DataLoaderService {
 
     private List<WheelPhrase> wheelPhrases = new ArrayList<>();
     private List<MillionaireLevel> millionaireLevels = new ArrayList<>();
-    private List<QuizQuestion> quizQuestions = new ArrayList<>();
+    private List<QuizLevel> quizLevels = new ArrayList<>();
 
     void onStart(@Observes StartupEvent ev) {
         LOG.infof("Loading game data for theme: %s", theme);
         loadWheelPhrases();
         loadMillionaireData();
-        loadQuizQuestions();
+        loadQuizData();
     }
 
     private void loadWheelPhrases() {
         String path = "data/" + theme + "/wheel.json";
         try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(path)) {
             if (is == null) {
-                LOG.warnf("File not found: %s. Using empty list.", path);
+                LOG.warnf("File not found: %s.", path);
                 return;
             }
             wheelPhrases = mapper.readValue(is, new TypeReference<List<WheelPhrase>>() {
@@ -58,7 +59,7 @@ public class DataLoaderService {
         String path = "data/" + theme + "/millionaire.json";
         try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(path)) {
             if (is == null) {
-                LOG.warnf("File not found: %s. Using empty list.", path);
+                LOG.warnf("File not found: %s.", path);
                 return;
             }
             MillionaireData data = mapper.readValue(is, MillionaireData.class);
@@ -70,18 +71,19 @@ public class DataLoaderService {
         }
     }
 
-    private void loadQuizQuestions() {
+    private void loadQuizData() {
         String path = "data/" + theme + "/quiz.json";
         try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(path)) {
             if (is == null) {
-                LOG.warnf("File not found: %s. Using empty list.", path);
+                LOG.warnf("File not found: %s.", path);
                 return;
             }
-            quizQuestions = mapper.readValue(is, new TypeReference<List<QuizQuestion>>() {
-            });
-            LOG.infof("Loaded %d quiz questions.", quizQuestions.size());
+            QuizData data = mapper.readValue(is, QuizData.class);
+            quizLevels = data.levels;
+            int total = quizLevels.stream().mapToInt(l -> l.questions.size()).sum();
+            LOG.infof("Loaded %d quiz levels with %d total questions.", quizLevels.size(), total);
         } catch (Exception e) {
-            LOG.error("Failed to load quiz questions", e);
+            LOG.error("Failed to load quiz data", e);
         }
     }
 
@@ -93,7 +95,7 @@ public class DataLoaderService {
         return millionaireLevels;
     }
 
-    public List<QuizQuestion> getQuizQuestions() {
-        return quizQuestions;
+    public List<QuizLevel> getQuizLevels() {
+        return quizLevels;
     }
 }

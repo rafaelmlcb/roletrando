@@ -104,7 +104,8 @@ const Quiz: React.FC = () => {
             playSound('wrong');
             setSelectedAnswer(-1);
             try {
-                const res = await dataApi.post(`/quiz/answer/${currentStep}`, { answerIndex: -1 });
+                const q = questions[currentStep];
+                const res = await dataApi.post(`/quiz/answer/${q?.level ?? 1}/${q?.questionIndex ?? 0}`, { answerIndex: -1 });
                 setCorrectAnswerIndex(res.data.correctAnswerIndex);
             } catch (e) {
                 console.error(e);
@@ -121,7 +122,8 @@ const Quiz: React.FC = () => {
         setSelectedAnswer(index);
 
         try {
-            const res = await dataApi.post(`/quiz/answer/${currentStep}`, { answerIndex: index });
+            const q = questions[currentStep];
+            const res = await dataApi.post(`/quiz/answer/${q?.level ?? 1}/${q?.questionIndex ?? 0}`, { answerIndex: index });
             const { correct, correctAnswerIndex } = res.data;
             setCorrectAnswerIndex(correctAnswerIndex);
             let youScore = 0;
@@ -164,13 +166,20 @@ const Quiz: React.FC = () => {
         }
     };
 
-    const resetQuiz = () => {
+    const resetQuiz = async () => {
         playSound('click');
         setCurrentStep(0);
         setSelectedAnswer(null);
         setCorrectAnswerIndex(null);
         setActiveRoomId('');
         setRoomIdInput('');
+        // Reload fresh random questions
+        try {
+            const res = await dataApi.get('/quiz/questions');
+            setQuestions(res.data);
+        } catch (e) {
+            console.error(e);
+        }
     };
 
     useEffect(() => {

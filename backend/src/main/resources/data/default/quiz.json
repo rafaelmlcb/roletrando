@@ -1,112 +1,382 @@
-[
-    {
-        "id": 1,
-        "question": "Qual é a cor resultante da mistura de azul e amarelo?",
-        "options": [
-            "Roxo",
-            "Verde",
-            "Laranja",
-            "Marrom"
-        ],
-        "answer": 1
-    },
-    {
-        "id": 2,
-        "question": "Qual animal é conhecido como o 'Rei da Selva'?",
-        "options": [
-            "Tigre",
-            "Elefante",
-            "Leão",
-            "Gorila"
-        ],
-        "answer": 2
-    },
-    {
-        "id": 3,
-        "question": "Qual é o maior planeta do nosso sistema solar?",
-        "options": [
-            "Terra",
-            "Marte",
-            "Saturno",
-            "Júpiter"
-        ],
-        "answer": 3
-    },
-    {
-        "id": 4,
-        "question": "Quem escreveu a peça 'Romeu e Julieta'?",
-        "options": [
-            "William Shakespeare",
-            "Charles Dickens",
-            "Machado de Assis",
-            "Oscar Wilde"
-        ],
-        "answer": 0
-    },
-    {
-        "id": 5,
-        "question": "Em qual continente fica o deserto do Saara?",
-        "options": [
-            "Ásia",
-            "América",
-            "África",
-            "Oceania"
-        ],
-        "answer": 2
-    },
-    {
-        "id": 6,
-        "question": "Qual é o metal cujo símbolo químico é Fe?",
-        "options": [
-            "Ouro",
-            "Ferro",
-            "Prata",
-            "Cobre"
-        ],
-        "answer": 1
-    },
-    {
-        "id": 7,
-        "question": "Qual é a capital da Itália?",
-        "options": [
-            "Veneza",
-            "Florença",
-            "Milão",
-            "Roma"
-        ],
-        "answer": 3
-    },
-    {
-        "id": 8,
-        "question": "Qual é o idioma oficial do Egito?",
-        "options": [
-            "Árabe",
-            "Egípcio",
-            "Francês",
-            "Inglês"
-        ],
-        "answer": 0
-    },
-    {
-        "id": 9,
-        "question": "Quantos segundos há em um minuto?",
-        "options": [
-            "30",
-            "60",
-            "90",
-            "120"
-        ],
-        "answer": 1
-    },
-    {
-        "id": 10,
-        "question": "Qual é o nome da galáxia em que vivemos?",
-        "options": [
-            "Andrômeda",
-            "Via Láctea",
-            "Sombreiro",
-            "Olho Negro"
-        ],
-        "answer": 1
-    }
-]
+{
+    "levels": [
+        {
+            "level": 1,
+            "label": "Fácil",
+            "questions": [
+                {
+                    "question": "Qual é a cor do céu durante o dia?",
+                    "options": [
+                        "Verde",
+                        "Azul",
+                        "Vermelho",
+                        "Amarelo"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Quantos dias tem uma semana?",
+                    "options": [
+                        "5",
+                        "6",
+                        "7",
+                        "8"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual animal late?",
+                    "options": [
+                        "Gato",
+                        "Vaca",
+                        "Cachorro",
+                        "Porco"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é a capital do Brasil?",
+                    "options": [
+                        "São Paulo",
+                        "Rio de Janeiro",
+                        "Brasília",
+                        "Salvador"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Quantos lados tem um triângulo?",
+                    "options": [
+                        "2",
+                        "3",
+                        "4",
+                        "5"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é a cor da banana madura?",
+                    "options": [
+                        "Verde",
+                        "Azul",
+                        "Amarela",
+                        "Vermelha"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Quantas horas tem um dia?",
+                    "options": [
+                        "12",
+                        "24",
+                        "36",
+                        "48"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é o maior planeta do sistema solar?",
+                    "options": [
+                        "Terra",
+                        "Marte",
+                        "Saturno",
+                        "Júpiter"
+                    ],
+                    "answer": 3
+                },
+                {
+                    "question": "Qual o idioma oficial do Brasil?",
+                    "options": [
+                        "Espanhol",
+                        "Inglês",
+                        "Português",
+                        "Francês"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Quantos meses tem um ano?",
+                    "options": [
+                        "10",
+                        "11",
+                        "12",
+                        "13"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é o nome do nosso planeta?",
+                    "options": [
+                        "Marte",
+                        "Vênus",
+                        "Terra",
+                        "Saturno"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Quantos olhos tem um ser humano normal?",
+                    "options": [
+                        "1",
+                        "2",
+                        "3",
+                        "4"
+                    ],
+                    "answer": 1
+                }
+            ]
+        },
+        {
+            "level": 2,
+            "label": "Médio",
+            "questions": [
+                {
+                    "question": "Qual é a fórmula química da água?",
+                    "options": [
+                        "CO2",
+                        "O2",
+                        "H2O",
+                        "NaCl"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Quantos continentes existem no mundo?",
+                    "options": [
+                        "5",
+                        "6",
+                        "7",
+                        "8"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Quem pintou a 'Mona Lisa'?",
+                    "options": [
+                        "Van Gogh",
+                        "Picasso",
+                        "Da Vinci",
+                        "Monet"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é o maior oceano do mundo?",
+                    "options": [
+                        "Atlântico",
+                        "Índico",
+                        "Ártico",
+                        "Pacífico"
+                    ],
+                    "answer": 3
+                },
+                {
+                    "question": "Qual é a montanha mais alta do mundo?",
+                    "options": [
+                        "K2",
+                        "Monte Everest",
+                        "Kilimanjaro",
+                        "Aconcágua"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Em que ano o Brasil foi descoberto?",
+                    "options": [
+                        "1488",
+                        "1492",
+                        "1498",
+                        "1500"
+                    ],
+                    "answer": 3
+                },
+                {
+                    "question": "Quantos estados tem o Brasil?",
+                    "options": [
+                        "25",
+                        "26",
+                        "27",
+                        "28"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é o gás que respiramos?",
+                    "options": [
+                        "CO2",
+                        "Hidrogênio",
+                        "Oxigênio",
+                        "Nitrogênio"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é a capital da Argentina?",
+                    "options": [
+                        "Santiago",
+                        "Buenos Aires",
+                        "Montevidéu",
+                        "Lima"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Quem escreveu 'Dom Casmurro'?",
+                    "options": [
+                        "José de Alencar",
+                        "Machado de Assis",
+                        "Clarice Lispector",
+                        "Jorge Amado"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é o símbolo químico do ouro?",
+                    "options": [
+                        "Go",
+                        "Or",
+                        "Au",
+                        "Ag"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Em que continente fica o Egito?",
+                    "options": [
+                        "Ásia",
+                        "Europa",
+                        "África",
+                        "América"
+                    ],
+                    "answer": 2
+                }
+            ]
+        },
+        {
+            "level": 3,
+            "label": "Difícil",
+            "questions": [
+                {
+                    "question": "Qual é o nome do processo pelo qual as plantas produzem alimento?",
+                    "options": [
+                        "Respiração",
+                        "Fotossíntese",
+                        "Digestão",
+                        "Fermentação"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual planeta é chamado de planeta vermelho?",
+                    "options": [
+                        "Vênus",
+                        "Marte",
+                        "Júpiter",
+                        "Mercúrio"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Quem formulou a lei da gravidade?",
+                    "options": [
+                        "Einstein",
+                        "Galileu",
+                        "Newton",
+                        "Kepler"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é o menor país do mundo?",
+                    "options": [
+                        "Mônaco",
+                        "San Marino",
+                        "Vaticano",
+                        "Liechtenstein"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Quantos cromossomos tem o ser humano?",
+                    "options": [
+                        "23",
+                        "44",
+                        "46",
+                        "48"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é o rio mais longo do mundo?",
+                    "options": [
+                        "Rio Amazonas",
+                        "Rio Nilo",
+                        "Rio Congo",
+                        "Rio Yangtzé"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual elemento tem símbolo 'Fe'?",
+                    "options": [
+                        "Fósforo",
+                        "Flúor",
+                        "Ferro",
+                        "Frâncio"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é a velocidade da luz (aprox.)?",
+                    "options": [
+                        "100.000 km/s",
+                        "200.000 km/s",
+                        "300.000 km/s",
+                        "400.000 km/s"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é a capital da Austrália?",
+                    "options": [
+                        "Sydney",
+                        "Melbourne",
+                        "Camberra",
+                        "Perth"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Quem foi o primeiro homem a pisar na Lua?",
+                    "options": [
+                        "Buzz Aldrin",
+                        "Neil Armstrong",
+                        "Yuri Gagarin",
+                        "Alan Shepard"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é o gás mais abundante na atmosfera terrestre?",
+                    "options": [
+                        "Oxigênio",
+                        "CO2",
+                        "Argônio",
+                        "Nitrogênio"
+                    ],
+                    "answer": 3
+                },
+                {
+                    "question": "Em que país fica o Canal de Suez?",
+                    "options": [
+                        "Israel",
+                        "Líbia",
+                        "Egito",
+                        "Turquia"
+                    ],
+                    "answer": 2
+                }
+            ]
+        }
+    ]
+}
