@@ -15,6 +15,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 
 import java.io.InputStream;
+import java.net.URL;
 import java.util.*;
 
 @ApplicationScoped

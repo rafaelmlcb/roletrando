@@ -19,12 +19,13 @@ interface GameCardProps {
     icon: ReactNode;
     onClick: () => void;
     color?: string;
+    disabled?: boolean;
 }
 
-export const GameCard: React.FC<GameCardProps> = ({ title, description, icon, onClick, color = '#10b981' }) => {
+export const GameCard: React.FC<GameCardProps> = ({ title, description, icon, onClick, color = '#10b981', disabled = false }) => {
     return (
-        <StyledCard>
-            <CardActionArea onClick={onClick} sx={{ p: 1 }}>
+        <StyledCard sx={{ opacity: disabled ? 0.4 : 1, pointerEvents: disabled ? 'none' : 'auto' }}>
+            <CardActionArea onClick={onClick} sx={{ p: 1 }} disabled={disabled}>
                 <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'center', textAlign: 'center' }}>
                     <Box sx={{
                         p: 2,

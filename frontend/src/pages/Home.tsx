@@ -148,7 +148,9 @@ const Home: React.FC = () => {
                     bgcolor: alpha('#0f172a', 0.6),
                     backdropFilter: 'blur(10px)',
                     border: '1px solid rgba(255,255,255,0.08)',
-                    display: 'flex', flexDirection: 'column', gap: 2
+                    display: 'flex', flexDirection: 'column', gap: 2,
+                    opacity: themesLoading ? 0.6 : 1,
+                    pointerEvents: themesLoading ? 'none' : 'auto'
                 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                         <Palette size={18} color="#a78bfa" />
@@ -160,10 +162,11 @@ const Home: React.FC = () => {
                     {themesLoading ? (
                         <Skeleton variant="rounded" height={56} sx={{ borderRadius: 3 }} />
                     ) : (
-                        <FormControl fullWidth size="small">
+                        <FormControl fullWidth size="small" disabled={themesLoading}>
                             <Select
                                 value={selectedTheme}
                                 onChange={(e) => setSelectedTheme(e.target.value)}
+                                disabled={themesLoading}
                                 sx={{
                                     borderRadius: 3,
                                     bgcolor: 'rgba(255,255,255,0.03)',
@@ -209,6 +212,7 @@ const Home: React.FC = () => {
                                     icon={game.icon}
                                     color={game.color}
                                     onClick={() => handlePlay(game.path)}
+                                    disabled={themesLoading}
                                 />
                             </motion.div>
                         </Grid>
