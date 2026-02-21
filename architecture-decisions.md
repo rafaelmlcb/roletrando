@@ -68,3 +68,14 @@ A comunicação entre eles é inteiramente baseada em JSON sobre HTTP (REST). O 
 **Decisão (Backend):** Uso de `quarkus-websockets-next` gerindo um `@ServerEndpoint` e implementando um `RoomManager` thread-safe. O backend torna-se a Fonte Absoluta da Verdade (Source of Truth) emitindo eventos Broadcast.
 **Decisão (Frontend):** Criação de um custom hook `useWebSocket` para reatividade local sem delay. A UI agora é uma projeção da `GameSession` do servidor (espelhando a Roleta, Letras e Placar).
 **Consequência:** Arquitetura robusta para combater trapaças (cheats) e garantir sincronismo perfeito (latência <100ms) em LAN e WAN. O servidor (App Backend) introduziu um sistema de "Lobby" oficial, bloqueando acesso quando a partida inicia. Para o `Roletrando`, há limite de 3 pessoas e auto-completamento com bots. Para o `Quiz`, não há limites de usuários e não há preenchimento com bots, suportando dezenas de jogadores. Pavimentada a trilha final para adicionar o multiplayer no *Millionaire*.
+
+### ADR 006: Identificação de Protocolo Dinâmica (Mixed Content)
+**Contexto:** Ao realizar o deploy da aplicação em ambientes de produção (como a Vercel), a comunicação com o WebSocket falhava com erro de Segurança (Mixed Content) porque a página era servida via HTTPS e o cliente tentava abrir o Socket via `ws://`. Adicionalmente, era necessário suportar um hostname diferente em produção.
+**Decisão:** O App passa a usar variáveis de ambiente (`VITE_API_URL`) para definir de onde vem o backend. Se não fornecida, ele infere através do `window.location`. O próprio código se responsabiliza por identificar `https:`  e substituir o protocolo para `wss:` adequadamente, prevenindo erros de proxy e browsers.
+**Consequência:** Deploy suave via Vercel / Render com conexão encriptada real, sem perdas de tráfego, enquanto mantém a facilidade de desenvolvimento local sem certificados.
+
+### ADR 007: Testes Automatizados (Engine e E2E)
+**Contexto:** À medida que a lógica do servidor virava a "Truth" (Ex: validação e randomização da Roleta sendo movidos para Quarkus) a complexidade aumentou. Adicionalmente, quebras de UI por Null Pointers precisavam ser mitigadas antes das sessões começarem em diferentes navegadores.
+**Decisão (Backend):** Implementação de testes automatizados com JUnit 5 (`GameEngineTest.java`) para estressar processamento de turno, limite de scores e consistência do `GameStore.sessions`.
+**Decisão (Frontend):** Adoção de **Playwright** para suítes de testes Fim-a-Fim (E2E), permitindo o lançamento simultâneo de múltiplos `BrowserContext` paralelos. Isso garante que testes simulem usuários na mesma Sala (host vs guest), garantindo sincronismo de Websockets em UI sem depender de testes lentos manuais.
+**Consequência:** Proteção contra regressões no Backend e estabilidade de Fluxo nos Lobbies Multiplayer sem o peso de múltiplos servidores para mock.
