@@ -206,10 +206,17 @@ public class GameWebSocket {
     }
 
     private void handleSolve(Room room, Player sender, String phrase) {
+        int scoreBefore = room.gameSession.score;
         gameEngine.solve(room.gameSession.id, phrase);
-        if (room.gameSession.gameOver) {
-            sender.score += 5000;
+
+        if (Boolean.TRUE.equals(room.gameSession.solveCorrect)) {
+            // Bônus já somado em session.score pelo GameEngine → transferir diferença ao
+            // player
+            int bonus = room.gameSession.score - scoreBefore;
+            sender.score += bonus;
         } else {
+            // Errou: zerar pontuação do jogador e perder a vez
+            sender.score = 0;
             nextTurn(room);
         }
         broadcastGameState(room);

@@ -129,12 +129,25 @@ public class GameEngine {
             return session;
 
         if (phrase.equalsIgnoreCase(guessedPhrase.trim())) {
+            // Contar letras ainda fechadas (não reveladas) antes do acerto
+            long letrasOcultas = phrase.chars()
+                    .filter(c -> !Character.isWhitespace(c))
+                    .mapToObj(c -> (char) c)
+                    .filter(c -> !session.guessedLetters.contains(Character.toUpperCase(c)))
+                    .count();
+
+            int bonus = (int) (letrasOcultas * 1000);
+            session.score += bonus;
             session.gameOver = true;
-            session.obscuredPhrase = phrase; // Reveal everything
-            session.score += 5000; // Bonus for solving early
-            session.message = "SENSACIONAL! Você acertou a frase inteira e ganhou 5000 de bônus!";
+            session.obscuredPhrase = phrase; // Revelar tudo
+            session.solveCorrect = true;
+            session.message = "SENSACIONAL! Você acertou a frase! +" + bonus + " pontos (" + letrasOcultas
+                    + " letras ocultas × 1000)!";
+            LOG.infof("Session %s solved correctly. Hidden letters: %d. Bonus: %d", sessionId, letrasOcultas, bonus);
         } else {
-            session.message = "Oops! '" + guessedPhrase + "' não é a frase correta.";
+            session.solveCorrect = false;
+            session.message = "Oops! '" + guessedPhrase + "' está errado. Você perde tudo e a vez!";
+            LOG.infof("Session %s: wrong solve attempt '%s'", sessionId, guessedPhrase);
         }
 
         return session;

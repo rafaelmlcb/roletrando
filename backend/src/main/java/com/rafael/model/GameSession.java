@@ -20,6 +20,12 @@ public class GameSession {
     public boolean gameOver;
 
     /**
+     * Resultado do último tentativa de SOLVE.
+     * true = acertou, false = errou, null = nenhum solve ainda na rodada.
+     */
+    public Boolean solveCorrect;
+
+    /**
      * Current feedback message for the player (e.g. correct, wrong, generic hint)
      */
     public String message;
