@@ -60,6 +60,9 @@ public class GameEngine {
         session.category = category;
         session.guessedLetters = new HashSet<>();
         session.score = 0;
+        session.gameOver = false;
+        session.obscuredPhrase = obscure(phrase, session.guessedLetters);
+
         GameStore.phrases.put(session.id, phrase);
         GameStore.sessions.put(session.id, session);
 
