@@ -1,14 +1,11 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import Logger from '../utils/logger';
 
-interface GameMessage {
-    type: string;
-    payload?: any;
-}
+import type { Room, GameMessage } from '../types/game';
 
 export function useWebSocket(roomId: string, playerName: string, theme: string = 'default', endpoint: string = 'game') {
     const [status, setStatus] = useState<'CONNECTING' | 'CONNECTED' | 'DISCONNECTED'>('CONNECTING');
-    const [gameState, setGameState] = useState<any>(null);
+    const [gameState, setGameState] = useState<Room | null>(null);
     const [currentPlayerTurnId, setCurrentPlayerTurnId] = useState<string>('');
     const [lastEvent, setLastEvent] = useState<GameMessage | null>(null);
 

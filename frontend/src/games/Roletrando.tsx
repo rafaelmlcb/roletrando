@@ -12,6 +12,7 @@ import { ActionButton } from '../components/shared/ActionButton';
 import { useWebSocket } from '../hooks/useWebSocket';
 
 import { useTheme } from '../context/ThemeContext';
+import type { Player } from '../types/game';
 
 const Roletrando: React.FC = () => {
   const navigate = useNavigate();
@@ -71,13 +72,13 @@ const Roletrando: React.FC = () => {
   const handleSpinEnd = () => {
     setIsSpinning(false);
     // Send spin result to server. Only the person who spun sends this to authoritative server.
-    if (currentPlayerTurnId === gameState?.players.find((p: any) => p.name === userName)?.id) {
+    if (currentPlayerTurnId === gameState?.players.find((p: Player) => p.name === userName)?.id) {
       sendMessage('SPIN_END');
     }
   };
 
   const startSpin = () => {
-    if (isSpinning || currentPlayerTurnId !== gameState?.players.find((p: any) => p.name === userName)?.id) return;
+    if (isSpinning || currentPlayerTurnId !== gameState?.players.find((p: Player) => p.name === userName)?.id) return;
     setIsSpinning(true);
     sendMessage('SPIN_START');
     // Wheel will spin when SPIN_START event is received back from the server
@@ -164,7 +165,7 @@ const Roletrando: React.FC = () => {
               {activeRoomId}
             </Typography>
             <Stack spacing={2} sx={{ mb: 6, textAlign: 'left' }}>
-              {players.map((p: any) => (
+              {players.map((p: Player) => (
                 <Paper key={p.id} sx={{ p: 2.5, bgcolor: alpha('#fff', 0.05), display: 'flex', alignItems: 'center', gap: 2, borderRadius: 4 }}>
                   <Avatar src={p.avatar} sx={{ border: '2px solid', borderColor: 'primary.main' }} />
                   <Typography variant="h6" sx={{ fontWeight: 800 }}>
@@ -203,7 +204,7 @@ const Roletrando: React.FC = () => {
             Fim de Jogo!
           </Typography>
           <Stack spacing={2} sx={{ mb: 6 }}>
-            {[...players].sort((a: any, b: any) => b.score - a.score).map((p: any, i: number) => (
+            {[...players].sort((a: Player, b: Player) => b.score - a.score).map((p: Player, i: number) => (
               <Paper key={p.id} sx={{ p: 2, bgcolor: i === 0 ? 'primary.main' : alpha('#fff', 0.05), display: 'flex', justifyContent: 'space-between', borderRadius: 4 }}>
                 <Typography variant="h6" sx={{ fontWeight: 900 }}>{i + 1}º {p.name}</Typography>
                 <Typography variant="h6" sx={{ fontWeight: 900, fontStyle: 'italic' }}>R$ {p.score}</Typography>

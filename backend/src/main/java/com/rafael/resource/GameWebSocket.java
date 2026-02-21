@@ -47,6 +47,16 @@ public class GameWebSocket {
 
         LOG.infof("User %s joining room %s (theme: %s) mapped to connection %s", playerName, roomId, theme, connId);
 
+        // Input Validation
+        if (roomId == null || roomId.length() < 3 || roomId.length() > 20 || !roomId.matches("^[a-zA-Z0-9_-]+$")) {
+            sendError("ID da sala inválido (3-20 caracteres, alfanumérico).");
+            return;
+        }
+        if (playerName == null || playerName.length() < 3 || playerName.length() > 15) {
+            sendError("Nome inválido (3-15 caracteres).");
+            return;
+        }
+
         Room room = roomManager.getRoom(roomId);
         if (room == null) {
             room = roomManager.createRoom(roomId);
@@ -315,6 +325,15 @@ public class GameWebSocket {
             });
         } catch (Exception e) {
             LOG.error("Failed to broadcastExcept", e);
+        }
+    }
+
+    private void sendError(String message) {
+        try {
+            connection.sendText(mapper.writeValueAsString(new GameMessage("ERROR", message)))
+                    .subscribe().with(v -> connection.close(), err -> connection.close());
+        } catch (Exception e) {
+            connection.close();
         }
     }
 }

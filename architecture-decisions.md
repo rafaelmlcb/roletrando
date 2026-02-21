@@ -31,6 +31,7 @@ A comunicação entre eles é inteiramente baseada em JSON sobre HTTP (REST). O 
 - **Baixa Latência para Mídia**: Efeitos sonoros contínuos (roleta, cronômetros) não devem sofrer atrasos ou interrupções, mesmo durante eventos em rápida sucessão.
 - **Observabilidade**: O sistema deve prover logs legíveis, tipados e com marcações de tempo que possibilitem debugging eficiente.
 - **Acesso em Rede Local**: Os serviços devem estar prontos para serem testados via LAN por diversos dispositivos físicos (smartphones, tablets).
+- **Segurança (OWASP)**: A aplicação deve seguir padrões básicos de segurança, incluindo Content Security Policy (CSP), validação rigorosa de inputs e sanitização de dados, conforme diretrizes da OWASP.
 
 ---
 
@@ -79,3 +80,18 @@ A comunicação entre eles é inteiramente baseada em JSON sobre HTTP (REST). O 
 **Decisão (Backend):** Implementação de testes automatizados com JUnit 5 (`GameEngineTest.java`) para estressar processamento de turno, limite de scores e consistência do `GameStore.sessions`.
 **Decisão (Frontend):** Adoção de **Playwright** para suítes de testes Fim-a-Fim (E2E), permitindo o lançamento simultâneo de múltiplos `BrowserContext` paralelos. Isso garante que testes simulem usuários na mesma Sala (host vs guest), garantindo sincronismo de Websockets em UI sem depender de testes lentos manuais.
 **Consequência:** Proteção contra regressões no Backend e estabilidade de Fluxo nos Lobbies Multiplayer sem o peso de múltiplos servidores para mock.
+
+### ADR 008: Temas Dinâmicos e Mecanismo de Fallback
+**Contexto:** Necessidade de suportar múltiplos temas (Jataí, Padrão, etc.) sem quebrar a aplicação caso um arquivo JSON específico esteja ausente ou vazio em um tema customizado.
+**Decisão:** Implementação do `DataLoaderService` que realiza:
+1.  **Auto-descoberta**: Escaneamento do diretório `data/` no startup para identificar temas.
+2.  **Resolvimento Per-Field**: Se um tema (`jatai`) não possuir um arquivo (ex: `millionaire.json`), o sistema utiliza automaticamente os dados do tema `default` apenas para aquele campo, mantendo o restante do tema original.
+3.  **UI Lock**: O frontend bloqueia interações (Game Cards e Theme Selector) até que o fetch de temas seja concluído, garantindo integridade.
+**Consequência:** Flexibilidade total para criação de novos temas com esforço mínimo e garantia de disponibilidade da aplicação mesmo com dados parciais.
+
+### ADR 009: Endurecimento de Segurança (OWASP Compliance)
+**Contexto:** Riscos de vulnerabilidades críticas de dependências (SCA), CORS permissivo e ausência de cabeçalhos de proteção identificados via análise SAST/DAST.
+**Decisão (Backend):** Migração do modo "Reflective Origin" para uma **Whitelist Rigorosa** no `CorsFilter.java`. Implementação de `SecurityHeadersFilter` seguindo recomendações da **OWASP** (CSP, X-Frame-Options, X-Content-Type-Options, etc.).
+**Decisão (Validação):** Adição de validação de `roomId` e `playerName` (limites de tamanho e Regex) nos WebSockets.
+**Decisão (Frontend):** Mitigação de SCA via `npm audit fix` e eliminação do uso de `any` em pontos críticos (pacotes de estado do jogo), adotando interfaces TypeScript reais para garantir segurança de tipos em tempo de execução.
+**Consequência:** Aplicação significativamente mais resiliente a ataques comuns (XSS, CSRF, Injection) e em conformidade com padrões modernos de segurança web.

@@ -37,10 +37,12 @@ A Vercel é a melhor casa para o React.
 
 ---
 
-## 4. Ajustes Finais
-1. Após a Vercel gerar seu domínio (ex: `https://roletrando.vercel.app`), você pode voltar ao Render e atualizar a variável `QUARKUS_HTTP_CORS_ORIGINS` para esse domínio específico. Isso aumenta a segurança.
+## 4. Ajustes Finais (Segurança OWASP)
+1. **Whitelist de CORS:** Por padrão, o backend bloqueia todas as origens exceto localhost. Para habilitar o acesso pela URL da Vercel, você deve adicionar seu domínio (ex: `https://roletrando.vercel.app`) à lista `ALLOWED_ORIGINS` no arquivo `backend/src/main/java/com/rafael/config/CorsFilter.java`.
+2. **SSL/HTTPS:** O Render e a Vercel gerenciam certificados SSL automaticamente. O código do frontend já está configurado para ajustar dinamicamente o protocolo WebSocket para `wss://` quando detecta HTTPS, garantindo a conformidade com as políticas de Mixed Content.
 
 ## Resumo Técnico
 - **Backend:** Roda em um container Docker (Java 17).
 - **Frontend:** Build estático (Vite) servido via CDN global.
 - **Grátis:** Ambos os planos "Free" suportam esse volume de acesso.
+- **Compliance:** Sistema protegido com Headers de Segurança e validação de pacotes WS.
