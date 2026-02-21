@@ -13,7 +13,8 @@ public class CorsFilter implements ContainerResponseFilter {
     private static final java.util.Set<String> ALLOWED_ORIGINS = java.util.Set.of(
             "http://localhost:5173",
             "http://localhost:3000",
-            "http://127.0.0.1:5173");
+            "http://127.0.0.1:5173",
+            "https://roletrando.vercel.app");
 
     @Override
     public void filter(ContainerRequestContext requestContext,
