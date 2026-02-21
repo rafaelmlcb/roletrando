@@ -1,0 +1,1064 @@
+{
+    "levels": [
+        {
+            "level": 1,
+            "prize": "R$ 1.000",
+            "questions": [
+                {
+                    "question": "Qual o nome do Design System do CPQD?",
+                    "options": [
+                        "Arara",
+                        "Quati",
+                        "Capivara",
+                        "Tucano"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual o principal banco de dados relacional da plataforma?",
+                    "options": [
+                        "PostgreSQL",
+                        "MySQL",
+                        "Oracle",
+                        "SQL Server"
+                    ],
+                    "answer": 0
+                },
+                {
+                    "question": "A plataforma Jataí é baseada em qual orquestrador?",
+                    "options": [
+                        "Docker Swarm",
+                        "Kubernetes",
+                        "OpenStack",
+                        "Nomad"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual ferramenta é usada para visualização de dashboards?",
+                    "options": [
+                        "Excel",
+                        "Superset",
+                        "PowerBI",
+                        "Tableau"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual o objetivo principal do Jataí?",
+                    "options": [
+                        "Venda de Hardware",
+                        "Acelerar Inovação",
+                        "Redes Móveis",
+                        "Suporte Jurídico"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O Jataí é inspirado em qual animal?",
+                    "options": [
+                        "Formiga",
+                        "Abelha",
+                        "Vespa",
+                        "Besouro"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual stack lida com a identidade dos usuários?",
+                    "options": [
+                        "Security",
+                        "Analytics",
+                        "Frontend",
+                        "Messaging"
+                    ],
+                    "answer": 0
+                },
+                {
+                    "question": "O que significa a sigla SSO?",
+                    "options": [
+                        "Single Sign-On",
+                        "Simple System Out",
+                        "Security Service Only",
+                        "Standard Sign Output"
+                    ],
+                    "answer": 0
+                },
+                {
+                    "question": "Qual ferramenta é usada para mensageria?",
+                    "options": [
+                        "Kafka",
+                        "Word",
+                        "Teams",
+                        "Outlook"
+                    ],
+                    "answer": 0
+                },
+                {
+                    "question": "Qual o framework backend padrão?",
+                    "options": [
+                        "Django",
+                        "Spring Boot",
+                        "Laravel",
+                        "Flask"
+                    ],
+                    "answer": 1
+                }
+            ]
+        },
+        {
+            "level": 2,
+            "prize": "R$ 5.000",
+            "questions": [
+                {
+                    "question": "Qual componente funciona como API Gateway?",
+                    "options": [
+                        "Nginx",
+                        "Kong",
+                        "Traefik",
+                        "Istio"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Para que serve o HashiCorp Vault na plataforma?",
+                    "options": [
+                        "Logs",
+                        "Gestão de Segredos",
+                        "Métricas",
+                        "Desenho de UI"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual ferramenta é usada para automação de testes E2E?",
+                    "options": [
+                        "Selenium",
+                        "Playwright",
+                        "Cypress",
+                        "Junit"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que o Grafana monitora?",
+                    "options": [
+                        "Vendas",
+                        "Métricas e Logs",
+                        "RH",
+                        "Financeiro"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual motor de processos foi integrado ao Jataí?",
+                    "options": [
+                        "Camunda",
+                        "Kogito",
+                        "Activiti",
+                        "jBPM"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual tecnologia é usada para o Frontend?",
+                    "options": [
+                        "Angular",
+                        "React",
+                        "Vue",
+                        "Svelte"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que é o PGA?",
+                    "options": [
+                        "Portal de Gestão de Acesso",
+                        "Plano Geral de Ação",
+                        "Plataforma Global de Apps",
+                        "Ponto de Gestão Ágil"
+                    ],
+                    "answer": 0
+                },
+                {
+                    "question": "Qual ferramenta gerencia o Continuous Delivery (CD)?",
+                    "options": [
+                        "Git",
+                        "ArgoCD",
+                        "Jenkins",
+                        "Bitbucket"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual o nome do repositório de código usado?",
+                    "options": [
+                        "GitHub",
+                        "Bitbucket",
+                        "GitLab",
+                        "SourceForge"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual tecnologia compõe a stack de Observability junto com o Grafana?",
+                    "options": [
+                        "Oracle",
+                        "Prometheus",
+                        "Spring",
+                        "Redis"
+                    ],
+                    "answer": 1
+                }
+            ]
+        },
+        {
+            "level": 3,
+            "prize": "R$ 10.000",
+            "questions": [
+                {
+                    "question": "O que significa o 'R' em RAAR?",
+                    "options": [
+                        "Rapidez",
+                        "Requisitos",
+                        "Radar Tecnológico",
+                        "Redundância"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual o limite mínimo de cobertura de testes para serviços críticos?",
+                    "options": [
+                        "50%",
+                        "70%",
+                        "80%",
+                        "100%"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "O modelo C4 é usado para quê no Jataí?",
+                    "options": [
+                        "Testes",
+                        "Design de UI",
+                        "Documentação de Arquitetura",
+                        "Financeiro"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual ferramenta coleta logs na stack de observabilidade?",
+                    "options": [
+                        "Tempo",
+                        "Loki",
+                        "Prometheus",
+                        "Minio"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual estratégia de deploy reduz riscos ao lançar versões gradualmente?",
+                    "options": [
+                        "Blue/Green",
+                        "Canary",
+                        "Rolling Update",
+                        "Recreate"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que é o SonarQube no ciclo DevSecOps?",
+                    "options": [
+                        "Banco de dados",
+                        "Análise de qualidade de código",
+                        "Gateway",
+                        "Mensageria"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual ferramenta é citada para varredura de vulnerabilidades em containers?",
+                    "options": [
+                        "Zabbix",
+                        "Trivy",
+                        "Sonar",
+                        "Vault"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que são as ADRs?",
+                    "options": [
+                        "Avisos de Risco",
+                        "Registros de Decisão de Arquitetura",
+                        "Ações de Redundância",
+                        "Apps de Resiliência"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual padrão é usado para comunicação de APIs assíncronas?",
+                    "options": [
+                        "OpenAPI",
+                        "AsyncAPI",
+                        "GraphQL",
+                        "SOAP"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Onde são armazenados os artefatos reutilizáveis de infraestrutura?",
+                    "options": [
+                        "Docker Hub",
+                        "Helm Charts",
+                        "S3",
+                        "Dropbox"
+                    ],
+                    "answer": 1
+                }
+            ]
+        },
+        {
+            "level": 4,
+            "prize": "R$ 25.000",
+            "questions": [
+                {
+                    "question": "Qual a fonte de títulos do Quati?",
+                    "options": [
+                        "Arial",
+                        "Poppins",
+                        "Public Sans",
+                        "Roboto"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "No Roadmap 2026, o que é Persistência Dual?",
+                    "options": [
+                        "PostgreSQL + Oracle",
+                        "Mongo + Redis",
+                        "SQL + NoSQL",
+                        "Local + Cloud"
+                    ],
+                    "answer": 0
+                },
+                {
+                    "question": "Qual ferramenta lida com o rastreamento distribuído (tracing)?",
+                    "options": [
+                        "Loki",
+                        "OpenTelemetry",
+                        "Prometheus",
+                        "Grafana"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual o nome da prática de usar princípios Open Source internamente?",
+                    "options": [
+                        "OutSource",
+                        "InnerSource",
+                        "OpenDev",
+                        "DevOps"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual o objetivo do suporte a Multitenancy?",
+                    "options": [
+                        "Alta Disponibilidade",
+                        "Operação SaaS",
+                        "Segurança Kubernetes",
+                        "Criação de Logs"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "A release 2.2.0 focou em quais pilares?",
+                    "options": [
+                        "Frontend e BDD",
+                        "Observabilidade e Segurança",
+                        "Mobile e Dados",
+                        "IA e Chatbots"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual padrão é usado para gerenciar implantações declarativas?",
+                    "options": [
+                        "Terraform",
+                        "GitOps",
+                        "Scripts Bash",
+                        "Manual"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual agente de IA ajuda no planejamento técnico?",
+                    "options": [
+                        "Agente de Requisitos",
+                        "Agente de Projeto de Software",
+                        "Agente DevOps",
+                        "Agente SRE"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual ferramenta armazena objetos não estruturados (S3-compatible)?",
+                    "options": [
+                        "Redis",
+                        "MinIO",
+                        "Kafka",
+                        "PostgreSQL"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que é o HPA no contexto de escalabilidade?",
+                    "options": [
+                        "Horizontal Pod Autoscaler",
+                        "High Performance Apps",
+                        "Hyper Proxy Access",
+                        "Hybrid Port Admin"
+                    ],
+                    "answer": 0
+                }
+            ]
+        },
+        {
+            "level": 5,
+            "prize": "R$ 50.000",
+            "questions": [
+                {
+                    "question": "Qual agente de IA foca na consistência visual?",
+                    "options": [
+                        "Agente de Dados",
+                        "Agente UX & Design System",
+                        "Agente Backend",
+                        "Agente de Arquitetura"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que o Framework RAAR busca combater?",
+                    "options": [
+                        "Custos altos",
+                        "Fragmentação tecnológica",
+                        "Baixa velocidade de internet",
+                        "Falta de café"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual metodologia de Design Thinking tem 4 fases?",
+                    "options": [
+                        "Agile",
+                        "Double Diamond",
+                        "Scrum",
+                        "Waterfall"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual tecnologia é citada para teste de tráfego gradual?",
+                    "options": [
+                        "Jenkins",
+                        "Kong/Canary",
+                        "Sonar",
+                        "Superset"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que o componente SLO garante no Keycloak?",
+                    "options": [
+                        "Single Login Only",
+                        "Single Logout",
+                        "Secure Line Open",
+                        "Service Level Objective"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual ferramenta é recomendada para buscas avançadas por programadores?",
+                    "options": [
+                        "Google",
+                        "Phind",
+                        "Bing",
+                        "Yahoo"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "A visão de futuro do Jataí envolve o que especificamente?",
+                    "options": [
+                        "Blockchain",
+                        "Agentes de IA em todas as fases",
+                        "Metaverso",
+                        "Hardware próprio"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual biblioteca Java executa cenários Gherkin na plataforma?",
+                    "options": [
+                        "JUnit",
+                        "Geb",
+                        "Mockito",
+                        "Hibernate"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "No Quati, qual a função do Grid?",
+                    "options": [
+                        "Paleta de cores",
+                        "Base estrutural visual",
+                        "Lista de ícones",
+                        "Tipografia"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual agente de IA analisa vulnerabilidades no código?",
+                    "options": [
+                        "Agente DevOps",
+                        "Agente de Segurança (DevSecOps)",
+                        "Agente SRE",
+                        "Agente de Testes"
+                    ],
+                    "answer": 1
+                }
+            ]
+        },
+        {
+            "level": 6,
+            "prize": "R$ 100.000",
+            "questions": [
+                {
+                    "question": "O que é o Cloud-Neutral no roadmap?",
+                    "options": [
+                        "Uso apenas de Nuvem Privada",
+                        "Portabilidade sem Lock-in",
+                        "Uso apenas de AWS",
+                        "Nuvem sem segurança"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual a função do Agente de Visão de Negócio?",
+                    "options": [
+                        "Codificar React",
+                        "Estruturar estratégia de produto",
+                        "Configurar Prometheus",
+                        "Testar APIs"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual release mitigou a vulnerabilidade no Tomcat?",
+                    "options": [
+                        "2.1.1",
+                        "2.0.0",
+                        "2.2.0",
+                        "1.0.0"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual técnica UX gera feedback rápido com papel?",
+                    "options": [
+                        "Persona",
+                        "Prototipação em Papel",
+                        "Teste A/B",
+                        "Matriz CSD"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que o Agente de Documentação compila?",
+                    "options": [
+                        "Código Java",
+                        "Manuais a partir de artefatos",
+                        "Planilhas de custos",
+                        "Lista de bugs"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual ferramenta do Playwright gera código automaticamente?",
+                    "options": [
+                        "Inspector",
+                        "Codegen",
+                        "Trace Viewer",
+                        "Reports"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual o papel do Agente SRE?",
+                    "options": [
+                        "Criar telas",
+                        "Monitorar saúde do ambiente",
+                        "Escrever BDD",
+                        "Vender o produto"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que o Agente de Requisitos traduz?",
+                    "options": [
+                        "Código para Inglês",
+                        "Negócio para especificações técnicas",
+                        "Logs para métricas",
+                        "Cores para Hex"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "No modelo Flight Levels, o que é o 'Tático'?",
+                    "options": [
+                        "Tarefas diárias",
+                        "Épicos e blocos de valor",
+                        "Iniciativas de longo prazo",
+                        "Falhas críticas"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual ferramenta o Agente de Testes utiliza?",
+                    "options": [
+                        "Jenkins",
+                        "Playwright",
+                        "Docker",
+                        "Vault"
+                    ],
+                    "answer": 1
+                }
+            ]
+        },
+        {
+            "level": 7,
+            "prize": "R$ 200.000",
+            "questions": [
+                {
+                    "question": "Qual a principal diferença do Playwright para o Cypress citada?",
+                    "options": [
+                        "Custo",
+                        "Suporte a cenários complexos/velocidade",
+                        "Idioma",
+                        "Dono da ferramenta"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que é a Matriz CSD?",
+                    "options": [
+                        "Certezas, Suposições e Dúvidas",
+                        "Código, Segurança e Dados",
+                        "Controle, Suporte e Deploy",
+                        "Custo, Sucesso e Demanda"
+                    ],
+                    "answer": 0
+                },
+                {
+                    "question": "Qual agente de IA projeta modelos de dados?",
+                    "options": [
+                        "Agente de Arquitetura",
+                        "Agente de Dados",
+                        "Agente de Integração",
+                        "Agente Backend"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que o Agente de Estratégia de IA recomenda?",
+                    "options": [
+                        "Hardware",
+                        "Modelos específicos de IA",
+                        "Cores",
+                        "Salários"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "No Jataí, qual a função do Agente DevOps?",
+                    "options": [
+                        "Documentar",
+                        "Automatizar pipelines e infraestrutura",
+                        "Desenhar ícones",
+                        "Gerir pessoas"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual componente da stack Security lida com autorização baseada em Roles?",
+                    "options": [
+                        "Vault",
+                        "Keycloak",
+                        "Kong",
+                        "Loki"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que é o Playwright MCP?",
+                    "options": [
+                        "Novo banco de dados",
+                        "Protocolo para LLMs interagirem com a web",
+                        "Serviço de email",
+                        "Chat de suporte"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual métrica RAAR avalia o tempo de setup de novos projetos?",
+                    "options": [
+                        "Lead Time",
+                        "Tempo de Setup",
+                        "Adoção de Artefatos",
+                        "Nenhuma"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que o Agente de Arquitetura assegura?",
+                    "options": [
+                        "Cores do Quati",
+                        "Conformidade com Framework RAAR",
+                        "Velocidade do Git",
+                        "Lucro do CPQD"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual técnica UX descreve visualmente as funcionalidades como uma HQ?",
+                    "options": [
+                        "Moodboard",
+                        "Storyboard",
+                        "Wireframe",
+                        "Persona"
+                    ],
+                    "answer": 1
+                }
+            ]
+        },
+        {
+            "level": 8,
+            "prize": "R$ 300.000",
+            "questions": [
+                {
+                    "question": "O que é o Gherkin no contexto de testes?",
+                    "options": [
+                        "Linguagem para cenários BDD",
+                        "Um tipo de banco",
+                        "Plugin do VS Code",
+                        "Ferramenta de rede"
+                    ],
+                    "answer": 0
+                },
+                {
+                    "question": "Qual agente de IA gera código em Spring Boot?",
+                    "options": [
+                        "Agente Frontend",
+                        "Agente Backend",
+                        "Agente de Dados",
+                        "Agente SRE"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que o Agente de Suporte analisa?",
+                    "options": [
+                        "Novas vendas",
+                        "Chamados cruzando logs e métricas",
+                        "Candidatos a emprego",
+                        "Cores da interface"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual o benefício da 'Escalabilidade de talentos'?",
+                    "options": [
+                        "Aumento de salário",
+                        "Onboarding rápido e flexível",
+                        "Mais férias",
+                        "Trabalho remoto"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que a 'Operação Zero-Downtime' evita?",
+                    "options": [
+                        "Custos",
+                        "Janelas noturnas de manutenção",
+                        "Uso de IA",
+                        "Logs"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual o propósito do Chatbot de Suporte Operacional?",
+                    "options": [
+                        "Responder RH",
+                        "Responder sobre saúde do cluster em linguagem natural",
+                        "Agendar reuniões",
+                        "Criar logos"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que compõe a 'Colmeia Digital' na metáfora?",
+                    "options": [
+                        "As stacks tecnológicas",
+                        "Os computadores",
+                        "Os prédios",
+                        "Os clientes"
+                    ],
+                    "answer": 0
+                },
+                {
+                    "question": "Qual ferramenta UX avalia a usabilidade baseada em 10 heurísticas?",
+                    "options": [
+                        "Teste A/B",
+                        "Análise Heurística",
+                        "Mapa de Empatia",
+                        "Questionário"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual o benefício estratégico do reuso de componentes?",
+                    "options": [
+                        "Mais reuniões",
+                        "Eficiência operacional e financeira",
+                        "Código mais longo",
+                        "Menos segurança"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que é o I18N no roadmap?",
+                    "options": [
+                        "Integração",
+                        "Internacionalização",
+                        "Inteligência",
+                        "Identidade"
+                    ],
+                    "answer": 1
+                }
+            ]
+        },
+        {
+            "level": 9,
+            "prize": "R$ 500.000",
+            "questions": [
+                {
+                    "question": "Qual agente de IA define contratos OpenAPI?",
+                    "options": [
+                        "Agente de Requisitos",
+                        "Agente de Integração/API",
+                        "Agente Backend",
+                        "Agente SRE"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que o Framework RAAR exige para registrar decisões técnicas?",
+                    "options": [
+                        "Emails",
+                        "ADR (Architecture Decision Records)",
+                        "Reuniões",
+                        "Post-its"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual tecnologia é usada pelo Geb para automação?",
+                    "options": [
+                        "Python",
+                        "Java",
+                        "NodeJS",
+                        "Go"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "No modelo FURPS+, o que o '+' representa?",
+                    "options": [
+                        "Preço",
+                        "Restrições de design e processo",
+                        "Mais usuários",
+                        "Velocidade"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que é o 'Paved Road' no contexto de IDP?",
+                    "options": [
+                        "Rua pavimentada",
+                        "Caminho padronizado para desenvolvedores",
+                        "Metodologia de vendas",
+                        "Processo de RH"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual a finalidade do Agente de UX & Design System?",
+                    "options": [
+                        "Escrever SQL",
+                        "Garantir consistência visual e acessibilidade",
+                        "Gerar Dockerfiles",
+                        "Monitorar CPU"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "No Roadmap, o que é o 'Dreno automatizado de pods'?",
+                    "options": [
+                        "Limpeza física",
+                        "Técnica para Zero-Downtime",
+                        "Exclusão de logs",
+                        "Criação de usuários"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual o foco do Agente de Projeto de Software?",
+                    "options": [
+                        "Testes",
+                        "Planejamento técnico e estimativas",
+                        "Cores",
+                        "Segurança"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual o benefício da 'Integração Nativa' entre produtos?",
+                    "options": [
+                        "Menos trabalho",
+                        "Experiência unificada e potencial de receita",
+                        "Mais bugs",
+                        "Preço menor"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que o Agente de Gestão de Processo de Negócios faz?",
+                    "options": [
+                        "Cria telas",
+                        "Orquestra fluxos de negócio",
+                        "Instala Linux",
+                        "Lava código"
+                    ],
+                    "answer": 1
+                }
+            ]
+        },
+        {
+            "level": 10,
+            "prize": "R$ 1.000.000",
+            "questions": [
+                {
+                    "question": "Qual o nome oficial da documentação que define os níveis de abstração da arquitetura?",
+                    "options": [
+                        "Modelo OSI",
+                        "Modelo C4",
+                        "Padrão IEEE",
+                        "Mapa Mental"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "No Roadmap 2026, qual motor será incorporado para orquestração de processos?",
+                    "options": [
+                        "BPMN.io",
+                        "Kogito",
+                        "Flowable",
+                        "Camunda 8"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que representa o 'Mel' na metáfora da Colmeia Jataí?",
+                    "options": [
+                        "Dinheiro",
+                        "Valor entregue ao cliente e negócio",
+                        "Código fonte",
+                        "Documentação"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é a política mandatória para o Quality Gate no SonarQube?",
+                    "options": [
+                        "80% cobertura e ausência de bugs críticos",
+                        "50% cobertura",
+                        "Apenas ausência de bugs",
+                        "100% de testes"
+                    ],
+                    "answer": 0
+                },
+                {
+                    "question": "No Jataí, quem são os 'Guardiões da integridade técnica'?",
+                    "options": [
+                        "Desenvolvedores",
+                        "Arquitetos de Solução",
+                        "Product Owners",
+                        "Clientes"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual técnica de deploy utiliza dois ambientes idênticos?",
+                    "options": [
+                        "Canary",
+                        "Blue/Green",
+                        "Rolling",
+                        "Stateless"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "A release 2.0.0 de Abril 2025 focou em qual arquitetura de processador?",
+                    "options": [
+                        "X86",
+                        "ARM",
+                        "RISC-V",
+                        "MIPS"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que significa 'IA Kubernetes-Nativa' no Roadmap?",
+                    "options": [
+                        "IA rodando no Windows",
+                        "Segurança e controle via políticas OPA/Gatekeeper",
+                        "IA para gerir emails",
+                        "Chatbot simples"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que é o 'Double Diamond'?",
+                    "options": [
+                        "Tipo de banco de dados",
+                        "Processo de Design Thinking",
+                        "Análise de segurança",
+                        "Modelo de vendas"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual o propósito final da Visão de Futuro do Jataí?",
+                    "options": [
+                        "Ser o maior do mundo",
+                        "IA ajudando em todas as fases do desenvolvimento",
+                        "Substituir humanos",
+                        "Vender consultoria"
+                    ],
+                    "answer": 1
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,322 @@
+{
+    "levels": [
+        {
+            "level": 1,
+            "label": "Fácil",
+            "questions": [
+                {
+                    "question": "Qual o animal símbolo da plataforma Jataí?",
+                    "options": [
+                        "Formiga",
+                        "Abelha",
+                        "Pássaro",
+                        "Gato"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O Design System do CPQD se chama...",
+                    "options": [
+                        "Tucano",
+                        "Quati",
+                        "Capivara",
+                        "Lobo"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual tecnologia é usada para Frontend?",
+                    "options": [
+                        "React",
+                        "PHP",
+                        "Cobol",
+                        "Ruby"
+                    ],
+                    "answer": 0
+                },
+                {
+                    "question": "Qual o banco de dados relacional padrão?",
+                    "options": [
+                        "Redis",
+                        "PostgreSQL",
+                        "Neo4j",
+                        "Cassandra"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Para que serve o Keycloak?",
+                    "options": [
+                        "Desenho",
+                        "Segurança/Identidade",
+                        "Logs",
+                        "Métricas"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O Jataí roda em qual orquestrador?",
+                    "options": [
+                        "Windows Server",
+                        "Kubernetes",
+                        "MacOS",
+                        "Android"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual ferramenta cria dashboards?",
+                    "options": [
+                        "Paint",
+                        "Superset",
+                        "Notepad",
+                        "Calculator"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual ferramenta monitora métricas?",
+                    "options": [
+                        "Word",
+                        "Prometheus",
+                        "Excel",
+                        "Zoom"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que o Jataí busca reduzir?",
+                    "options": [
+                        "O café",
+                        "Redundância tecnológica",
+                        "O número de abelhas",
+                        "A internet"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual o framework Backend?",
+                    "options": [
+                        "Spring Boot",
+                        "Rails",
+                        "Django",
+                        "Node"
+                    ],
+                    "answer": 0
+                }
+            ]
+        },
+        {
+            "level": 2,
+            "label": "Médio",
+            "questions": [
+                {
+                    "question": "O que significa a sigla RAAR?",
+                    "options": [
+                        "Rede de Apoio",
+                        "Radar, Arquitetura, Artefatos e Registro",
+                        "Registro de App e Rede",
+                        "Regras de Arquitetura Real"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual ferramenta é usada para testes E2E?",
+                    "options": [
+                        "Junit",
+                        "Playwright",
+                        "Postman",
+                        "Swagger"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que é o PGA?",
+                    "options": [
+                        "Portal de Gestão de Acesso",
+                        "Plano Geral",
+                        "Programa de Gestão",
+                        "Ponto de Acesso"
+                    ],
+                    "answer": 0
+                },
+                {
+                    "question": "Para que serve o HashiCorp Vault?",
+                    "options": [
+                        "Armazenar fotos",
+                        "Gestão de segredos",
+                        "Métricas de CPU",
+                        "Chat"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual motor de processos é usado?",
+                    "options": [
+                        "Kogito",
+                        "Camunda",
+                        "Activiti",
+                        "jBPM"
+                    ],
+                    "answer": 0
+                },
+                {
+                    "question": "O que é o ArgoCD?",
+                    "options": [
+                        "Editor de texto",
+                        "Ferramenta de Continuous Delivery (GitOps)",
+                        "Banco de dados",
+                        "Navegador"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual a cobertura de testes mínima recomendada?",
+                    "options": [
+                        "20%",
+                        "50%",
+                        "80%",
+                        "100%"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "O que o Grafana visualiza?",
+                    "options": [
+                        "Código fonte",
+                        "Observabilidade (Métricas/Logs)",
+                        "Emails",
+                        "RH"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que é o modelo C4?",
+                    "options": [
+                        "Tipo de explosivo",
+                        "Modelo de documentação de arquitetura",
+                        "Framework de testes",
+                        "Metodologia ágil"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual ferramenta lida com o tráfego de API?",
+                    "options": [
+                        "Kong",
+                        "Redis",
+                        "Kafka",
+                        "Minio"
+                    ],
+                    "answer": 0
+                }
+            ]
+        },
+        {
+            "level": 3,
+            "label": "Difícil",
+            "questions": [
+                {
+                    "question": "No Roadmap, o que é Persistência Dual?",
+                    "options": [
+                        "Dois HDs",
+                        "Suporte a PostgreSQL e Oracle",
+                        "Cache e Disco",
+                        "Cloud e Local"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que é o 'Paved Road'?",
+                    "options": [
+                        "Estrada de testes",
+                        "Caminho padronizado para desenvolvimento",
+                        "Fase de vendas",
+                        "Arquitetura antiga"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que o Agente SRE faz?",
+                    "options": [
+                        "Cria telas",
+                        "Monitora saúde e sugere ações proativas",
+                        "Escreve BDD",
+                        "Vende o Jataí"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual release focou em ARM e mitigação de vulnerabilidade no Tomcat?",
+                    "options": [
+                        "2.0.0",
+                        "2.1.1",
+                        "2.2.0",
+                        "1.5.0"
+                    ],
+                    "answer": 0
+                },
+                {
+                    "question": "O que é o Cloud-Neutral?",
+                    "options": [
+                        "Nuvem sem cor",
+                        "Estratégia para evitar lock-in de fornecedor",
+                        "Nuvem privada apenas",
+                        "Sem uso de nuvem"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que o Agente de Requisitos utiliza como saída?",
+                    "options": [
+                        "Código React",
+                        "Especificações em BDD/Gherkin",
+                        "Planilhas Excel",
+                        "Imagens PNG"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual a função do componente Loki?",
+                    "options": [
+                        "Métricas temporais",
+                        "Agregação e busca de logs",
+                        "Gateway de API",
+                        "Identidade"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "No Quati, quais as fontes para títulos e corpo?",
+                    "options": [
+                        "Arial/Times",
+                        "Poppins/Public Sans",
+                        "Roboto/Open Sans",
+                        "Poppins/Arial"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que o 'Double Diamond' descreve?",
+                    "options": [
+                        "Rede de dados",
+                        "Processo de Design Thinking",
+                        "Segurança em camadas",
+                        "Banco NoSQL"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "O que o Agente de Estratégia de IA faz?",
+                    "options": [
+                        "Instala o ChatGPT",
+                        "Identifica oportunidades e recomenda modelos de IA",
+                        "Cria o Roadmap",
+                        "Limpa o banco"
+                    ],
+                    "answer": 1
+                }
+            ]
+        }
+    ]
+}

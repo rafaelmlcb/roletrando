@@ -14,9 +14,7 @@ import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.*;
 
 @ApplicationScoped
@@ -30,7 +28,6 @@ public class DataLoaderService {
     @Inject
     ObjectMapper mapper;
 
-    // Map<themeName, ThemeData>
     private final Map<String, ThemeData> themeCache = new LinkedHashMap<>();
 
     public static class ThemeData {
@@ -42,25 +39,25 @@ public class DataLoaderService {
     void onStart(@Observes StartupEvent ev) {
         LOG.infof("Scanning game themes in data/...");
         List<String> themes = discoverThemes();
-        LOG.infof("Found themes: %s", themes);
+        // Load default first so other themes can fall back to it
+        if (themes.contains("default")) {
+            themeCache.put("default", loadTheme("default"));
+        }
         for (String theme : themes) {
-            ThemeData data = loadTheme(theme);
-            themeCache.put(theme, data);
+            if (!theme.equals("default")) {
+                themeCache.put(theme, loadTheme(theme));
+            }
         }
         // Ensure default is always present
-        if (!themeCache.containsKey("default")) {
-            themeCache.put("default", new ThemeData());
-        }
+        themeCache.putIfAbsent("default", new ThemeData());
         LOG.infof("Loaded %d theme(s): %s", themeCache.size(), themeCache.keySet());
     }
 
     private List<String> discoverThemes() {
         List<String> themes = new ArrayList<>();
         try {
-            // Enumerate subdirectories under data/ in classpath
             URL dataUrl = Thread.currentThread().getContextClassLoader().getResource("data");
             if (dataUrl != null) {
-                // Works when running from exploded classpath (dev mode)
                 java.io.File dataDir = new java.io.File(dataUrl.toURI());
                 if (dataDir.exists() && dataDir.isDirectory()) {
                     for (java.io.File f : Objects.requireNonNull(dataDir.listFiles())) {
@@ -72,7 +69,6 @@ public class DataLoaderService {
         } catch (Exception e) {
             LOG.warn("Could not auto-discover themes from filesystem, using classpath probing.");
         }
-        // Always try "default" as fallback
         if (themes.isEmpty())
             themes.add("default");
         Collections.sort(themes);
@@ -90,8 +86,8 @@ public class DataLoaderService {
     private List<WheelPhrase> loadWheelPhrases(String theme) {
         String path = "data/" + theme + "/wheel.json";
         try (InputStream is = stream(path)) {
-            if (is == null) {
-                LOG.warnf("Not found: %s", path);
+            if (is == null || is.available() == 0) {
+                LOG.warnf("[%s] wheel.json not found or empty.", theme);
                 return new ArrayList<>();
             }
             List<WheelPhrase> list = mapper.readValue(is, new TypeReference<List<WheelPhrase>>() {
@@ -99,7 +95,7 @@ public class DataLoaderService {
             LOG.infof("[%s] Loaded %d wheel phrases.", theme, list.size());
             return list;
         } catch (Exception e) {
-            LOG.errorf("Failed to load wheel for theme %s: %s", theme, e.getMessage());
+            LOG.warnf("[%s] Failed to load wheel.json: %s", theme, e.getMessage());
             return new ArrayList<>();
         }
     }
@@ -107,15 +103,15 @@ public class DataLoaderService {
     private List<MillionaireLevel> loadMillionaireData(String theme) {
         String path = "data/" + theme + "/millionaire.json";
         try (InputStream is = stream(path)) {
-            if (is == null) {
-                LOG.warnf("Not found: %s", path);
+            if (is == null || is.available() == 0) {
+                LOG.warnf("[%s] millionaire.json not found or empty — will use default fallback.", theme);
                 return new ArrayList<>();
             }
             MillionaireData data = mapper.readValue(is, MillionaireData.class);
             LOG.infof("[%s] Loaded %d millionaire levels.", theme, data.levels.size());
             return data.levels;
         } catch (Exception e) {
-            LOG.errorf("Failed to load millionaire for theme %s: %s", theme, e.getMessage());
+            LOG.warnf("[%s] Failed to load millionaire.json: %s — will use default fallback.", theme, e.getMessage());
             return new ArrayList<>();
         }
     }
@@ -123,15 +119,15 @@ public class DataLoaderService {
     private List<QuizLevel> loadQuizData(String theme) {
         String path = "data/" + theme + "/quiz.json";
         try (InputStream is = stream(path)) {
-            if (is == null) {
-                LOG.warnf("Not found: %s", path);
+            if (is == null || is.available() == 0) {
+                LOG.warnf("[%s] quiz.json not found or empty — will use default fallback.", theme);
                 return new ArrayList<>();
             }
             QuizData data = mapper.readValue(is, QuizData.class);
             LOG.infof("[%s] Loaded %d quiz levels.", theme, data.levels.size());
             return data.levels;
         } catch (Exception e) {
-            LOG.errorf("Failed to load quiz for theme %s: %s", theme, e.getMessage());
+            LOG.warnf("[%s] Failed to load quiz.json: %s — will use default fallback.", theme, e.getMessage());
             return new ArrayList<>();
         }
     }
@@ -150,13 +146,31 @@ public class DataLoaderService {
         return defaultTheme;
     }
 
+    /**
+     * Resolve a theme with per-field fallback to default when data is missing.
+     * e.g.: jatai has wheel but no millionaire → millionaire falls back to default.
+     */
     private ThemeData resolve(String theme) {
-        ThemeData data = themeCache.get(theme);
-        if (data == null) {
-            LOG.warnf("Theme '%s' not found, falling back to default.", theme);
-            data = themeCache.getOrDefault(defaultTheme, new ThemeData());
+        ThemeData requested = themeCache.get(theme);
+        ThemeData fallback = themeCache.getOrDefault("default", new ThemeData());
+
+        if (requested == null) {
+            LOG.warnf("Theme '%s' not found in cache, using default.", theme);
+            return fallback;
         }
-        return data;
+
+        // Field-level fallback: if a specific data type is missing, use default
+        ThemeData result = new ThemeData();
+        result.wheelPhrases = (requested.wheelPhrases == null || requested.wheelPhrases.isEmpty())
+                ? fallback.wheelPhrases
+                : requested.wheelPhrases;
+        result.millionaireLevels = (requested.millionaireLevels == null || requested.millionaireLevels.isEmpty())
+                ? fallback.millionaireLevels
+                : requested.millionaireLevels;
+        result.quizLevels = (requested.quizLevels == null || requested.quizLevels.isEmpty())
+                ? fallback.quizLevels
+                : requested.quizLevels;
+        return result;
     }
 
     public List<WheelPhrase> getWheelPhrases(String theme) {
@@ -171,7 +185,7 @@ public class DataLoaderService {
         return resolve(theme).quizLevels;
     }
 
-    // Keep old single-theme getters that use the configured default
+    // No-arg versions use configured default
     public List<WheelPhrase> getWheelPhrases() {
         return getWheelPhrases(defaultTheme);
     }

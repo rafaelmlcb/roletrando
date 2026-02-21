@@ -40,6 +40,11 @@ const Quiz: React.FC = () => {
     // Handle Server Events
     useEffect(() => {
         const fetchQuestions = async () => {
+            setLoading(true);
+            setQuestions([]);
+            setCurrentStep(0);
+            setSelectedAnswer(null);
+            setCorrectAnswerIndex(null);
             try {
                 const res = await dataApi.get('/quiz/questions', { params: { theme: selectedTheme } });
                 setQuestions(res.data);
@@ -50,7 +55,7 @@ const Quiz: React.FC = () => {
             }
         };
         fetchQuestions();
-    }, []);
+    }, [selectedTheme]);
 
     useEffect(() => {
         if (lastEvent) {
@@ -205,7 +210,7 @@ const Quiz: React.FC = () => {
         );
     }
 
-    const currentQuestion = questions[currentStep];
+    const currentQuestion = questions[currentStep] ?? null;
 
     if (!activeRoomId) {
         return (
@@ -335,7 +340,7 @@ const Quiz: React.FC = () => {
                                 <Typography variant="overline" sx={{ color: 'text.secondary', fontWeight: 900, mb: 2, display: 'block' }}>
                                     Questão {currentStep + 1} de {questions.length}
                                 </Typography>
-                                <Typography variant="h4" sx={{ fontWeight: 900, mb: 4, color: 'text.primary' }}>{currentQuestion.question}</Typography>
+                                <Typography variant="h4" sx={{ fontWeight: 900, mb: 4, color: 'text.primary' }}>{currentQuestion?.question ?? ''}</Typography>
 
                                 <Box sx={{ position: 'relative', width: 80, height: 80, mx: 'auto' }}>
                                     <svg width="80" height="80">
@@ -353,7 +358,7 @@ const Quiz: React.FC = () => {
                             </Paper>
 
                             <Grid container spacing={2}>
-                                {currentQuestion.options.map((option: any, index: number) => (
+                                {(currentQuestion?.options ?? []).map((option: any, index: number) => (
                                     <Grid size={{ xs: 12, sm: 6 }} key={index}>
                                         <ButtonBase
                                             onClick={() => handleAnswer(index)}
