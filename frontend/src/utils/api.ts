@@ -14,6 +14,19 @@ const getBaseUrl = () => {
     return `http://${host}:8080/api/data`;
 }
 
+const getApiBaseUrl = () => {
+    if (import.meta.env.VITE_API_URL) {
+        try {
+            const url = new URL(import.meta.env.VITE_API_URL);
+            return `${url.origin}/api`;
+        } catch (e) {
+            return import.meta.env.VITE_API_URL.replace('/game', '');
+        }
+    }
+    const host = window.location.hostname;
+    return `http://${host}:8080/api`;
+}
+
 export const dataApi = axios.create({
     baseURL: getBaseUrl(),
     headers: {
@@ -28,3 +41,19 @@ dataApi.interceptors.response.use(
         return Promise.reject(error);
     }
 );
+
+export const statsApi = axios.create({
+    baseURL: getApiBaseUrl(),
+    headers: {
+        'Content-Type': 'application/json'
+    }
+});
+
+statsApi.interceptors.response.use(
+    response => response,
+    error => {
+        Logger.error('StatsAPI', 'Request failed', error);
+        return Promise.reject(error);
+    }
+);
+

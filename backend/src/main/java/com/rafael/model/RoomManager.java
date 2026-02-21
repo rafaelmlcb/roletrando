@@ -43,4 +43,12 @@ public class RoomManager {
         }
         return null;
     }
+
+    public long getOnlinePlayersCount() {
+        return rooms.values().stream().mapToLong(r -> r.players.size()).sum();
+    }
+
+    public long getActiveRoomsCount() {
+        return rooms.size();
+    }
 }

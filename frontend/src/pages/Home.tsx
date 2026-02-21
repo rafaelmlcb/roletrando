@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Gamepad2, Trophy, Zap, User, ChevronRight, CheckCircle2, Palette } from 'lucide-react';
+import { Gamepad2, Trophy, Zap, User, ChevronRight, CheckCircle2, Palette, Activity } from 'lucide-react';
 import {
     Container, Typography, Box, Grid, alpha, TextField,
     InputAdornment, Select, MenuItem, FormControl, Chip, Skeleton
@@ -219,6 +219,27 @@ const Home: React.FC = () => {
                     ))}
                 </Grid>
             </Container>
+
+            {/* Footer Statistics Link */}
+            <Box sx={{
+                mt: 12, pb: 2, textAlign: 'center', opacity: 0.5,
+                '&:hover': { opacity: 1, transition: 'opacity 0.3s' }
+            }}>
+                <Box
+                    component="button"
+                    onClick={() => navigate('/stats')}
+                    sx={{
+                        display: 'inline-flex', alignItems: 'center', gap: 1,
+                        bgcolor: 'transparent', border: 'none', cursor: 'pointer',
+                        color: 'text.secondary', fontSize: '0.75rem', fontWeight: 900,
+                        letterSpacing: 2, textTransform: 'uppercase',
+                        '&:hover': { color: 'primary.main' }
+                    }}
+                >
+                    <Activity size={14} />
+                    ESTATÍSTICAS DA PLATAFORMA
+                </Box>
+            </Box>
         </Box>
     );
 };

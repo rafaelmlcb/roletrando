@@ -11,6 +11,7 @@ import jakarta.inject.Inject;
 import org.jboss.logging.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rafael.service.StatsService;
 import io.vertx.core.Vertx;
 
 import java.util.Map;
@@ -29,6 +30,9 @@ public class GameWebSocket {
 
     @Inject
     WebSocketConnection connection;
+
+    @Inject
+    StatsService statsService;
 
     @Inject
     ObjectMapper mapper;
@@ -62,6 +66,7 @@ public class GameWebSocket {
             room = roomManager.createRoom(roomId);
             room.gameSession = gameEngine.startNewGame(theme);
             room.hostConnectionId = connId;
+            statsService.incrementGamesCreated();
         }
 
         if (room.status.equals("PLAYING") || room.players.size() >= 3) {
