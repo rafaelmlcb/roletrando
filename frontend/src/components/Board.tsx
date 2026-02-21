@@ -7,7 +7,7 @@ interface BoardProps {
 }
 
 export const Board: React.FC<BoardProps> = ({ phrase, category }) => {
-    const words = phrase.split(' ');
+    const words = (phrase || '').split(' ');
 
     return (
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '30px', width: '100%', padding: '20px' }}>
