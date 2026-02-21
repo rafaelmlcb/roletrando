@@ -19,7 +19,13 @@ export function useWebSocket(roomId: string, playerName: string, endpoint: strin
 
         let wsBaseUrl = '';
         if (import.meta.env.VITE_API_URL) {
-            wsBaseUrl = import.meta.env.VITE_API_URL.replace(/^http/, 'ws');
+            try {
+                const parsedUrl = new URL(import.meta.env.VITE_API_URL);
+                wsBaseUrl = `${parsedUrl.protocol === 'https:' ? 'wss:' : 'ws:'}//${parsedUrl.host}`;
+            } catch (e) {
+                // Fallback for invalid URLs
+                wsBaseUrl = import.meta.env.VITE_API_URL.replace(/^http/, 'ws').replace(/\/api.*$/, '');
+            }
         } else {
             const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
             const host = window.location.hostname;
