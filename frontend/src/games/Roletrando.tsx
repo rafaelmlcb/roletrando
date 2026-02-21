@@ -131,7 +131,50 @@ const Roletrando: React.FC = () => {
   const session = gameState.gameSession;
   const players = gameState.players;
   const me = players.find((p: any) => p.name === userName);
+  const isHost = players.length > 0 && players[0].id === me?.id;
   const myTurn = currentPlayerTurnId === me?.id;
+
+  if (gameState.status === 'WAITING') {
+    return (
+      <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: 'background.default', color: 'text.primary', pb: 4 }}>
+        <Container maxWidth="sm">
+          <Paper sx={{ p: 6, textAlign: 'center', borderRadius: 10 }}>
+            <Typography variant="overline" sx={{ color: 'primary.main', fontWeight: 900, letterSpacing: 4 }}>
+              SALA
+            </Typography>
+            <Typography variant="h3" sx={{ mb: 4, fontStyle: 'italic', fontWeight: 900 }}>
+              {activeRoomId}
+            </Typography>
+            <Stack spacing={2} sx={{ mb: 6, textAlign: 'left' }}>
+              {players.map((p: any) => (
+                <Paper key={p.id} sx={{ p: 2.5, bgcolor: alpha('#fff', 0.05), display: 'flex', alignItems: 'center', gap: 2, borderRadius: 4 }}>
+                  <Avatar src={p.avatar} sx={{ border: '2px solid', borderColor: 'primary.main' }} />
+                  <Typography variant="h6" sx={{ fontWeight: 800 }}>
+                    {p.name} {p.id === me?.id && "(Você)"} {p.id === players[0].id && "👑"}
+                  </Typography>
+                </Paper>
+              ))}
+              {Array.from({ length: 3 - players.length }).map((_, i) => (
+                <Paper key={`empty-${i}`} sx={{ p: 2.5, bgcolor: alpha('#fff', 0.02), border: '1px dashed rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 4 }}>
+                  <Typography variant="button" sx={{ color: 'text.secondary' }}>Aguardando jogador...</Typography>
+                </Paper>
+              ))}
+            </Stack>
+            {isHost ? (
+              <ActionButton fullWidth onClick={() => sendMessage('START_GAME')} size="large">
+                INICIAR JOGO AGORA
+              </ActionButton>
+            ) : (
+              <Typography variant="button" sx={{ color: 'text.secondary', display: 'block', mb: 2 }}>Aguardando o host iniciar a partida...</Typography>
+            )}
+            <IconButton onClick={() => { setActiveRoomId(''); setRoomIdInput(''); window.location.reload(); }} sx={{ mt: 4 }}>
+              <ArrowLeft /> Sair da Sala
+            </IconButton>
+          </Paper>
+        </Container>
+      </Box>
+    );
+  }
 
   if (session?.gameOver) {
     return (

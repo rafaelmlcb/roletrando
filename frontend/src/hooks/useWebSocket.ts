@@ -6,7 +6,7 @@ interface GameMessage {
     payload?: any;
 }
 
-export function useWebSocket(roomId: string, playerName: string) {
+export function useWebSocket(roomId: string, playerName: string, endpoint: string = 'game') {
     const [status, setStatus] = useState<'CONNECTING' | 'CONNECTED' | 'DISCONNECTED'>('CONNECTING');
     const [gameState, setGameState] = useState<any>(null);
     const [currentPlayerTurnId, setCurrentPlayerTurnId] = useState<string>('');
@@ -18,7 +18,7 @@ export function useWebSocket(roomId: string, playerName: string) {
         if (!roomId || !playerName) return;
 
         const host = window.location.hostname;
-        const wsUrl = `ws://${host}:8080/api/ws/game/${roomId}/${encodeURIComponent(playerName)}`;
+        const wsUrl = `ws://${host}:8080/api/ws/${endpoint}/${roomId}/${encodeURIComponent(playerName)}`;
 
         ws.current = new WebSocket(wsUrl);
 

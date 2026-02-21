@@ -6,8 +6,11 @@ import java.util.List;
 public class Room {
     public String id;
     public List<Player> players = new ArrayList<>();
-    public GameSession gameSession;
+    public GameSession gameSession; // For Roletrando
+    public QuizSession quizSession; // For Quiz
     public int currentTurnIndex = 0;
+    public String status = "WAITING"; // WAITING, PLAYING, FINISHED
+    public String hostConnectionId;
 
     public Room() {
     }

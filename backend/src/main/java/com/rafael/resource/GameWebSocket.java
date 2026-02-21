@@ -11,6 +11,7 @@ import jakarta.inject.Inject;
 import org.jboss.logging.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.vertx.core.Vertx;
 
 import java.util.Map;
 import java.util.UUID;
@@ -32,6 +33,9 @@ public class GameWebSocket {
     @Inject
     ObjectMapper mapper;
 
+    @Inject
+    Vertx vertx;
+
     @OnOpen
     public void onOpen() {
         String roomId = connection.pathParam("roomId");
@@ -44,13 +48,27 @@ public class GameWebSocket {
         if (room == null) {
             room = roomManager.createRoom(roomId);
             room.gameSession = gameEngine.startNewGame();
+            room.hostConnectionId = connId;
+        }
+
+        if (room.status.equals("PLAYING") || room.players.size() >= 3) {
+            try {
+                connection.sendTextAndAwait(
+                        mapper.writeValueAsString(new GameMessage("ERROR", "Sala cheia ou jogo já em andamento.")));
+            } catch (Exception e) {
+            }
+            return;
         }
 
         Player player = new Player(UUID.randomUUID().toString(), playerName,
-                "https://api.dicebear.com/7.x/avataaars/svg?seed=" + playerName, connId);
+                "https://api.dicebear.com/7.x/avataaars/svg?seed=" + playerName, connId, false);
         room.players.add(player);
 
-        broadcastGameState(room);
+        if (room.players.size() == 3) {
+            startGame(room);
+        } else {
+            broadcastGameState(room);
+        }
     }
 
     @OnTextMessage
@@ -74,6 +92,11 @@ public class GameWebSocket {
             boolean isMyTurn = room.players.indexOf(sender) == room.currentTurnIndex;
 
             switch (msg.type) {
+                case "START_GAME":
+                    if (connId.equals(room.hostConnectionId) && room.status.equals("WAITING")) {
+                        startGame(room);
+                    }
+                    break;
                 case "SPIN_START":
                     if (isMyTurn)
                         broadcastExcept(room, connId, new GameMessage("SPIN_START", null));
@@ -81,46 +104,20 @@ public class GameWebSocket {
                 case "SPIN_END":
                     if (isMyTurn) {
                         int val = Integer.parseInt(msg.payload.toString());
-                        if (val == 0) {
-                            sender.score = 0;
-                            room.gameSession.currentSpinValue = 0;
-                            room.gameSession.message = "Que azar! Perdeu tudo!";
-                            nextTurn(room);
-                        } else {
-                            room.gameSession.currentSpinValue = val;
-                            room.gameSession.message = "A roleta parou em " + val + " pontos! Escolha uma letra.";
-                        }
-                        broadcastGameState(room);
+                        handleSpinEnd(room, sender, val);
                     }
                     break;
                 case "GUESS":
                     if (isMyTurn) {
                         String letterStr = String.valueOf(msg.payload);
                         char letter = letterStr.charAt(0);
-
-                        int prevScore = room.gameSession.score;
-                        gameEngine.processGuess(room.gameSession.id, letter);
-                        int newScore = room.gameSession.score;
-
-                        if (newScore > prevScore) {
-                            sender.score += (newScore - prevScore);
-                            room.gameSession.currentSpinValue = 0;
-                        } else {
-                            nextTurn(room);
-                        }
-                        broadcastGameState(room);
+                        handleGuess(room, sender, letter);
                     }
                     break;
                 case "SOLVE":
                     if (isMyTurn) {
                         String phrase = String.valueOf(msg.payload);
-                        gameEngine.solve(room.gameSession.id, phrase);
-                        if (room.gameSession.gameOver) {
-                            sender.score += 5000;
-                        } else {
-                            nextTurn(room);
-                        }
-                        broadcastGameState(room);
+                        handleSolve(room, sender, phrase);
                     }
                     break;
             }
@@ -153,10 +150,121 @@ public class GameWebSocket {
         LOG.error("WebSocket error on connection " + connection.id(), t);
     }
 
+    private void handleSpinEnd(Room room, Player sender, int val) {
+        if (val == 0) {
+            sender.score = 0;
+            room.gameSession.currentSpinValue = 0;
+            room.gameSession.message = "Que azar! Perdeu tudo!";
+            nextTurn(room);
+        } else {
+            room.gameSession.currentSpinValue = val;
+            room.gameSession.message = "A roleta parou em " + val + " pontos! Escolha uma letra.";
+        }
+        broadcastGameState(room);
+    }
+
+    private void handleGuess(Room room, Player sender, char letter) {
+        int prevScore = room.gameSession.score;
+        gameEngine.processGuess(room.gameSession.id, letter);
+        int newScore = room.gameSession.score;
+
+        if (newScore > prevScore) {
+            sender.score += (newScore - prevScore);
+            room.gameSession.currentSpinValue = 0;
+            broadcastGameState(room);
+            checkBotTurn(room); // bot might get to play again right away
+        } else {
+            nextTurn(room);
+            broadcastGameState(room);
+        }
+    }
+
+    private void handleSolve(Room room, Player sender, String phrase) {
+        gameEngine.solve(room.gameSession.id, phrase);
+        if (room.gameSession.gameOver) {
+            sender.score += 5000;
+        } else {
+            nextTurn(room);
+        }
+        broadcastGameState(room);
+    }
+
+    private void startGame(Room room) {
+        room.status = "PLAYING";
+        int botCount = 1;
+        while (room.players.size() < 3) {
+            room.players.add(new Player(UUID.randomUUID().toString(), "Robô " + botCount,
+                    "https://api.dicebear.com/7.x/avataaars/svg?seed=bot" + botCount, "BOT_" + botCount, true));
+            botCount++;
+        }
+        broadcastGameState(room);
+        checkBotTurn(room);
+    }
+
     private void nextTurn(Room room) {
-        if (!room.players.isEmpty()) {
+        if (!room.players.isEmpty() && !room.gameSession.gameOver) {
             room.currentTurnIndex = (room.currentTurnIndex + 1) % room.players.size();
             room.gameSession.currentSpinValue = 0;
+            checkBotTurn(room);
+        }
+    }
+
+    private void checkBotTurn(Room room) {
+        if (room.status.equals("PLAYING") && !room.gameSession.gameOver) {
+            Player current = room.players.get(room.currentTurnIndex);
+            if (current.isBot) {
+                vertx.setTimer(1500, id -> playBotTurn(room, current));
+            }
+        }
+    }
+
+    private void playBotTurn(Room room, Player bot) {
+        if (!room.status.equals("PLAYING") || room.gameSession.gameOver)
+            return;
+        Player current = room.players.get(room.currentTurnIndex);
+        if (!current.id.equals(bot.id))
+            return; // turn changed
+
+        if (room.gameSession.currentSpinValue == 0) {
+            broadcastGameState(room); // send state to ensure UI is updated
+            broadcastExcept(room, "", new GameMessage("SPIN_START", null));
+
+            vertx.setTimer(3000, id -> {
+                if (room.gameSession.gameOver)
+                    return;
+                // Random spin value simulation
+                int[] values = { 0, 100, 200, 300, 400, 500, 600, 800, 1000 };
+                int val = values[(int) (Math.random() * values.length)];
+                handleSpinEnd(room, bot, val);
+
+                if (val > 0) {
+                    vertx.setTimer(1500, id2 -> playBotGuess(room, bot));
+                }
+            });
+        }
+    }
+
+    private void playBotGuess(Room room, Player bot) {
+        if (!room.status.equals("PLAYING") || room.gameSession.gameOver)
+            return;
+        Player current = room.players.get(room.currentTurnIndex);
+        if (!current.id.equals(bot.id))
+            return;
+
+        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        java.util.List<Character> unrevealed = new java.util.ArrayList<>();
+        for (char c : alphabet.toCharArray()) {
+            if (!room.gameSession.guessedLetters.contains(c)) {
+                unrevealed.add(c);
+            }
+        }
+
+        if (!unrevealed.isEmpty()) {
+            char guess = unrevealed.get((int) (Math.random() * unrevealed.size()));
+            handleGuess(room, bot, guess);
+        } else {
+            nextTurn(room);
+            broadcastGameState(room);
         }
     }
 
