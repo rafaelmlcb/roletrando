@@ -17,8 +17,17 @@ export function useWebSocket(roomId: string, playerName: string, endpoint: strin
     const connect = useCallback(() => {
         if (!roomId || !playerName) return;
 
-        const host = window.location.hostname;
-        const wsUrl = `ws://${host}:8080/api/ws/${endpoint}/${roomId}/${encodeURIComponent(playerName)}`;
+        let wsBaseUrl = '';
+        if (import.meta.env.VITE_API_URL) {
+            wsBaseUrl = import.meta.env.VITE_API_URL.replace(/^http/, 'ws');
+        } else {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const host = window.location.hostname;
+            wsBaseUrl = `${protocol}//${host}:8080`;
+        }
+
+        wsBaseUrl = wsBaseUrl.replace(/\/$/, '');
+        const wsUrl = `${wsBaseUrl}/api/ws/${endpoint}/${roomId}/${encodeURIComponent(playerName)}`;
 
         ws.current = new WebSocket(wsUrl);
 
