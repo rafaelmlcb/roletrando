@@ -9,7 +9,7 @@ interface WheelProps {
 }
 
 export interface WheelHandle {
-    spin: () => void;
+    spin: (targetValue?: number) => void;
 }
 
 const SEGMENTS = [
@@ -30,13 +30,31 @@ export const Wheel = forwardRef<WheelHandle, WheelProps>(({ onSpinEnd, onSpinSta
     const [rotation, setRotation] = useState(0);
     const lastTickRef = useRef(0);
 
-    const spin = async () => {
+    const spin = async (targetValue?: number) => {
         if (isSpinning) return;
 
         onSpinStart();
 
-        const extraDegrees = Math.floor(Math.random() * 360);
-        const totalRotation = rotation + 1800 + extraDegrees; // 5 full turns
+        const segmentAngle = 360 / SEGMENTS.length;
+        let finalIndex = -1;
+        if (targetValue !== undefined) {
+            finalIndex = SEGMENTS.findIndex(s => s.value === targetValue);
+        } else {
+            finalIndex = Math.floor(Math.random() * SEGMENTS.length);
+        }
+
+        // Randomly pick an angle within the target segment (avoiding edges)
+        const offsetRotation = finalIndex * segmentAngle + (Math.random() * segmentAngle * 0.8 + segmentAngle * 0.1);
+
+        // offsetRotation is where the pointer (270 degrees) should land relative to the wheel
+        let finalAngle = (270 - offsetRotation) % 360;
+        if (finalAngle < 0) finalAngle += 360;
+
+        const baseRotation = rotation - (rotation % 360) + 1800; // spin 5 times
+        let totalRotation = baseRotation + finalAngle;
+        if (totalRotation < rotation + 1440) {
+            totalRotation += 360;
+        }
 
         setRotation(totalRotation);
 
@@ -45,12 +63,7 @@ export const Wheel = forwardRef<WheelHandle, WheelProps>(({ onSpinEnd, onSpinSta
             transition: { duration: 4, ease: [0.15, 0, 0.15, 1] }
         });
 
-        const finalAngle = totalRotation % 360;
-        const segmentAngle = 360 / SEGMENTS.length;
-        const offsetRotation = (270 - finalAngle + 360) % 360;
-        const index = Math.floor(offsetRotation / segmentAngle);
-
-        onSpinEnd(SEGMENTS[index % SEGMENTS.length].value);
+        onSpinEnd(targetValue ?? SEGMENTS[finalIndex].value);
     };
 
     useImperativeHandle(ref, () => ({
@@ -113,7 +126,7 @@ export const Wheel = forwardRef<WheelHandle, WheelProps>(({ onSpinEnd, onSpinSta
             </div>
 
             <button
-                onClick={spin}
+                onClick={() => spin()}
                 disabled={isSpinning}
                 style={{
                     marginTop: '30px',

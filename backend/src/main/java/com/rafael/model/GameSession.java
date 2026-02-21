@@ -15,6 +15,7 @@ public class GameSession {
 
     public int score;
     public int currentSpinValue;
+    public int pendingSpinValue;
     public Set<Character> guessedLetters;
     public boolean gameOver;
 

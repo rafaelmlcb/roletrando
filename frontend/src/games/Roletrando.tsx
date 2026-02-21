@@ -32,7 +32,8 @@ const Roletrando: React.FC = () => {
     if (lastEvent) {
       if (lastEvent.type === 'SPIN_START') {
         setIsSpinning(true);
-        wheelRef.current?.spin();
+        const val = lastEvent.payload;
+        wheelRef.current?.spin(val);
       }
       setLastEvent(null);
     }
@@ -64,19 +65,19 @@ const Roletrando: React.FC = () => {
     sendMessage('SOLVE', phrase.toUpperCase());
   };
 
-  const handleSpinEnd = (value: number) => {
+  const handleSpinEnd = () => {
     setIsSpinning(false);
     // Send spin result to server. Only the person who spun sends this to authoritative server.
     if (currentPlayerTurnId === gameState?.players.find((p: any) => p.name === userName)?.id) {
-      sendMessage('SPIN_END', value);
+      sendMessage('SPIN_END');
     }
   };
 
   const startSpin = () => {
     if (isSpinning || currentPlayerTurnId !== gameState?.players.find((p: any) => p.name === userName)?.id) return;
-    sendMessage('SPIN_START');
     setIsSpinning(true);
-    wheelRef.current?.spin();
+    sendMessage('SPIN_START');
+    // Wheel will spin when SPIN_START event is received back from the server
   };
 
   // UI rendering

@@ -53,8 +53,10 @@ public class GameWebSocket {
 
         if (room.status.equals("PLAYING") || room.players.size() >= 3) {
             try {
-                connection.sendTextAndAwait(
-                        mapper.writeValueAsString(new GameMessage("ERROR", "Sala cheia ou jogo já em andamento.")));
+                connection.sendText(
+                        mapper.writeValueAsString(new GameMessage("ERROR", "Sala cheia ou jogo já em andamento.")))
+                        .subscribe().with(v -> {
+                        }, err -> LOG.error("Send error", err));
             } catch (Exception e) {
             }
             return;
@@ -98,12 +100,18 @@ public class GameWebSocket {
                     }
                     break;
                 case "SPIN_START":
-                    if (isMyTurn)
-                        broadcastExcept(room, connId, new GameMessage("SPIN_START", null));
+                    if (isMyTurn) {
+                        int[] values = { 100, 500, 200, 1000, 0, 300, 600, 150, 800, 400 };
+                        int val = values[(int) (Math.random() * values.length)];
+                        room.gameSession.pendingSpinValue = val;
+                        // Broadcast the spin start with the target value to EVERYONE
+                        broadcastExcept(room, "", new GameMessage("SPIN_START", val));
+                    }
                     break;
                 case "SPIN_END":
                     if (isMyTurn) {
-                        int val = Integer.parseInt(msg.payload.toString());
+                        // Use the server-generated pending value
+                        int val = room.gameSession.pendingSpinValue;
                         handleSpinEnd(room, sender, val);
                     }
                     break;
@@ -227,14 +235,18 @@ public class GameWebSocket {
 
         if (room.gameSession.currentSpinValue == 0) {
             broadcastGameState(room); // send state to ensure UI is updated
-            broadcastExcept(room, "", new GameMessage("SPIN_START", null));
 
-            vertx.setTimer(3000, id -> {
+            // Random spin value simulation
+            int[] values = { 100, 500, 200, 1000, 0, 300, 600, 150, 800, 400 };
+            int val = values[(int) (Math.random() * values.length)];
+            room.gameSession.pendingSpinValue = val;
+
+            broadcastExcept(room, "", new GameMessage("SPIN_START", val));
+
+            // Wait 4.5 seconds for wheel animation before finishing spin
+            vertx.setTimer(4500, id -> {
                 if (room.gameSession.gameOver)
                     return;
-                // Random spin value simulation
-                int[] values = { 0, 100, 200, 300, 400, 500, 600, 800, 1000 };
-                int val = values[(int) (Math.random() * values.length)];
                 handleSpinEnd(room, bot, val);
 
                 if (val > 0) {
@@ -279,7 +291,8 @@ public class GameWebSocket {
             connection.getOpenConnections().forEach(conn -> {
                 boolean inRoom = room.players.stream().anyMatch(p -> p.connectionId.equals(conn.id()));
                 if (inRoom) {
-                    conn.sendTextAndAwait(json);
+                    conn.sendText(json).subscribe().with(v -> {
+                    }, err -> LOG.error("Send error", err));
                 }
             });
         } catch (Exception e) {
@@ -293,7 +306,8 @@ public class GameWebSocket {
             connection.getOpenConnections().forEach(conn -> {
                 boolean inRoom = room.players.stream().anyMatch(p -> p.connectionId.equals(conn.id()));
                 if (inRoom && !conn.id().equals(excludeConnId)) {
-                    conn.sendTextAndAwait(json);
+                    conn.sendText(json).subscribe().with(v -> {
+                    }, err -> LOG.error("Send error", err));
                 }
             });
         } catch (Exception e) {

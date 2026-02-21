@@ -48,11 +48,11 @@ public class QuizWebSocket {
             room.hostConnectionId = connId;
         }
 
-        if (room.status.equals("PLAYING") || room.players.size() >= 50) { // Quiz allows more players, but let's cap at
-                                                                          // 50
+        if (room.status.equals("PLAYING")) {
             try {
-                connection.sendTextAndAwait(
-                        mapper.writeValueAsString(new GameMessage("ERROR", "Sala cheia ou jogo já em andamento.")));
+                connection.sendText(mapper.writeValueAsString(new GameMessage("ERROR", "Jogo já em andamento.")))
+                        .subscribe().with(v -> {
+                        }, err -> LOG.error("Send error", err));
             } catch (Exception e) {
             }
             return;
@@ -133,13 +133,6 @@ public class QuizWebSocket {
 
     private void startGame(Room room) {
         room.status = "PLAYING";
-        int botCount = 1;
-        // If there are less than 3 players, fill with bots up to 3
-        while (room.players.size() < 3) {
-            room.players.add(new Player(UUID.randomUUID().toString(), "Convidado " + botCount,
-                    "https://api.dicebear.com/7.x/avataaars/svg?seed=bot" + botCount, "BOT_" + botCount, true));
-            botCount++;
-        }
         broadcastGameState(room);
 
         // Let clients know game started
@@ -155,7 +148,8 @@ public class QuizWebSocket {
             connection.getOpenConnections().forEach(conn -> {
                 boolean inRoom = room.players.stream().anyMatch(p -> p.connectionId.equals(conn.id()));
                 if (inRoom) {
-                    conn.sendTextAndAwait(json);
+                    conn.sendText(json).subscribe().with(v -> {
+                    }, err -> LOG.error("Send error", err));
                 }
             });
         } catch (Exception e) {
@@ -169,7 +163,8 @@ public class QuizWebSocket {
             connection.getOpenConnections().forEach(conn -> {
                 boolean inRoom = room.players.stream().anyMatch(p -> p.connectionId.equals(conn.id()));
                 if (inRoom && !conn.id().equals(excludeConnId)) {
-                    conn.sendTextAndAwait(json);
+                    conn.sendText(json).subscribe().with(v -> {
+                    }, err -> LOG.error("Send error", err));
                 }
             });
         } catch (Exception e) {
