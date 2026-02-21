@@ -11,6 +11,7 @@ import {
 import { dataApi } from '../utils/api';
 import { useSound } from '../hooks/useSound';
 import { useUser } from '../context/UserContext';
+import { useTheme } from '../context/ThemeContext';
 import { ActionButton } from '../components/shared/ActionButton';
 
 interface SessionQuestion {
@@ -25,6 +26,7 @@ const Millionaire: React.FC = () => {
     const navigate = useNavigate();
     const { playSound } = useSound();
     const { userName } = useUser();
+    const { selectedTheme } = useTheme();
 
     const [currentLevel, setCurrentLevel] = useState(0);
     const [gameState, setGameState] = useState<'playing' | 'winning' | 'lost' | 'finished'>('playing');
@@ -48,7 +50,7 @@ const Millionaire: React.FC = () => {
     const fetchQuestions = async () => {
         setLoading(true);
         try {
-            const res = await dataApi.get('/millionaire/questions');
+            const res = await dataApi.get('/millionaire/questions', { params: { theme: selectedTheme } });
             setSessionQuestions(res.data);
         } catch (error) {
             console.error('Erro carregando questoes', error);
@@ -72,7 +74,8 @@ const Millionaire: React.FC = () => {
         try {
             const res = await dataApi.post(
                 `/millionaire/answer/${currentQuestion.level}/${currentQuestion.questionIndex}`,
-                { answerIndex: selectedAnswer }
+                { answerIndex: selectedAnswer },
+                { params: { theme: selectedTheme } }
             );
             const { correct, correctAnswerIndex } = res.data;
             setCorrectAnswerIndex(correctAnswerIndex);
@@ -125,7 +128,7 @@ const Millionaire: React.FC = () => {
         if (!lifelines.fiftyFifty || isConfirmed || gameState !== 'playing' || !currentQuestion) return;
         playSound('click');
         try {
-            const res = await dataApi.get(`/millionaire/lifeline/fiftyfifty/${currentQuestion.level}/${currentQuestion.questionIndex}`);
+            const res = await dataApi.get(`/millionaire/lifeline/fiftyfifty/${currentQuestion.level}/${currentQuestion.questionIndex}`, { params: { theme: selectedTheme } });
             if (res.data.hiddenOptions && Array.isArray(res.data.hiddenOptions)) {
                 setHiddenOptions(res.data.hiddenOptions);
                 setLifelines(prev => ({ ...prev, fiftyFifty: false }));
@@ -139,7 +142,7 @@ const Millionaire: React.FC = () => {
         if (!lifelines.audience || isConfirmed || gameState !== 'playing' || !currentQuestion) return;
         playSound('click');
         try {
-            const res = await dataApi.get(`/millionaire/lifeline/audience/${currentQuestion.level}/${currentQuestion.questionIndex}`);
+            const res = await dataApi.get(`/millionaire/lifeline/audience/${currentQuestion.level}/${currentQuestion.questionIndex}`, { params: { theme: selectedTheme } });
             const ad = res.data.audienceData;
             if (ad && Array.isArray(ad) && ad.length === 4) {
                 setAudienceData(ad.map(Number));
@@ -156,7 +159,8 @@ const Millionaire: React.FC = () => {
         setLifelines(prev => ({ ...prev, skip: false }));
         try {
             const res = await dataApi.get(
-                `/millionaire/skip/${currentQuestion.level}?excludeIndex=${currentQuestion.questionIndex}`
+                `/millionaire/skip/${currentQuestion.level}?excludeIndex=${currentQuestion.questionIndex}`,
+                { params: { theme: selectedTheme } }
             );
             // Replace current question in session with the new one
             const newQ: SessionQuestion = {

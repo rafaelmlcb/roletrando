@@ -9,6 +9,7 @@ import { Container, Typography, Box, Grid, alpha, Paper, Stack, IconButton, Butt
 import { dataApi } from '../utils/api';
 import { useSound } from '../hooks/useSound';
 import { useUser } from '../context/UserContext';
+import { useTheme } from '../context/ThemeContext';
 import { ActionButton } from '../components/shared/ActionButton';
 import { useWebSocket } from '../hooks/useWebSocket';
 
@@ -18,6 +19,7 @@ const Quiz: React.FC = () => {
     const navigate = useNavigate();
     const { playSound, stopSound } = useSound();
     const { userName } = useUser();
+    const { selectedTheme } = useTheme();
 
     const [currentStep, setCurrentStep] = useState(0);
     const [localPhase, setLocalPhase] = useState<'question' | 'feedback' | 'question_ranking' | 'accumulated_ranking' | 'ended'>('question');
@@ -39,7 +41,7 @@ const Quiz: React.FC = () => {
     useEffect(() => {
         const fetchQuestions = async () => {
             try {
-                const res = await dataApi.get('/quiz/questions');
+                const res = await dataApi.get('/quiz/questions', { params: { theme: selectedTheme } });
                 setQuestions(res.data);
             } catch (error) {
                 console.error("Erro carregando questoes do quiz", error);
@@ -105,7 +107,7 @@ const Quiz: React.FC = () => {
             setSelectedAnswer(-1);
             try {
                 const q = questions[currentStep];
-                const res = await dataApi.post(`/quiz/answer/${q?.level ?? 1}/${q?.questionIndex ?? 0}`, { answerIndex: -1 });
+                const res = await dataApi.post(`/quiz/answer/${q?.level ?? 1}/${q?.questionIndex ?? 0}`, { answerIndex: -1 }, { params: { theme: selectedTheme } });
                 setCorrectAnswerIndex(res.data.correctAnswerIndex);
             } catch (e) {
                 console.error(e);
@@ -123,7 +125,7 @@ const Quiz: React.FC = () => {
 
         try {
             const q = questions[currentStep];
-            const res = await dataApi.post(`/quiz/answer/${q?.level ?? 1}/${q?.questionIndex ?? 0}`, { answerIndex: index });
+            const res = await dataApi.post(`/quiz/answer/${q?.level ?? 1}/${q?.questionIndex ?? 0}`, { answerIndex: index }, { params: { theme: selectedTheme } });
             const { correct, correctAnswerIndex } = res.data;
             setCorrectAnswerIndex(correctAnswerIndex);
             let youScore = 0;
@@ -175,7 +177,7 @@ const Quiz: React.FC = () => {
         setRoomIdInput('');
         // Reload fresh random questions
         try {
-            const res = await dataApi.get('/quiz/questions');
+            const res = await dataApi.get('/quiz/questions', { params: { theme: selectedTheme } });
             setQuestions(res.data);
         } catch (e) {
             console.error(e);

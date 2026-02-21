@@ -85,10 +85,16 @@ Cada nível tem `level` (1-3), `label` ("Fácil"/"Médio"/"Difícil") e `questio
 
 ## 📁 Como Aplicar o Tema no Projeto
 
+### Opção 1: Seleção via Interface (Recomendado)
 1. Crie a pasta `backend/src/main/resources/data/{nome-do-tema}/`
 2. Salve os três arquivos (`wheel.json`, `millionaire.json`, `quiz.json`) dentro dela.
-3. Em `backend/src/main/resources/application.properties`, configure:
-   ```
-   game.theme={nome-do-tema}
-   ```
-4. Reinicie o backend — os dados do novo tema serão carregados automaticamente.
+3. Reinicie o backend — o novo tema será detectado automaticamente.
+4. Na **tela principal do jogo**, use o seletor **"TEMA DO JOGO"** para escolher o tema desejado.
+5. Todos os jogos (Roletrando, Show do Milhão, Quiz) carregarão conteúdo do tema selecionado.
+
+### Opção 2: Configurar o tema padrão (application.properties)
+Em `backend/src/main/resources/application.properties`, configure:
+```
+game.theme={nome-do-tema}
+```
+O tema configurado aqui será o padrão exibido na interface e usado como fallback.

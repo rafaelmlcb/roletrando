@@ -4,8 +4,6 @@ import com.rafael.model.MillionaireLevel;
 import com.rafael.model.MillionaireQuestion;
 import com.rafael.model.QuizLevel;
 import com.rafael.model.QuizQuestion;
-import com.rafael.model.dto.SecureMillionaireQuestion;
-import com.rafael.model.dto.SecureQuizQuestion;
 import com.rafael.service.DataLoaderService;
 import org.jboss.logging.Logger;
 
@@ -18,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 @Path("/api/data")
 @Produces(MediaType.APPLICATION_JSON)
@@ -32,13 +29,27 @@ public class DataResource {
     DataLoaderService dataLoader;
 
     // ============================================================
+    // THEME DISCOVERY ENDPOINT
+    // ============================================================
+
+    @GET
+    @Path("/themes")
+    public Response getThemes() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("themes", dataLoader.getAvailableThemes());
+        response.put("defaultTheme", dataLoader.getDefaultTheme());
+        return Response.ok(response).build();
+    }
+
+    // ============================================================
     // MILLIONAIRE ENDPOINTS
     // ============================================================
 
     @GET
     @Path("/millionaire/questions")
-    public Response getMillionaireQuestions() {
-        List<MillionaireLevel> levels = dataLoader.getMillionaireLevels();
+    public Response getMillionaireQuestions(@QueryParam("theme") String theme) {
+        String t = resolveTheme(theme);
+        List<MillionaireLevel> levels = dataLoader.getMillionaireLevels(t);
         if (levels == null || levels.isEmpty())
             return Response.status(Response.Status.NOT_FOUND).build();
 
@@ -68,9 +79,10 @@ public class DataResource {
     public Response checkMillionaireAnswer(
             @PathParam("level") int level,
             @PathParam("questionIndex") int questionIndex,
+            @QueryParam("theme") String theme,
             AnswerRequest request) {
 
-        MillionaireQuestion q = getMillionaireQuestion(level, questionIndex);
+        MillionaireQuestion q = getMillionaireQuestion(resolveTheme(theme), level, questionIndex);
         if (q == null)
             return Response.status(Response.Status.BAD_REQUEST).build();
 
@@ -85,9 +97,10 @@ public class DataResource {
     @Path("/millionaire/lifeline/fiftyfifty/{level}/{questionIndex}")
     public Response getFiftyFifty(
             @PathParam("level") int level,
-            @PathParam("questionIndex") int questionIndex) {
+            @PathParam("questionIndex") int questionIndex,
+            @QueryParam("theme") String theme) {
 
-        MillionaireQuestion q = getMillionaireQuestion(level, questionIndex);
+        MillionaireQuestion q = getMillionaireQuestion(resolveTheme(theme), level, questionIndex);
         if (q == null)
             return Response.status(Response.Status.BAD_REQUEST).build();
 
@@ -98,8 +111,7 @@ public class DataResource {
         }
         List<Integer> toHide = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
-            int randomIndex = RANDOM.nextInt(wrongAnswers.size());
-            toHide.add(wrongAnswers.remove(randomIndex));
+            toHide.add(wrongAnswers.remove(RANDOM.nextInt(wrongAnswers.size())));
         }
         Map<String, Object> response = new HashMap<>();
         response.put("hiddenOptions", toHide);
@@ -110,9 +122,10 @@ public class DataResource {
     @Path("/millionaire/lifeline/audience/{level}/{questionIndex}")
     public Response getAudience(
             @PathParam("level") int level,
-            @PathParam("questionIndex") int questionIndex) {
+            @PathParam("questionIndex") int questionIndex,
+            @QueryParam("theme") String theme) {
 
-        MillionaireQuestion q = getMillionaireQuestion(level, questionIndex);
+        MillionaireQuestion q = getMillionaireQuestion(resolveTheme(theme), level, questionIndex);
         if (q == null)
             return Response.status(Response.Status.BAD_REQUEST).build();
 
@@ -145,14 +158,15 @@ public class DataResource {
     @Path("/millionaire/skip/{level}")
     public Response skipMillionaireQuestion(
             @PathParam("level") int level,
-            @QueryParam("excludeIndex") int excludeIndex) {
+            @QueryParam("excludeIndex") int excludeIndex,
+            @QueryParam("theme") String theme) {
 
-        List<MillionaireLevel> levels = dataLoader.getMillionaireLevels();
+        String t = resolveTheme(theme);
+        List<MillionaireLevel> levels = dataLoader.getMillionaireLevels(t);
         if (levels == null)
             return Response.status(Response.Status.NOT_FOUND).build();
 
-        MillionaireLevel foundLevel = levels.stream()
-                .filter(l -> l.level == level).findFirst().orElse(null);
+        MillionaireLevel foundLevel = levels.stream().filter(l -> l.level == level).findFirst().orElse(null);
         if (foundLevel == null || foundLevel.questions.size() <= 1)
             return Response.status(Response.Status.BAD_REQUEST).build();
 
@@ -177,14 +191,11 @@ public class DataResource {
     // QUIZ ENDPOINTS
     // ============================================================
 
-    /**
-     * Returns one random question per quiz level (without the answer field).
-     * Response: [{ level, label, question, options, questionIndex }]
-     */
     @GET
     @Path("/quiz/questions")
-    public Response getQuizQuestions() {
-        List<QuizLevel> levels = dataLoader.getQuizLevels();
+    public Response getQuizQuestions(@QueryParam("theme") String theme) {
+        String t = resolveTheme(theme);
+        List<QuizLevel> levels = dataLoader.getQuizLevels(t);
         if (levels == null || levels.isEmpty())
             return Response.status(Response.Status.NOT_FOUND).build();
 
@@ -205,18 +216,15 @@ public class DataResource {
         return Response.ok(result).build();
     }
 
-    /**
-     * Validates the answer for a specific quiz level/question.
-     * POST /api/data/quiz/answer/{level}/{questionIndex}
-     */
     @POST
     @Path("/quiz/answer/{level}/{questionIndex}")
     public Response checkQuizAnswer(
             @PathParam("level") int level,
             @PathParam("questionIndex") int questionIndex,
+            @QueryParam("theme") String theme,
             AnswerRequest request) {
 
-        QuizQuestion q = getQuizQuestion(level, questionIndex);
+        QuizQuestion q = getQuizQuestion(resolveTheme(theme), level, questionIndex);
         if (q == null)
             return Response.status(Response.Status.BAD_REQUEST).build();
 
@@ -231,23 +239,25 @@ public class DataResource {
     // HELPERS
     // ============================================================
 
-    private MillionaireQuestion getMillionaireQuestion(int level, int questionIndex) {
-        List<MillionaireLevel> levels = dataLoader.getMillionaireLevels();
+    private String resolveTheme(String theme) {
+        return (theme != null && !theme.isBlank()) ? theme : dataLoader.getDefaultTheme();
+    }
+
+    private MillionaireQuestion getMillionaireQuestion(String theme, int level, int questionIndex) {
+        List<MillionaireLevel> levels = dataLoader.getMillionaireLevels(theme);
         if (levels == null)
             return null;
-        MillionaireLevel foundLevel = levels.stream()
-                .filter(l -> l.level == level).findFirst().orElse(null);
+        MillionaireLevel foundLevel = levels.stream().filter(l -> l.level == level).findFirst().orElse(null);
         if (foundLevel == null || questionIndex < 0 || questionIndex >= foundLevel.questions.size())
             return null;
         return foundLevel.questions.get(questionIndex);
     }
 
-    private QuizQuestion getQuizQuestion(int level, int questionIndex) {
-        List<QuizLevel> levels = dataLoader.getQuizLevels();
+    private QuizQuestion getQuizQuestion(String theme, int level, int questionIndex) {
+        List<QuizLevel> levels = dataLoader.getQuizLevels(theme);
         if (levels == null)
             return null;
-        QuizLevel foundLevel = levels.stream()
-                .filter(l -> l.level == level).findFirst().orElse(null);
+        QuizLevel foundLevel = levels.stream().filter(l -> l.level == level).findFirst().orElse(null);
         if (foundLevel == null || questionIndex < 0 || questionIndex >= foundLevel.questions.size())
             return null;
         return foundLevel.questions.get(questionIndex);

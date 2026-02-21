@@ -1,0 +1,62 @@
+[
+    {
+        "category": "TECNOLOGIA",
+        "phrase": "KUBERNETES E HELM"
+    },
+    {
+        "category": "TECNOLOGIA",
+        "phrase": "POSTGRESQL E MONGODB"
+    },
+    {
+        "category": "TECNOLOGIA",
+        "phrase": "SPRING BOOT E REACT"
+    },
+    {
+        "category": "DESIGN SYSTEM",
+        "phrase": "QUATI DESIGN SYSTEM"
+    },
+    {
+        "category": "SEGURANÇA",
+        "phrase": "KEYCLOAK E KONG"
+    },
+    {
+        "category": "OBSERVABILIDADE",
+        "phrase": "GRAFANA E PROMETHEUS"
+    },
+    {
+        "category": "PROCESSOS",
+        "phrase": "MOTOR DE PROCESSOS KOGITO"
+    },
+    {
+        "category": "AUTOMAÇÃO",
+        "phrase": "TESTES COM PLAYWRIGHT"
+    },
+    {
+        "category": "CONCEITO",
+        "phrase": "COLMEIA DIGITAL"
+    },
+    {
+        "category": "GOVERNANÇA",
+        "phrase": "FRAMEWORK RAAR"
+    },
+    {
+        "category": "METÁFORA",
+        "phrase": "ABELHA JATAI"
+    },
+    {
+        "category": "INFRAESTRUTURA",
+        "phrase": "PIPELINE CI CD UNIFICADO"
+    },
+    {
+        "category": "DADOS",
+        "phrase": "APACHE SUPERSET"
+    },
+    {
+        "category": "ESTRATÉGIA",
+        "phrase": "ROADMAP DOIS MIL E VINTE SEIS"
+    },
+    {
+        "category": "SEGURANÇA",
+        "phrase": "HASHICORP VAULT"
+    }
+]
