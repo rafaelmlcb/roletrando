@@ -16,7 +16,7 @@ import io.vertx.core.Vertx;
 import java.util.Map;
 import java.util.UUID;
 
-@WebSocket(path = "/api/ws/game/{roomId}/{playerName}")
+@WebSocket(path = "/api/ws/game/{roomId}/{playerName}/{theme}")
 public class GameWebSocket {
 
     private static final Logger LOG = Logger.getLogger(GameWebSocket.class);
@@ -40,14 +40,17 @@ public class GameWebSocket {
     public void onOpen() {
         String roomId = connection.pathParam("roomId");
         String playerName = connection.pathParam("playerName");
+        String theme = connection.pathParam("theme");
+        if (theme == null || theme.isBlank())
+            theme = "default";
         String connId = connection.id();
 
-        LOG.infof("User %s joining room %s mapped to connection %s", playerName, roomId, connId);
+        LOG.infof("User %s joining room %s (theme: %s) mapped to connection %s", playerName, roomId, theme, connId);
 
         Room room = roomManager.getRoom(roomId);
         if (room == null) {
             room = roomManager.createRoom(roomId);
-            room.gameSession = gameEngine.startNewGame();
+            room.gameSession = gameEngine.startNewGame(theme);
             room.hostConnectionId = connId;
         }
 

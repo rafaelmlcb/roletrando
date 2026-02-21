@@ -24,15 +24,13 @@ public class GameEngine {
     private int lastIndex = -1;
 
     /**
-     * Initializes a new GameSession with a random phrase.
-     * 
-     * @return Initialized GameSession.
+     * Initializes a new GameSession with a random phrase from the given theme.
      */
-    public GameSession startNewGame() {
-        java.util.List<WheelPhrase> phrases = dataLoader.getWheelPhrases();
+    public GameSession startNewGame(String theme) {
+        java.util.List<WheelPhrase> phrases = dataLoader.getWheelPhrases(theme);
 
         if (phrases == null || phrases.isEmpty()) {
-            throw new IllegalStateException("Nenhuma frase da Roleta encontrada no tema carregado.");
+            throw new IllegalStateException("Nenhuma frase da Roleta encontrada para o tema: " + theme);
         }
 
         int index;
@@ -57,6 +55,11 @@ public class GameEngine {
         GameStore.sessions.put(session.id, session);
 
         return session;
+    }
+
+    /** Backward-compatible: uses the configured default theme. */
+    public GameSession startNewGame() {
+        return startNewGame(dataLoader.getDefaultTheme());
     }
 
     /**

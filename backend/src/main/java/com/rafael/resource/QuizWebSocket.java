@@ -16,7 +16,7 @@ import io.vertx.core.Vertx;
 import java.util.Map;
 import java.util.UUID;
 
-@WebSocket(path = "/api/ws/quiz/{roomId}/{playerName}")
+@WebSocket(path = "/api/ws/quiz/{roomId}/{playerName}/{theme}")
 public class QuizWebSocket {
 
     private static final Logger LOG = Logger.getLogger(QuizWebSocket.class);
@@ -37,9 +37,11 @@ public class QuizWebSocket {
     public void onOpen() {
         String roomId = connection.pathParam("roomId");
         String playerName = connection.pathParam("playerName");
+        String theme = connection.pathParam("theme");
         String connId = connection.id();
 
-        LOG.infof("Quiz User %s joining room %s mapped to connection %s", playerName, roomId, connId);
+        LOG.infof("Quiz User %s joining room %s (theme: %s) mapped to connection %s", playerName, roomId, theme,
+                connId);
 
         Room room = roomManager.getRoom(roomId);
         if (room == null) {

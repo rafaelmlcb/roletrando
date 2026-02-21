@@ -33,7 +33,7 @@ const Quiz: React.FC = () => {
     // Multiplayer State
     const [roomIdInput, setRoomIdInput] = useState('');
     const [activeRoomId, setActiveRoomId] = useState<string>('');
-    const { status, gameState, lastEvent, sendMessage, setLastEvent } = useWebSocket(activeRoomId, userName || 'Player', 'quiz');
+    const { status, gameState, lastEvent, sendMessage, setLastEvent } = useWebSocket(activeRoomId, userName || 'Player', selectedTheme, 'quiz');
 
     const timerRef = useRef<number | null>(null);
 

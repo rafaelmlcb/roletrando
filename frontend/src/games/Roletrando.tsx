@@ -11,15 +11,18 @@ import { useUser } from '../context/UserContext';
 import { ActionButton } from '../components/shared/ActionButton';
 import { useWebSocket } from '../hooks/useWebSocket';
 
+import { useTheme } from '../context/ThemeContext';
+
 const Roletrando: React.FC = () => {
   const navigate = useNavigate();
   const { playSound } = useSound();
   const { userName } = useUser();
+  const { selectedTheme } = useTheme();
 
   const [roomIdInput, setRoomIdInput] = useState('');
   const [activeRoomId, setActiveRoomId] = useState<string>('');
 
-  const { status, gameState, currentPlayerTurnId, lastEvent, sendMessage, setLastEvent } = useWebSocket(activeRoomId, userName || 'Player');
+  const { status, gameState, currentPlayerTurnId, lastEvent, sendMessage, setLastEvent } = useWebSocket(activeRoomId, userName || 'Player', selectedTheme);
 
   const [isSpinning, setIsSpinning] = useState(false);
   const [error, setError] = useState<string | null>(null);

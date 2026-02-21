@@ -6,7 +6,7 @@ interface GameMessage {
     payload?: any;
 }
 
-export function useWebSocket(roomId: string, playerName: string, endpoint: string = 'game') {
+export function useWebSocket(roomId: string, playerName: string, theme: string = 'default', endpoint: string = 'game') {
     const [status, setStatus] = useState<'CONNECTING' | 'CONNECTED' | 'DISCONNECTED'>('CONNECTING');
     const [gameState, setGameState] = useState<any>(null);
     const [currentPlayerTurnId, setCurrentPlayerTurnId] = useState<string>('');
@@ -33,7 +33,7 @@ export function useWebSocket(roomId: string, playerName: string, endpoint: strin
         }
 
         wsBaseUrl = wsBaseUrl.replace(/\/$/, '');
-        const wsUrl = `${wsBaseUrl}/api/ws/${endpoint}/${roomId}/${encodeURIComponent(playerName)}`;
+        const wsUrl = `${wsBaseUrl}/api/ws/${endpoint}/${roomId}/${encodeURIComponent(playerName)}/${encodeURIComponent(theme)}`;
 
         Logger.info('useWebSocket', `Attempting to connect to: ${wsUrl}`);
         Logger.info('useWebSocket', `VITE_API_URL status: ${import.meta.env.VITE_API_URL ? 'set' : 'not set'}`);
@@ -69,7 +69,7 @@ export function useWebSocket(roomId: string, playerName: string, endpoint: strin
             Logger.error('useWebSocket', 'WebSocket error', err);
             setStatus('DISCONNECTED');
         };
-    }, [roomId, playerName]);
+    }, [roomId, playerName, theme, endpoint]);
 
     useEffect(() => {
         connect();
