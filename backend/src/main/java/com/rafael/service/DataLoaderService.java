@@ -2,7 +2,8 @@ package com.rafael.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rafael.model.MillionaireQuestion;
+import com.rafael.model.MillionaireData;
+import com.rafael.model.MillionaireLevel;
 import com.rafael.model.QuizQuestion;
 import com.rafael.model.WheelPhrase;
 import io.quarkus.runtime.StartupEvent;
@@ -28,13 +29,13 @@ public class DataLoaderService {
     ObjectMapper mapper;
 
     private List<WheelPhrase> wheelPhrases = new ArrayList<>();
-    private List<MillionaireQuestion> millionaireQuestions = new ArrayList<>();
+    private List<MillionaireLevel> millionaireLevels = new ArrayList<>();
     private List<QuizQuestion> quizQuestions = new ArrayList<>();
 
     void onStart(@Observes StartupEvent ev) {
         LOG.infof("Loading game data for theme: %s", theme);
         loadWheelPhrases();
-        loadMillionaireQuestions();
+        loadMillionaireData();
         loadQuizQuestions();
     }
 
@@ -53,18 +54,19 @@ public class DataLoaderService {
         }
     }
 
-    private void loadMillionaireQuestions() {
+    private void loadMillionaireData() {
         String path = "data/" + theme + "/millionaire.json";
         try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(path)) {
             if (is == null) {
                 LOG.warnf("File not found: %s. Using empty list.", path);
                 return;
             }
-            millionaireQuestions = mapper.readValue(is, new TypeReference<List<MillionaireQuestion>>() {
-            });
-            LOG.infof("Loaded %d millionaire questions.", millionaireQuestions.size());
+            MillionaireData data = mapper.readValue(is, MillionaireData.class);
+            millionaireLevels = data.levels;
+            int total = millionaireLevels.stream().mapToInt(l -> l.questions.size()).sum();
+            LOG.infof("Loaded %d millionaire levels with %d total questions.", millionaireLevels.size(), total);
         } catch (Exception e) {
-            LOG.error("Failed to load millionaire questions", e);
+            LOG.error("Failed to load millionaire data", e);
         }
     }
 
@@ -87,8 +89,8 @@ public class DataLoaderService {
         return wheelPhrases;
     }
 
-    public List<MillionaireQuestion> getMillionaireQuestions() {
-        return millionaireQuestions;
+    public List<MillionaireLevel> getMillionaireLevels() {
+        return millionaireLevels;
     }
 
     public List<QuizQuestion> getQuizQuestions() {

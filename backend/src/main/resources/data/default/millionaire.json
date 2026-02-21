@@ -1,152 +1,1264 @@
-[
-    {
-        "question": "Qual é a capital do Brasil?",
-        "options": [
-            "Rio de Janeiro",
-            "Brasília",
-            "São Paulo",
-            "Salvador"
-        ],
-        "answer": 1
-    },
-    {
-        "question": "Quantos planetas existem no sistema solar?",
-        "options": [
-            "7",
-            "8",
-            "9",
-            "10"
-        ],
-        "answer": 1
-    },
-    {
-        "question": "Quem pintou a 'Mona Lisa'?",
-        "options": [
-            "Vincent van Gogh",
-            "Pablo Picasso",
-            "Leonardo da Vinci",
-            "Claude Monet"
-        ],
-        "answer": 2
-    },
-    {
-        "question": "Qual é o maior oceano da Terra?",
-        "options": [
-            "Oceano Atlântico",
-            "Oceano Índico",
-            "Oceano Ártico",
-            "Oceano Pacífico"
-        ],
-        "answer": 3
-    },
-    {
-        "question": "Em que ano o homem pisou na Lua pela primeira vez?",
-        "options": [
-            "1965",
-            "1969",
-            "1972",
-            "1959"
-        ],
-        "answer": 1
-    },
-    {
-        "question": "Qual é o elemento químico com símbolo 'Au'?",
-        "options": [
-            "Prata",
-            "Cobre",
-            "Ouro",
-            "Alumínio"
-        ],
-        "answer": 2
-    },
-    {
-        "question": "Qual é a montanha mais alta do mundo?",
-        "options": [
-            "K2",
-            "Monte Everest",
-            "Monte Branco",
-            "Kilimanjaro"
-        ],
-        "answer": 1
-    },
-    {
-        "question": "Quem escreveu 'Dom Casmurro'?",
-        "options": [
-            "Machado de Assis",
-            "José de Alencar",
-            "Clarice Lispector",
-            "Jorge Amado"
-        ],
-        "answer": 0
-    },
-    {
-        "question": "Qual é a capital da França?",
-        "options": [
-            "Lyon",
-            "Marselha",
-            "Paris",
-            "Bordeaux"
-        ],
-        "answer": 2
-    },
-    {
-        "question": "Qual é o rio mais longo do mundo?",
-        "options": [
-            "Rio Amazonas",
-            "Rio Nilo",
-            "Rio Mississipi",
-            "Rio Yangtzé"
-        ],
-        "answer": 0
-    },
-    {
-        "question": "Qual destes países não fica na Europa?",
-        "options": [
-            "Áustria",
-            "Bélgica",
-            "Egito",
-            "Portugal"
-        ],
-        "answer": 2
-    },
-    {
-        "question": "Quantos ossos tem o corpo humano adulto?",
-        "options": [
-            "186",
-            "206",
-            "216",
-            "226"
-        ],
-        "answer": 1
-    },
-    {
-        "question": "Qual é a velocidade da luz?",
-        "options": [
-            "~300.000 km/s",
-            "~150.000 km/s",
-            "~100.000 km/s",
-            "~500.000 km/s"
-        ],
-        "answer": 0
-    },
-    {
-        "question": "Quem descobriu o Brasil?",
-        "options": [
-            "Cristóvão Colombo",
-            "Pedro Álvares Cabral",
-            "Vasco da Gama",
-            "Américo Vespúcio"
-        ],
-        "answer": 1
-    },
-    {
-        "question": "Qual é a fórmula química da água?",
-        "options": [
-            "CO2",
-            "O2",
-            "H2O",
-            "NaCl"
-        ],
-        "answer": 2
-    }
-]
+{
+    "levels": [
+        {
+            "level": 1,
+            "prize": "R$ 1.000",
+            "questions": [
+                {
+                    "question": "Qual é a capital do Brasil?",
+                    "options": [
+                        "Rio de Janeiro",
+                        "Brasília",
+                        "São Paulo",
+                        "Manaus"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Quantas horas tem um dia?",
+                    "options": [
+                        "12",
+                        "36",
+                        "24",
+                        "48"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é a cor do céu limpo durante o dia?",
+                    "options": [
+                        "Verde",
+                        "Vermelho",
+                        "Amarelo",
+                        "Azul"
+                    ],
+                    "answer": 3
+                },
+                {
+                    "question": "Quantos dias tem uma semana?",
+                    "options": [
+                        "5",
+                        "6",
+                        "7",
+                        "8"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual animal late?",
+                    "options": [
+                        "Gato",
+                        "Cachorro",
+                        "Vaca",
+                        "Porco"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é o maior planeta do sistema solar?",
+                    "options": [
+                        "Terra",
+                        "Marte",
+                        "Saturno",
+                        "Júpiter"
+                    ],
+                    "answer": 3
+                },
+                {
+                    "question": "Quantos lados tem um triângulo?",
+                    "options": [
+                        "2",
+                        "3",
+                        "4",
+                        "5"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é a cor da grama?",
+                    "options": [
+                        "Azul",
+                        "Verde",
+                        "Amarelo",
+                        "Vermelho"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é o idioma oficial do Brasil?",
+                    "options": [
+                        "Espanhol",
+                        "Inglês",
+                        "Francês",
+                        "Português"
+                    ],
+                    "answer": 3
+                },
+                {
+                    "question": "Quantos meses tem um ano?",
+                    "options": [
+                        "10",
+                        "11",
+                        "12",
+                        "13"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é o menor número natural?",
+                    "options": [
+                        "1",
+                        "0",
+                        "-1",
+                        "2"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual o nome do nosso planeta?",
+                    "options": [
+                        "Marte",
+                        "Vênus",
+                        "Terra",
+                        "Saturno"
+                    ],
+                    "answer": 2
+                }
+            ]
+        },
+        {
+            "level": 2,
+            "prize": "R$ 5.000",
+            "questions": [
+                {
+                    "question": "Quantos continentes existem no mundo?",
+                    "options": [
+                        "5",
+                        "6",
+                        "7",
+                        "8"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é a fórmula química da água?",
+                    "options": [
+                        "CO2",
+                        "O2",
+                        "H2O",
+                        "NaCl"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Quem pintou a 'Mona Lisa'?",
+                    "options": [
+                        "Van Gogh",
+                        "Picasso",
+                        "Da Vinci",
+                        "Monet"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Quantos estados tem o Brasil?",
+                    "options": [
+                        "25",
+                        "26",
+                        "27",
+                        "28"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Em que continente fica o Brasil?",
+                    "options": [
+                        "África",
+                        "Europa",
+                        "Ásia",
+                        "América do Sul"
+                    ],
+                    "answer": 3
+                },
+                {
+                    "question": "Qual é o maior oceano do mundo?",
+                    "options": [
+                        "Atlântico",
+                        "Índico",
+                        "Ártico",
+                        "Pacífico"
+                    ],
+                    "answer": 3
+                },
+                {
+                    "question": "Quantos planetas existem no sistema solar?",
+                    "options": [
+                        "7",
+                        "8",
+                        "9",
+                        "10"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é o metal mais precioso?",
+                    "options": [
+                        "Prata",
+                        "Cobre",
+                        "Ouro",
+                        "Bronze"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é a montanha mais alta do mundo?",
+                    "options": [
+                        "K2",
+                        "Monte Everest",
+                        "Monte Branco",
+                        "Kilimanjaro"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é o símbolo químico do ouro?",
+                    "options": [
+                        "Go",
+                        "Or",
+                        "Au",
+                        "Ou"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual a capital da Argentina?",
+                    "options": [
+                        "Santiago",
+                        "Buenos Aires",
+                        "Montevidéu",
+                        "Lima"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Quantos ossos tem o corpo humano adulto?",
+                    "options": [
+                        "186",
+                        "196",
+                        "206",
+                        "216"
+                    ],
+                    "answer": 2
+                }
+            ]
+        },
+        {
+            "level": 3,
+            "prize": "R$ 10.000",
+            "questions": [
+                {
+                    "question": "Quem escreveu 'Dom Casmurro'?",
+                    "options": [
+                        "José de Alencar",
+                        "Machado de Assis",
+                        "Clarice Lispector",
+                        "Jorge Amado"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Em que ano o Brasil foi descoberto?",
+                    "options": [
+                        "1488",
+                        "1492",
+                        "1500",
+                        "1510"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é a velocidade da luz?",
+                    "options": [
+                        "~100.000 km/s",
+                        "~200.000 km/s",
+                        "~300.000 km/s",
+                        "~400.000 km/s"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é o rio mais longo do mundo?",
+                    "options": [
+                        "Rio Amazonas",
+                        "Rio Nilo",
+                        "Rio Mississipi",
+                        "Rio Congo"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual o nome do processo pelo qual as plantas produzem alimento?",
+                    "options": [
+                        "Fotossíntese",
+                        "Respiração",
+                        "Digestão",
+                        "Fermentação"
+                    ],
+                    "answer": 0
+                },
+                {
+                    "question": "Qual a capital da Austrália?",
+                    "options": [
+                        "Sydney",
+                        "Melbourne",
+                        "Camberra",
+                        "Perth"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Quantos cromossomos humanos existem normalmente?",
+                    "options": [
+                        "23",
+                        "44",
+                        "46",
+                        "48"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é o menor país do mundo?",
+                    "options": [
+                        "Mônaco",
+                        "Liechtenstein",
+                        "San Marino",
+                        "Vaticano"
+                    ],
+                    "answer": 3
+                },
+                {
+                    "question": "Quem descobriu o Brasil?",
+                    "options": [
+                        "Cristóvão Colombo",
+                        "Pedro Álvares Cabral",
+                        "Vasco da Gama",
+                        "Américo Vespúcio"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é a capital da Austrália?",
+                    "options": [
+                        "Sydney",
+                        "Melbourne",
+                        "Camberra",
+                        "Brisbane"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual elemento químico tem símbolo 'Fe'?",
+                    "options": [
+                        "Fósforo",
+                        "Flúor",
+                        "Ferro",
+                        "Frâncio"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Quem foi o primeiro homem a pisar na Lua?",
+                    "options": [
+                        "Buzz Aldrin",
+                        "Neil Armstrong",
+                        "Yuri Gagarin",
+                        "Alan Shepard"
+                    ],
+                    "answer": 1
+                }
+            ]
+        },
+        {
+            "level": 4,
+            "prize": "R$ 25.000",
+            "questions": [
+                {
+                    "question": "Qual é o menor país da América do Sul?",
+                    "options": [
+                        "Uruguai",
+                        "Suriname",
+                        "Guiana",
+                        "Paraguai"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Quantas asas tem uma borboleta?",
+                    "options": [
+                        "2",
+                        "4",
+                        "6",
+                        "8"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é o gás mais abundante na atmosfera terrestre?",
+                    "options": [
+                        "Oxigênio",
+                        "CO2",
+                        "Argônio",
+                        "Nitrogênio"
+                    ],
+                    "answer": 3
+                },
+                {
+                    "question": "Em que país foi inventado o telefone?",
+                    "options": [
+                        "EUA",
+                        "Reino Unido",
+                        "Alemanha",
+                        "França"
+                    ],
+                    "answer": 0
+                },
+                {
+                    "question": "Qual órgão humano produz insulina?",
+                    "options": [
+                        "Fígado",
+                        "Rim",
+                        "Pâncreas",
+                        "Baço"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é o ano em que a Segunda Guerra Mundial terminou?",
+                    "options": [
+                        "1943",
+                        "1944",
+                        "1945",
+                        "1946"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Quantas cordas tem um violão padrão?",
+                    "options": [
+                        "4",
+                        "5",
+                        "6",
+                        "7"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual planeta é conhecido como o planeta vermelho?",
+                    "options": [
+                        "Vênus",
+                        "Marte",
+                        "Júpiter",
+                        "Mercúrio"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é a capital da China?",
+                    "options": [
+                        "Xangai",
+                        "Hong Kong",
+                        "Pequim",
+                        "Cantão"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é o elemento mais abundante no universo?",
+                    "options": [
+                        "Oxigênio",
+                        "Hélio",
+                        "Hidrogênio",
+                        "Carbono"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é o maior deserto do mundo?",
+                    "options": [
+                        "Saara",
+                        "Atacama",
+                        "Gobi",
+                        "Antártico"
+                    ],
+                    "answer": 3
+                },
+                {
+                    "question": "Quem escreveu 'A Divina Comédia'?",
+                    "options": [
+                        "Petrarca",
+                        "Boccaccio",
+                        "Dante Alighieri",
+                        "Virgílio"
+                    ],
+                    "answer": 2
+                }
+            ]
+        },
+        {
+            "level": 5,
+            "prize": "R$ 50.000",
+            "questions": [
+                {
+                    "question": "Qual é o nome da teoria que explica a origem do universo?",
+                    "options": [
+                        "Teoria da Gravidade",
+                        "Big Bang",
+                        "Teoria da Relatividade",
+                        "Teoria das Cordas"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é a unidade básica da herança genética?",
+                    "options": [
+                        "Célula",
+                        "Cromossomo",
+                        "Gene",
+                        "DNA"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Quem formulou a lei da gravitação universal?",
+                    "options": [
+                        "Albert Einstein",
+                        "Galileu Galilei",
+                        "Isaac Newton",
+                        "Nicolau Copérnico"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é a capital da Índia?",
+                    "options": [
+                        "Mumbai",
+                        "Nova Delhi",
+                        "Calcutá",
+                        "Bangalore"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual instrumento mede a pressão atmosférica?",
+                    "options": [
+                        "Termômetro",
+                        "Higrômetro",
+                        "Barômetro",
+                        "Anemômetro"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual foi o primeiro país a conceder direito de voto às mulheres?",
+                    "options": [
+                        "Austrália",
+                        "Nova Zelândia",
+                        "Finlândia",
+                        "Noruega"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual a linguagem de programação criada por James Gosling?",
+                    "options": [
+                        "C++",
+                        "Python",
+                        "Java",
+                        "Ruby"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Quantos graus tem a soma dos ângulos internos de um triângulo?",
+                    "options": [
+                        "90°",
+                        "120°",
+                        "180°",
+                        "360°"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é o nome do processo de divisão celular que origina gametas?",
+                    "options": [
+                        "Mitose",
+                        "Meiose",
+                        "Fissão",
+                        "Cissiparidade"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Em que país fica o Canal de Suez?",
+                    "options": [
+                        "Israel",
+                        "Líbia",
+                        "Egito",
+                        "Turquia"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual o valor de Pi com 2 casas decimais?",
+                    "options": [
+                        "3.12",
+                        "3.14",
+                        "3.16",
+                        "3.18"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é o órgão responsável pela produção de bile?",
+                    "options": [
+                        "Pâncreas",
+                        "Estômago",
+                        "Fígado",
+                        "Vesícula"
+                    ],
+                    "answer": 2
+                }
+            ]
+        },
+        {
+            "level": 6,
+            "prize": "R$ 100.000",
+            "questions": [
+                {
+                    "question": "Qual é o nome do princípio que afirma que é impossível medir simultaneamente com precisão a posição e o momento de uma partícula?",
+                    "options": [
+                        "Princípio da Relatividade",
+                        "Princípio da Incerteza de Heisenberg",
+                        "Princípio de Exclusão de Pauli",
+                        "Princípio da Superposição"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é o nome da lei que descreve a relação entre pressão, volume e temperatura de um gás?",
+                    "options": [
+                        "Lei de Ohm",
+                        "Lei de Boyle",
+                        "Lei dos Gases Ideais",
+                        "Lei de Hooke"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual filósofo grego foi condenado à morte por corromper a juventude?",
+                    "options": [
+                        "Platão",
+                        "Aristóteles",
+                        "Sócrates",
+                        "Pitágoras"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Em que guerra ocorreu a Batalha de Stalingrado?",
+                    "options": [
+                        "Primeira Guerra Mundial",
+                        "Guerra Fria",
+                        "Segunda Guerra Mundial",
+                        "Guerra da Coreia"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual país tem a maior biodiversidade do mundo?",
+                    "options": [
+                        "EUA",
+                        "China",
+                        "Índia",
+                        "Brasil"
+                    ],
+                    "answer": 3
+                },
+                {
+                    "question": "Qual é o número de Avogadro aproximado?",
+                    "options": [
+                        "3,6 × 10^23",
+                        "6,02 × 10^23",
+                        "9,5 × 10^23",
+                        "1,2 × 10^24"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual a capital da Noruega?",
+                    "options": [
+                        "Estocolmo",
+                        "Copenhague",
+                        "Oslo",
+                        "Helsinque"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Quem pintou 'A Noite Estrelada'?",
+                    "options": [
+                        "Claude Monet",
+                        "Pablo Picasso",
+                        "Salvador Dalí",
+                        "Vincent van Gogh"
+                    ],
+                    "answer": 3
+                },
+                {
+                    "question": "Qual é o nome do satélite natural da Terra?",
+                    "options": [
+                        "Phobos",
+                        "Titã",
+                        "Europa",
+                        "Lua"
+                    ],
+                    "answer": 3
+                },
+                {
+                    "question": "Qual é a língua mais falada no mundo como língua nativa?",
+                    "options": [
+                        "Inglês",
+                        "Espanhol",
+                        "Mandarim",
+                        "Árabe"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual estrutura cerebral está associada ao processamento das emoções?",
+                    "options": [
+                        "Córtex Frontal",
+                        "Cerebelo",
+                        "Amígdala",
+                        "Hipocampo"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Em que ano foi fundada a ONU?",
+                    "options": [
+                        "1942",
+                        "1944",
+                        "1945",
+                        "1948"
+                    ],
+                    "answer": 2
+                }
+            ]
+        },
+        {
+            "level": 7,
+            "prize": "R$ 200.000",
+            "questions": [
+                {
+                    "question": "Qual é o teorema matemático que afirma que todo número inteiro maior que 1 é um produto único de números primos?",
+                    "options": [
+                        "Teorema de Fermat",
+                        "Teorema Fundamental da Aritmética",
+                        "Teorema de Pitágoras",
+                        "Teorema de Bayes"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é o processo pelo qual as plantas perdem água pelas folhas?",
+                    "options": [
+                        "Evaporação",
+                        "Transpiração",
+                        "Gutação",
+                        "Osmose"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Quem foi o primeiro presidente do Brasil?",
+                    "options": [
+                        "Getúlio Vargas",
+                        "Floriano Peixoto",
+                        "Deodoro da Fonseca",
+                        "Campos Sales"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é o nome do fenômeno que ocorre quando a luz passa por um prisma e se divide em cores?",
+                    "options": [
+                        "Refração",
+                        "Difração",
+                        "Dispersão",
+                        "Reflexão"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é o país com maior extensão territorial do mundo?",
+                    "options": [
+                        "EUA",
+                        "China",
+                        "Canadá",
+                        "Rússia"
+                    ],
+                    "answer": 3
+                },
+                {
+                    "question": "Qual compositor escreveu a Quinta Sinfonia?",
+                    "options": [
+                        "Mozart",
+                        "Bach",
+                        "Beethoven",
+                        "Schubert"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Quantos cromossomos tem uma célula humana reprodutora (gameta)?",
+                    "options": [
+                        "23",
+                        "46",
+                        "48",
+                        "22"
+                    ],
+                    "answer": 0
+                },
+                {
+                    "question": "Em que cidade foi assinada a Declaração de Independência dos EUA?",
+                    "options": [
+                        "Boston",
+                        "Nova York",
+                        "Washington D.C.",
+                        "Filadélfia"
+                    ],
+                    "answer": 3
+                },
+                {
+                    "question": "Qual é o nome do éter que compõe a membrana celular?",
+                    "options": [
+                        "Glicerol",
+                        "Fosfolipídio",
+                        "Colesterol",
+                        "Triglicerídeo"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é a obra literária mais vendida de todos os tempos, excluindo a Bíblia?",
+                    "options": [
+                        "Dom Quixote",
+                        "Harry Potter",
+                        "O Senhor dos Anéis",
+                        "A Tale of Two Cities"
+                    ],
+                    "answer": 0
+                },
+                {
+                    "question": "Qual país inventou a pólvora?",
+                    "options": [
+                        "Índia",
+                        "China",
+                        "Arábia",
+                        "Grécia"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é o nome da camada da atmosfera que absorve a radiação ultravioleta?",
+                    "options": [
+                        "Troposfera",
+                        "Estratosfera",
+                        "Camada de Ozônio",
+                        "Termosfera"
+                    ],
+                    "answer": 2
+                }
+            ]
+        },
+        {
+            "level": 8,
+            "prize": "R$ 300.000",
+            "questions": [
+                {
+                    "question": "Qual é o nome do paradoxo que descreve um gato que pode estar simultaneamente vivo e morto?",
+                    "options": [
+                        "Paradoxo de Russell",
+                        "Paradoxo de Zenão",
+                        "Gato de Schrödinger",
+                        "Paradoxo de Fermi"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é o nome da escrita dos antigos egípcios?",
+                    "options": [
+                        "Cuneiforme",
+                        "Fenício",
+                        "Hieróglifos",
+                        "Lineal A"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é o número de quarks que compõe um próton?",
+                    "options": [
+                        "2",
+                        "3",
+                        "4",
+                        "6"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual filósofo afirmou 'O homem é um animal político'?",
+                    "options": [
+                        "Platão",
+                        "Sócrates",
+                        "Aristóteles",
+                        "Epicuro"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é o nome do processo de transformação de um sólido diretamente em gás?",
+                    "options": [
+                        "Evaporação",
+                        "Sublimação",
+                        "Fusão",
+                        "Condensação"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Em que ano ocorreu a Revolução Francesa?",
+                    "options": [
+                        "1776",
+                        "1789",
+                        "1793",
+                        "1804"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é o menor osso do corpo humano?",
+                    "options": [
+                        "Fêmur",
+                        "Ossículo martelo",
+                        "Estribo",
+                        "Fíbula"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é a partícula subatômica que não tem carga?",
+                    "options": [
+                        "Próton",
+                        "Elétron",
+                        "Nêutron",
+                        "Pósitron"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Em que país fica a cidade de Machu Picchu?",
+                    "options": [
+                        "Bolívia",
+                        "Chile",
+                        "Peru",
+                        "Colômbia"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é o nome do primeiro satélite artificial lançado ao espaço?",
+                    "options": [
+                        "Explorer 1",
+                        "Vostok 1",
+                        "Sputnik 1",
+                        "Apollo 1"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é o nome da unidade de medida da resistência elétrica?",
+                    "options": [
+                        "Volt",
+                        "Ampère",
+                        "Ohm",
+                        "Watt"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é o nome do vírus que causou a pandemia de 1918?",
+                    "options": [
+                        "H1N1",
+                        "Influenza Espanhola",
+                        "H5N1",
+                        "SARS"
+                    ],
+                    "answer": 1
+                }
+            ]
+        },
+        {
+            "level": 9,
+            "prize": "R$ 500.000",
+            "questions": [
+                {
+                    "question": "Qual é o nome da teoria que unifica eletricidade e magnetismo formulada por Maxwell?",
+                    "options": [
+                        "Teoria Quântica de Campos",
+                        "Eletrodinâmica Clássica",
+                        "Teoria do Éter",
+                        "Teoria de Maxwell-Boltzmann"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual foi a primeira linguagem de alto nível criada na história da computação?",
+                    "options": [
+                        "COBOL",
+                        "FORTRAN",
+                        "LISP",
+                        "ALGOL"
+                    ],
+                    "answer": 0
+                },
+                {
+                    "question": "Qual é o nome do processo de síntese de proteínas a partir do RNA mensageiro?",
+                    "options": [
+                        "Transcrição",
+                        "Tradução",
+                        "Replicação",
+                        "Recombinação"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é o nome do sistema de escrita inventado por Blaise Pascal?",
+                    "options": [
+                        "Pascal Script",
+                        "Calculadora de Pascal",
+                        "Máquina de Pascal",
+                        "Pascalina"
+                    ],
+                    "answer": 3
+                },
+                {
+                    "question": "Em que país fica a Sagrada Família, obra de Gaudí?",
+                    "options": [
+                        "Portugal",
+                        "Itália",
+                        "Espanha",
+                        "França"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é a distância média entre a Terra e a Lua?",
+                    "options": [
+                        "~180.000 km",
+                        "~284.000 km",
+                        "~384.000 km",
+                        "~500.000 km"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é o nome do campo de força que permeia o universo e dá massa às partículas?",
+                    "options": [
+                        "Campo de Higgs",
+                        "Campo de Dirac",
+                        "Campo de Yang-Mills",
+                        "Campo Gravitacional"
+                    ],
+                    "answer": 0
+                },
+                {
+                    "question": "Qual filósofo escreveu 'Crítica da Razão Pura'?",
+                    "options": [
+                        "Hegel",
+                        "Schopenhauer",
+                        "Leibniz",
+                        "Immanuel Kant"
+                    ],
+                    "answer": 3
+                },
+                {
+                    "question": "Qual é o nome da equação que descreve a evolução temporal de um sistema quântico?",
+                    "options": [
+                        "Equação de Maxwell",
+                        "Equação de Schrödinger",
+                        "Equação de Dirac",
+                        "Equação de Klein-Gordon"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é o nome da constelação que contém a estrela Polaris?",
+                    "options": [
+                        "Orion",
+                        "Ursa Maior",
+                        "Ursa Menor",
+                        "Cassiopeia"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Em que ano Einstein publicou a Teoria da Relatividade Especial?",
+                    "options": [
+                        "1902",
+                        "1905",
+                        "1910",
+                        "1915"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é o processo pelo qual organismos vivos sintetizam ATP a partir de glicose sem oxigênio?",
+                    "options": [
+                        "Respiração Aeróbica",
+                        "Fotossíntese",
+                        "Fermentação",
+                        "Quimiossíntese"
+                    ],
+                    "answer": 2
+                }
+            ]
+        },
+        {
+            "level": 10,
+            "prize": "R$ 1.000.000",
+            "questions": [
+                {
+                    "question": "Qual é o nome do teorema que prova que em qualquer sistema formal suficientemente poderoso existem proposições verdadeiras que não podem ser provadas dentro do sistema?",
+                    "options": [
+                        "Teorema de Cantor",
+                        "Teorema de Gödel da Incompletude",
+                        "Paradoxo de Russell",
+                        "Tese de Church-Turing"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é o nome da estrutura matemática que descreve as simetrias da física de partículas?",
+                    "options": [
+                        "Grupo de Lie",
+                        "Álgebra de Clifford",
+                        "Tensor de Riemann",
+                        "Espaço de Hilbert"
+                    ],
+                    "answer": 0
+                },
+                {
+                    "question": "Qual é o nome do paradoxo que questiona por que não detectamos sinais de civilizações extraterrestres?",
+                    "options": [
+                        "Paradoxo de Fermi",
+                        "Paradoxo de Olbers",
+                        "Paradoxo EPR",
+                        "Paradoxo de Boltzmann"
+                    ],
+                    "answer": 0
+                },
+                {
+                    "question": "Qual é o nome do experimento mental que demonstra a não-localidade quântica?",
+                    "options": [
+                        "Experimento de Young",
+                        "Experimento EPR",
+                        "Gato de Schrödinger",
+                        "Experimento de Stern-Gerlach"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual matemático provou o Último Teorema de Fermat?",
+                    "options": [
+                        "Andrew Wiles",
+                        "John Nash",
+                        "Grigori Perelman",
+                        "Terence Tao"
+                    ],
+                    "answer": 0
+                },
+                {
+                    "question": "Qual é o nome do modelo padrão que descreve as partículas fundamentais e as forças da natureza?",
+                    "options": [
+                        "Teoria das Cordas",
+                        "Modelo Padrão da Física de Partículas",
+                        "Modelo ΛCDM",
+                        "Teoria M"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é o nome do princípio que afirma que informação não pode ser destruída no universo?",
+                    "options": [
+                        "Lei da Entropia",
+                        "Princípio da Conservação da Informação",
+                        "Princípio Holográfico",
+                        "Teorema de Hawking"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é o nome do campo de pesquisa que estuda a computação usando fenômenos quânticos?",
+                    "options": [
+                        "Criptografia Quântica",
+                        "Computação Quântica",
+                        "Informação Quântica",
+                        "Óptica Quântica"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual filósofo cunhou o conceito de 'Super-Homem' (Übermensch)?",
+                    "options": [
+                        "Heidegger",
+                        "Schopenhauer",
+                        "Nietzsche",
+                        "Hegel"
+                    ],
+                    "answer": 2
+                },
+                {
+                    "question": "Qual é o nome da hipótese que propõe que o universo pode ser uma simulação computacional?",
+                    "options": [
+                        "Hipótese do Universo Matemático",
+                        "Hipótese da Simulação de Bostrom",
+                        "Princípio Antrópico",
+                        "Hipótese do Mundo Pequeno"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é o nome da era geológica em que vivem os seres humanos modernos?",
+                    "options": [
+                        "Pleistoceno",
+                        "Holoceno",
+                        "Plioceno",
+                        "Antropoceno"
+                    ],
+                    "answer": 1
+                },
+                {
+                    "question": "Qual é o nome do colapso gravitacional extremo que forma um buraco negro de massa estelar?",
+                    "options": [
+                        "Supernova Tipo Ia",
+                        "Nebulosa Planetária",
+                        "Colapso de Chandrasekhar",
+                        "Supernova de Núcleo de Ferro"
+                    ],
+                    "answer": 3
+                }
+            ]
+        }
+    ]
+}
