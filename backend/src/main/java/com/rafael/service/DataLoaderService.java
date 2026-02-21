@@ -54,7 +54,27 @@ public class DataLoaderService {
         LOG.infof("Loaded %d theme(s): %s", themeCache.size(), themeCache.keySet());
     }
 
+    @ConfigProperty(name = "game.themes", defaultValue = "default")
+    String configuredThemes;
+
     private List<String> discoverThemes() {
+        // Primeiro tenta a lista explícita do application.properties
+        // (necessário porque java.io.File não funciona dentro de um JAR em produção)
+        if (configuredThemes != null && !configuredThemes.isBlank()) {
+            List<String> themes = new ArrayList<>();
+            for (String t : configuredThemes.split(",")) {
+                String trimmed = t.trim();
+                if (!trimmed.isEmpty())
+                    themes.add(trimmed);
+            }
+            if (!themes.isEmpty()) {
+                LOG.infof("Themes loaded from configuration: %s", themes);
+                Collections.sort(themes);
+                return themes;
+            }
+        }
+
+        // Fallback: scan do filesystem (funciona apenas em dev, não no JAR)
         List<String> themes = new ArrayList<>();
         try {
             URL dataUrl = Thread.currentThread().getContextClassLoader().getResource("data");
@@ -68,7 +88,7 @@ public class DataLoaderService {
                 }
             }
         } catch (Exception e) {
-            LOG.warn("Could not auto-discover themes from filesystem, using classpath probing.");
+            LOG.warn("Could not auto-discover themes from filesystem.");
         }
         if (themes.isEmpty())
             themes.add("default");
