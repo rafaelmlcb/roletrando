@@ -5,6 +5,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import org.jboss.logging.Logger;
 
 /**
@@ -16,26 +17,8 @@ public class GameEngine {
 
     private static final Logger LOG = Logger.getLogger(GameEngine.class);
 
-    private final String[][] phrases = {
-            { "ANIMAIS", "CAVALO MARINHO" },
-            { "ANIMAIS", "ORNITORRINCO" },
-            { "ANIMAIS", "BALEIA JUBARTE" },
-            { "COMIDA", "ARROZ COM FEIJAO" },
-            { "COMIDA", "LASANHA DE PRESUNTO" },
-            { "COMIDA", "FEIJOADA COMPLETA" },
-            { "CURSOS", "CIENCIA DA COMPUTACAO" },
-            { "CURSOS", "ENGENHARIA ELETRICA" },
-            { "CURSOS", "SISTEMAS DE INFORMACAO" },
-            { "OBJETOS", "TELEVISAO DE LED" },
-            { "OBJETOS", "MAQUINA DE ESCREVER" },
-            { "OBJETOS", "NOTEBOOK GAMER" },
-            { "LUGARES", "RIO DE JANEIRO" },
-            { "LUGARES", "TORRE EIFFEL" },
-            { "LUGARES", "ESTATUA DA LIBERDADE" },
-            { "ESPORTES", "FUTEBOL DE CAMPO" },
-            { "ESPORTES", "VOLEI DE PRAIA" },
-            { "ESPORTES", "BASQUETEBOL" }
-    };
+    @Inject
+    com.rafael.service.DataLoaderService dataLoader;
 
     private final Random random = new Random();
     private int lastIndex = -1;
@@ -46,14 +29,21 @@ public class GameEngine {
      * @return Initialized GameSession.
      */
     public GameSession startNewGame() {
+        java.util.List<WheelPhrase> phrases = dataLoader.getWheelPhrases();
+
+        if (phrases == null || phrases.isEmpty()) {
+            throw new IllegalStateException("Nenhuma frase da Roleta encontrada no tema carregado.");
+        }
+
         int index;
         do {
-            index = random.nextInt(phrases.length);
-        } while (index == lastIndex && phrases.length > 1);
+            index = random.nextInt(phrases.size());
+        } while (index == lastIndex && phrases.size() > 1);
         lastIndex = index;
 
-        String category = phrases[index][0];
-        String phrase = phrases[index][1];
+        WheelPhrase selected = phrases.get(index);
+        String category = selected.category;
+        String phrase = selected.phrase;
 
         GameSession session = new GameSession();
         session.id = UUID.randomUUID().toString();

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -6,9 +6,14 @@ import {
 } from 'lucide-react';
 import {
     Container, Typography, Box, Grid, alpha, Paper, Stack,
-    IconButton, ButtonBase, Avatar, Chip
+    IconButton, ButtonBase, Avatar, Chip, CircularProgress
 } from '@mui/material';
-import { MILLIONAIRE_QUESTIONS, PRIZE_LADDER } from '../data/millionaireData';
+import { dataApi } from '../utils/api';
+
+const PRIZE_LADDER = [
+    "R$ 1 MIL", "R$ 5 MIL", "R$ 10 MIL", "R$ 50 MIL", "R$ 100 MIL",
+    "R$ 200 MIL", "R$ 300 MIL", "R$ 400 MIL", "R$ 500 MIL", "R$ 1 MILHÃO"
+];
 import { useSound } from '../hooks/useSound';
 import { useUser } from '../context/UserContext';
 import { ActionButton } from '../components/shared/ActionButton';
@@ -28,39 +33,66 @@ const Millionaire: React.FC = () => {
     });
     const [hiddenOptions, setHiddenOptions] = useState<number[]>([]);
     const [audienceData, setAudienceData] = useState<number[]>([]);
+    const [questions, setQuestions] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [correctAnswerIndex, setCorrectAnswerIndex] = useState<number | null>(null);
 
-    const currentQuestion = MILLIONAIRE_QUESTIONS[currentLevel];
+    useEffect(() => {
+        const fetchQuestions = async () => {
+            try {
+                const res = await dataApi.get('/millionaire/questions');
+                setQuestions(res.data);
+            } catch (error) {
+                console.error("Erro carregando questoes", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchQuestions();
+    }, []);
+
+    const currentQuestion = questions[currentLevel];
 
     const handleAnswerClick = (index: number) => {
         if (isConfirmed || gameState !== 'playing') return;
         setSelectedAnswer(index);
     };
 
-    const confirmAnswer = () => {
+    const confirmAnswer = async () => {
         if (selectedAnswer === null || isConfirmed) return;
         setIsConfirmed(true);
         playSound('click');
 
-        setTimeout(() => {
-            if (selectedAnswer === currentQuestion.answer) {
-                if (currentLevel === MILLIONAIRE_QUESTIONS.length - 1) {
-                    playSound('win');
-                    setGameState('finished');
+        try {
+            const res = await dataApi.post(`/millionaire/answer/${currentLevel}`, { answerIndex: selectedAnswer });
+            const { correct, correctAnswerIndex } = res.data;
+            setCorrectAnswerIndex(correctAnswerIndex);
+
+            setTimeout(() => {
+                if (correct) {
+                    if (currentLevel === questions.length - 1) {
+                        playSound('win');
+                        setGameState('finished');
+                    } else {
+                        playSound('correct');
+                        setGameState('winning');
+                    }
                 } else {
-                    playSound('correct');
-                    setGameState('winning');
+                    playSound('wrong');
+                    setGameState('lost');
                 }
-            } else {
-                playSound('wrong');
-                setGameState('lost');
-            }
-        }, 1500);
+            }, 1500);
+        } catch (error) {
+            console.error("Erro validando resposta", error);
+            setIsConfirmed(false); // Retentar
+        }
     };
 
     const nextQuestion = () => {
         playSound('click');
         setCurrentLevel(prev => prev + 1);
         setSelectedAnswer(null);
+        setCorrectAnswerIndex(null);
         setIsConfirmed(false);
         setGameState('playing');
         setHiddenOptions([]);
@@ -72,50 +104,39 @@ const Millionaire: React.FC = () => {
         setCurrentLevel(0);
         setGameState('playing');
         setSelectedAnswer(null);
+        setCorrectAnswerIndex(null);
         setIsConfirmed(false);
         setLifelines({ fiftyFifty: true, audience: true, skip: true });
         setHiddenOptions([]);
         setAudienceData([]);
     };
 
-    const useFiftyFifty = () => {
+    const useFiftyFifty = async () => {
         if (!lifelines.fiftyFifty || isConfirmed || gameState !== 'playing') return;
-        const correctAnswer = currentQuestion.answer;
-        const wrongAnswers = currentQuestion.options
-            .map((_, i) => i)
-            .filter(i => i !== correctAnswer);
-        const toHide: number[] = [];
-        const available = [...wrongAnswers];
-        for (let i = 0; i < 2; i++) {
-            const randomIndex = Math.floor(Math.random() * available.length);
-            toHide.push(available.splice(randomIndex, 1)[0]);
-        }
-        setHiddenOptions(toHide);
-        setLifelines(prev => ({ ...prev, fiftyFifty: false }));
         playSound('click');
+        try {
+            const res = await dataApi.get(`/millionaire/lifeline/fiftyfifty/${currentLevel}`);
+            if (res.data.hiddenOptions) {
+                setHiddenOptions(res.data.hiddenOptions);
+                setLifelines(prev => ({ ...prev, fiftyFifty: false }));
+            }
+        } catch (e) {
+            console.error(e);
+        }
     };
 
-    const useAudience = () => {
+    const useAudience = async () => {
         if (!lifelines.audience || isConfirmed || gameState !== 'playing') return;
-        const correctAnswer = currentQuestion.answer;
-        const data = [0, 0, 0, 0];
-        let remaining = 100;
-        const correctWeight = 50 + Math.floor(Math.random() * 30);
-        data[correctAnswer] = correctWeight;
-        remaining -= correctWeight;
-        const wrongIndices = [0, 1, 2, 3].filter(i => i !== correctAnswer);
-        wrongIndices.forEach((idx, i) => {
-            if (i === 2) {
-                data[idx] = remaining;
-            } else {
-                const val = Math.floor(Math.random() * remaining);
-                data[idx] = val;
-                remaining -= val;
-            }
-        });
-        setAudienceData(data);
-        setLifelines(prev => ({ ...prev, audience: false }));
         playSound('click');
+        try {
+            const res = await dataApi.get(`/millionaire/lifeline/audience/${currentLevel}`);
+            if (res.data.audienceData) {
+                setAudienceData(res.data.audienceData);
+                setLifelines(prev => ({ ...prev, audience: false }));
+            }
+        } catch (e) {
+            console.error(e);
+        }
     };
 
     const useSkip = () => {
@@ -124,6 +145,14 @@ const Millionaire: React.FC = () => {
         playSound('click');
         nextQuestion();
     };
+
+    if (loading) {
+        return (
+            <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: 'background.default' }}>
+                <CircularProgress color="primary" />
+            </Box>
+        );
+    }
 
     return (
         <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', pb: 8 }}>
@@ -175,24 +204,32 @@ const Millionaire: React.FC = () => {
                                         </Paper>
                                     )}
                                     <Grid container spacing={2}>
-                                        {currentQuestion.options.map((option, index) => {
+                                        {currentQuestion.options.map((option: any, index: number) => {
                                             const isSelected = selectedAnswer === index;
-                                            const isCorrect = index === currentQuestion.answer;
+                                            const isCorrect = isConfirmed ? index === correctAnswerIndex : false;
+                                            const isWrongSelection = isConfirmed && isSelected && index !== correctAnswerIndex;
+
                                             const isHidden = hiddenOptions.includes(index);
                                             let stateColor = 'rgba(255,255,255,0.03)';
                                             let borderColor = 'rgba(255,255,255,0.1)';
                                             let textColor = 'text.primary';
-                                            if (isSelected) {
-                                                if (isConfirmed) {
-                                                    stateColor = isCorrect ? alpha('#10b981', 0.2) : alpha('#f43f5e', 0.2);
-                                                    borderColor = isCorrect ? '#10b981' : '#f43f5e';
-                                                    textColor = isCorrect ? '#10b981' : '#f43f5e';
-                                                } else {
-                                                    stateColor = alpha('#f59e0b', 0.2);
-                                                    borderColor = '#f59e0b';
-                                                    textColor = '#f59e0b';
+
+                                            if (isConfirmed) {
+                                                if (isCorrect) {
+                                                    stateColor = alpha('#10b981', 0.2);
+                                                    borderColor = '#10b981';
+                                                    textColor = '#10b981';
+                                                } else if (isWrongSelection) {
+                                                    stateColor = alpha('#f43f5e', 0.2);
+                                                    borderColor = '#f43f5e';
+                                                    textColor = '#f43f5e';
                                                 }
+                                            } else if (isSelected) {
+                                                stateColor = alpha('#f59e0b', 0.2);
+                                                borderColor = '#f59e0b';
+                                                textColor = '#f59e0b';
                                             }
+
                                             return (
                                                 <Grid size={{ xs: 12, md: 6 }} key={index}>
                                                     <ButtonBase onClick={() => handleAnswerClick(index)} disabled={isHidden || isConfirmed} sx={{ width: '100%', p: 3, borderRadius: 4, textAlign: 'left', bgcolor: stateColor, border: '2px solid', borderColor: borderColor, opacity: isHidden ? 0 : 1, pointerEvents: isHidden ? 'none' : 'auto', transition: 'all 0.2s', display: 'flex', alignItems: 'center', gap: 3, '&:hover': !isConfirmed && !isHidden ? { borderColor: '#f59e0b', bgcolor: alpha('#f59e0b', 0.05) } : {} }}>
@@ -216,7 +253,7 @@ const Millionaire: React.FC = () => {
                                 <Box component={motion.div} key="lost" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} sx={{ textAlign: 'center', py: 8 }}>
                                     <Box sx={{ width: 120, height: 120, borderRadius: '50%', mx: 'auto', mb: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: alpha('#f43f5e', 0.1), border: '4px solid #f43f5e' }}><XCircle size={64} color="#f43f5e" /></Box>
                                     <Typography variant="h2" sx={{ fontWeight: 900, fontStyle: 'italic', mb: 1, color: '#f43f5e' }}>FIM DE JOGO!</Typography>
-                                    <Typography variant="h6" sx={{ color: 'text.secondary', mb: 4 }}>A resposta correta era: <Typography component="span" sx={{ color: '#f59e0b', fontWeight: 900, display: 'block' }}>{currentQuestion.options[currentQuestion.answer]}</Typography></Typography>
+                                    <Typography variant="h6" sx={{ color: 'text.secondary', mb: 4 }}>A resposta correta era: <Typography component="span" sx={{ color: '#f59e0b', fontWeight: 900, display: 'block' }}>{correctAnswerIndex !== null ? currentQuestion.options[correctAnswerIndex] : ''}</Typography></Typography>
                                     <Stack direction="row" spacing={2} justifyContent="center"><ActionButton onClick={resetGame}>TENTAR NOVAMENTE</ActionButton><ActionButton variant="outlined" color="secondary" onClick={() => navigate('/')}>SAIR</ActionButton></Stack>
                                 </Box>
                             ) : (

@@ -5,14 +5,14 @@ import {
     ArrowLeft, Trophy, CheckCircle, XCircle,
     Triangle, Square, Circle, Star, RotateCcw, Users
 } from 'lucide-react';
-import { Container, Typography, Box, Grid, alpha, Paper, Stack, IconButton, ButtonBase, Avatar, TextField, Alert } from '@mui/material';
-import { QUIZ_QUESTIONS } from '../data/quizData';
+import { Container, Typography, Box, Grid, alpha, Paper, Stack, IconButton, ButtonBase, Avatar, TextField, Alert, CircularProgress } from '@mui/material';
+import { dataApi } from '../utils/api';
 import { useSound } from '../hooks/useSound';
 import { useUser } from '../context/UserContext';
 import { ActionButton } from '../components/shared/ActionButton';
 import { useWebSocket } from '../hooks/useWebSocket';
 
-const QUIZ_DURATION = 20; // seconds
+const QUIZ_DURATION = 10; // seconds
 
 const Quiz: React.FC = () => {
     const navigate = useNavigate();
@@ -23,7 +23,10 @@ const Quiz: React.FC = () => {
     const [localPhase, setLocalPhase] = useState<'question' | 'feedback' | 'question_ranking' | 'accumulated_ranking' | 'ended'>('question');
     const [timer, setTimer] = useState(QUIZ_DURATION);
     const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+    const [correctAnswerIndex, setCorrectAnswerIndex] = useState<number | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [questions, setQuestions] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
 
     // Multiplayer State
     const [roomIdInput, setRoomIdInput] = useState('');
@@ -33,6 +36,20 @@ const Quiz: React.FC = () => {
     const timerRef = useRef<number | null>(null);
 
     // Handle Server Events
+    useEffect(() => {
+        const fetchQuestions = async () => {
+            try {
+                const res = await dataApi.get('/quiz/questions');
+                setQuestions(res.data);
+            } catch (error) {
+                console.error("Erro carregando questoes do quiz", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchQuestions();
+    }, []);
+
     useEffect(() => {
         if (lastEvent) {
             if (lastEvent.type === 'GAME_START') {
@@ -80,33 +97,46 @@ const Quiz: React.FC = () => {
         }, 100);
     }, [playSound]);
 
-    const handleTimeUp = () => {
+    const handleTimeUp = async () => {
         if (timerRef.current) clearInterval(timerRef.current);
         stopSound('ticker');
         if (selectedAnswer === null) {
             playSound('wrong');
             setSelectedAnswer(-1);
+            try {
+                const res = await dataApi.post(`/quiz/answer/${currentStep}`, { answerIndex: -1 });
+                setCorrectAnswerIndex(res.data.correctAnswerIndex);
+            } catch (e) {
+                console.error(e);
+            }
             setLocalPhase('feedback');
         }
     };
 
-    const handleAnswer = (index: number) => {
+    const handleAnswer = async (index: number) => {
         if (localPhase !== 'question' || selectedAnswer !== null) return;
 
         if (timerRef.current) clearInterval(timerRef.current);
         stopSound('ticker');
         setSelectedAnswer(index);
 
-        const question = QUIZ_QUESTIONS[currentStep];
-        let youScore = 0;
-        if (index === question.answer) {
-            playSound('correct');
-            youScore = Math.floor(1000 * (timer / QUIZ_DURATION));
-            sendMessage('SUBMIT_SCORE', youScore);
-        } else {
-            playSound('wrong');
+        try {
+            const res = await dataApi.post(`/quiz/answer/${currentStep}`, { answerIndex: index });
+            const { correct, correctAnswerIndex } = res.data;
+            setCorrectAnswerIndex(correctAnswerIndex);
+            let youScore = 0;
+            if (correct) {
+                playSound('correct');
+                youScore = Math.floor(1000 * (timer / QUIZ_DURATION));
+                sendMessage('SUBMIT_SCORE', youScore);
+            } else {
+                playSound('wrong');
+            }
+            setLocalPhase('feedback');
+        } catch (e) {
+            console.error(e);
+            setSelectedAnswer(null); // Retentar
         }
-        setLocalPhase('feedback');
     };
 
     const toQuestionRanking = () => {
@@ -121,9 +151,10 @@ const Quiz: React.FC = () => {
 
     const nextStep = () => {
         playSound('click');
-        if (currentStep < QUIZ_QUESTIONS.length - 1) {
+        if (currentStep < questions.length - 1) {
             setCurrentStep(prev => prev + 1);
             setSelectedAnswer(null);
+            setCorrectAnswerIndex(null);
             setLocalPhase('question');
             startTimer();
             sendMessage('NEXT_QUESTION');
@@ -137,6 +168,7 @@ const Quiz: React.FC = () => {
         playSound('click');
         setCurrentStep(0);
         setSelectedAnswer(null);
+        setCorrectAnswerIndex(null);
         setActiveRoomId('');
         setRoomIdInput('');
     };
@@ -147,13 +179,22 @@ const Quiz: React.FC = () => {
         };
     }, []);
 
-    const currentQuestion = QUIZ_QUESTIONS[currentStep];
     const optionStyles = [
         { color: '#e21b3c', icon: <Triangle size={24} fill="white" /> }, // Red
         { color: '#1368ce', icon: <Square size={24} fill="white" /> }, // Blue
         { color: '#d89e00', icon: <Circle size={24} fill="white" /> }, // Yellow
         { color: '#26890c', icon: <Star size={24} fill="white" /> }    // Green
     ];
+
+    if (loading) {
+        return (
+            <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: '#46178f' }}>
+                <CircularProgress sx={{ color: 'white' }} />
+            </Box>
+        );
+    }
+
+    const currentQuestion = questions[currentStep];
 
     if (!activeRoomId) {
         return (
@@ -281,7 +322,7 @@ const Quiz: React.FC = () => {
                         <Container maxWidth="md" component={motion.div} key="question" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                             <Paper sx={{ p: 6, mb: 4, textAlign: 'center', borderRadius: 10, borderBottom: '8px solid rgba(0,0,0,0.1)' }}>
                                 <Typography variant="overline" sx={{ color: 'text.secondary', fontWeight: 900, mb: 2, display: 'block' }}>
-                                    Questão {currentStep + 1} de {QUIZ_QUESTIONS.length}
+                                    Questão {currentStep + 1} de {questions.length}
                                 </Typography>
                                 <Typography variant="h4" sx={{ fontWeight: 900, mb: 4, color: 'text.primary' }}>{currentQuestion.question}</Typography>
 
@@ -301,7 +342,7 @@ const Quiz: React.FC = () => {
                             </Paper>
 
                             <Grid container spacing={2}>
-                                {currentQuestion.options.map((option, index) => (
+                                {currentQuestion.options.map((option: any, index: number) => (
                                     <Grid size={{ xs: 12, sm: 6 }} key={index}>
                                         <ButtonBase
                                             onClick={() => handleAnswer(index)}
@@ -325,15 +366,15 @@ const Quiz: React.FC = () => {
                             <Box sx={{
                                 width: 120, height: 120, borderRadius: '50%', mx: 'auto', mb: 4,
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                bgcolor: selectedAnswer === currentQuestion.answer ? '#10b981' : '#f43f5e',
+                                bgcolor: selectedAnswer === correctAnswerIndex ? '#10b981' : '#f43f5e',
                                 boxShadow: '0 10px 30px rgba(0,0,0,0.3)'
                             }}>
-                                {selectedAnswer === currentQuestion.answer ? <CheckCircle size={64} /> : <XCircle size={64} />}
+                                {selectedAnswer === correctAnswerIndex ? <CheckCircle size={64} /> : <XCircle size={64} />}
                             </Box>
                             <Typography variant="h2" sx={{ fontWeight: 900, fontStyle: 'italic', mb: 2 }}>
-                                {selectedAnswer === currentQuestion.answer ? 'CORRETO!' : 'ERRADO!'}
+                                {selectedAnswer === correctAnswerIndex ? 'CORRETO!' : 'ERRADO!'}
                             </Typography>
-                            {selectedAnswer === currentQuestion.answer && (
+                            {selectedAnswer === correctAnswerIndex && (
                                 <Typography variant="h4" sx={{ fontWeight: 900, color: '#34d399', mb: 6 }}>+{(roundScores && you) ? roundScores[you.id] || 0 : 0} PTS</Typography>
                             )}
                             <ActionButton onClick={toQuestionRanking} sx={{ px: 8, py: 3, fontSize: '1.25rem', bgcolor: 'white', color: '#46178f', '&:hover': { bgcolor: '#eee' } }}>
@@ -384,7 +425,7 @@ const Quiz: React.FC = () => {
                                     ))}
                                 </Stack>
                                 <ActionButton fullWidth onClick={nextStep} sx={{ bgcolor: 'white', color: '#46178f', '&:hover': { bgcolor: '#eee' } }}>
-                                    {currentStep < QUIZ_QUESTIONS.length - 1 ? 'PRÓXIMA PERGUNTA' : 'RESULTADO FINAL'}
+                                    {currentStep < questions.length - 1 ? 'PRÓXIMA PERGUNTA' : 'RESULTADO FINAL'}
                                 </ActionButton>
                             </Paper>
                         </Container>

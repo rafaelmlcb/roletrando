@@ -1,0 +1,74 @@
+[
+    {
+        "category": "ANIMAIS",
+        "phrase": "CAVALO MARINHO"
+    },
+    {
+        "category": "ANIMAIS",
+        "phrase": "ORNITORRINCO"
+    },
+    {
+        "category": "ANIMAIS",
+        "phrase": "BALEIA JUBARTE"
+    },
+    {
+        "category": "COMIDA",
+        "phrase": "ARROZ COM FEIJAO"
+    },
+    {
+        "category": "COMIDA",
+        "phrase": "LASANHA DE PRESUNTO"
+    },
+    {
+        "category": "COMIDA",
+        "phrase": "FEIJOADA COMPLETA"
+    },
+    {
+        "category": "CURSOS",
+        "phrase": "CIENCIA DA COMPUTACAO"
+    },
+    {
+        "category": "CURSOS",
+        "phrase": "ENGENHARIA ELETRICA"
+    },
+    {
+        "category": "CURSOS",
+        "phrase": "SISTEMAS DE INFORMACAO"
+    },
+    {
+        "category": "OBJETOS",
+        "phrase": "TELEVISAO DE LED"
+    },
+    {
+        "category": "OBJETOS",
+        "phrase": "MAQUINA DE ESCREVER"
+    },
+    {
+        "category": "OBJETOS",
+        "phrase": "NOTEBOOK GAMER"
+    },
+    {
+        "category": "LUGARES",
+        "phrase": "RIO DE JANEIRO"
+    },
+    {
+        "category": "LUGARES",
+        "phrase": "TORRE EIFFEL"
+    },
+    {
+        "category": "LUGARES",
+        "phrase": "ESTATUA DA LIBERDADE"
+    },
+    {
+        "category": "ESPORTES",
+        "phrase": "FUTEBOL DE CAMPO"
+    },
+    {
+        "category": "ESPORTES",
+        "phrase": "VOLEI DE PRAIA"
+    },
+    {
+        "category": "ESPORTES",
+        "phrase": "BASQUETEBOL"
+    }
+]
