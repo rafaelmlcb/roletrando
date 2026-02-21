@@ -31,17 +31,13 @@ export const Wheel = forwardRef<WheelHandle, WheelProps>(({ onSpinEnd, onSpinSta
     const lastTickRef = useRef(0);
 
     const spin = async (targetValue?: number) => {
-        if (isSpinning) return;
+        if (targetValue === undefined) return;
 
         onSpinStart();
 
         const segmentAngle = 360 / SEGMENTS.length;
-        let finalIndex = -1;
-        if (targetValue !== undefined) {
-            finalIndex = SEGMENTS.findIndex(s => s.value === targetValue);
-        } else {
-            finalIndex = Math.floor(Math.random() * SEGMENTS.length);
-        }
+        let finalIndex = SEGMENTS.findIndex(s => s.value === targetValue);
+        if (finalIndex === -1) finalIndex = 0;
 
         // Randomly pick an angle within the target segment (avoiding edges)
         const offsetRotation = finalIndex * segmentAngle + (Math.random() * segmentAngle * 0.8 + segmentAngle * 0.1);
@@ -63,7 +59,7 @@ export const Wheel = forwardRef<WheelHandle, WheelProps>(({ onSpinEnd, onSpinSta
             transition: { duration: 4, ease: [0.15, 0, 0.15, 1] }
         });
 
-        onSpinEnd(targetValue ?? SEGMENTS[finalIndex].value);
+        onSpinEnd(targetValue);
     };
 
     useImperativeHandle(ref, () => ({
@@ -126,7 +122,7 @@ export const Wheel = forwardRef<WheelHandle, WheelProps>(({ onSpinEnd, onSpinSta
             </div>
 
             <button
-                onClick={() => spin()}
+                onClick={onSpinStart}
                 disabled={isSpinning}
                 style={{
                     marginTop: '30px',
