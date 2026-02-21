@@ -29,6 +29,9 @@ export function useWebSocket(roomId: string, playerName: string, endpoint: strin
         wsBaseUrl = wsBaseUrl.replace(/\/$/, '');
         const wsUrl = `${wsBaseUrl}/api/ws/${endpoint}/${roomId}/${encodeURIComponent(playerName)}`;
 
+        Logger.info('useWebSocket', `Attempting to connect to: ${wsUrl}`);
+        Logger.info('useWebSocket', `VITE_API_URL status: ${import.meta.env.VITE_API_URL ? 'set' : 'not set'}`);
+
         ws.current = new WebSocket(wsUrl);
 
         ws.current.onopen = () => {

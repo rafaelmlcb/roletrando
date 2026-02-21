@@ -121,6 +121,20 @@ const Roletrando: React.FC = () => {
     );
   }
 
+  if (status === 'DISCONNECTED') {
+    return (
+      <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
+        <Typography variant="h5" sx={{ color: 'error.main' }}>Erro de conexão com o Servidor!</Typography>
+        <Typography variant="body1" sx={{ color: 'text.secondary', textAlign: 'center', maxWidth: 400 }}>
+          O WebSocket não conseguiu conectar. Verifique se o servidor está rodando ou se a variável VITE_API_URL está configurada corretamente.
+        </Typography>
+        <ActionButton onClick={() => { setActiveRoomId(''); setRoomIdInput(''); }}>
+          Voltar
+        </ActionButton>
+      </Box>
+    );
+  }
+
   if (status !== 'CONNECTED' || !gameState) {
     return (
       <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

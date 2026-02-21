@@ -196,6 +196,20 @@ const Quiz: React.FC = () => {
         );
     }
 
+    if (status === 'DISCONNECTED') {
+        return (
+            <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', bgcolor: '#46178f', gap: 2, px: 3 }}>
+                <Typography variant="h5" sx={{ color: '#f87171' }}>Erro de conexão com o Servidor!</Typography>
+                <Typography variant="body1" sx={{ color: 'rgba(255,255,255,0.7)', textAlign: 'center', maxWidth: 400 }}>
+                    O WebSocket não conseguiu conectar. Se você estiver na Vercel, certifique-se de ter configurado a variável VITE_API_URL.
+                </Typography>
+                <ActionButton onClick={() => { setActiveRoomId(''); setRoomIdInput(''); }}>
+                    Voltar
+                </ActionButton>
+            </Box>
+        );
+    }
+
     if (status !== 'CONNECTED' || !gameState) {
         return (
             <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: '#46178f' }}>
