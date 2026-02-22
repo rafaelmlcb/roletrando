@@ -11,6 +11,7 @@ public class Room {
     public int currentTurnIndex = 0;
     public String status = "WAITING"; // WAITING, PLAYING, FINISHED
     public String hostConnectionId;
+    public boolean historyRecorded = false; // Prevents double-recording on game over
 
     public Room() {
     }

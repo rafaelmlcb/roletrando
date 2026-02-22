@@ -11,6 +11,7 @@ import jakarta.inject.Inject;
 import org.jboss.logging.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rafael.service.GameHistoryService;
 import io.vertx.core.Vertx;
 
 import java.util.Map;
@@ -29,6 +30,9 @@ public class QuizWebSocket {
 
     @Inject
     ObjectMapper mapper;
+
+    @Inject
+    GameHistoryService historyService;
 
     @Inject
     Vertx vertx;
@@ -99,6 +103,9 @@ public class QuizWebSocket {
             switch (msg.type) {
                 case "START_GAME":
                     if (connId.equals(room.hostConnectionId) && room.status.equals("WAITING")) {
+                        if (msg.payload instanceof Number n) {
+                            room.quizSession.totalQuestions = n.intValue();
+                        }
                         startGame(room);
                     }
                     break;
@@ -115,6 +122,27 @@ public class QuizWebSocket {
                     if (connId.equals(room.hostConnectionId) && room.status.equals("PLAYING")) {
                         room.quizSession.currentStep++;
                         room.quizSession.roundScores.clear();
+
+                        // Detecta fim do quiz: quando não há mais perguntas
+                        // O front envia NEXT_QUESTION após a última — verificamos pelo totalQuestions
+                        if (room.quizSession.totalQuestions > 0
+                                && room.quizSession.currentStep >= room.quizSession.totalQuestions
+                                && !room.historyRecorded) {
+                            room.historyRecorded = true;
+
+                            // Determinar a pontuação máxima para definir o(s) vencedor(es)
+                            int maxScore = room.players.stream()
+                                    .filter(p -> !p.isBot)
+                                    .mapToInt(p -> p.score)
+                                    .max().orElse(-1);
+
+                            for (Player p : room.players) {
+                                if (!p.isBot) {
+                                    boolean isWinner = (maxScore > 0 && p.score == maxScore);
+                                    historyService.record(p.name, "Quiz", p.score, isWinner);
+                                }
+                            }
+                        }
                         broadcastGameState(room);
                     }
                     break;

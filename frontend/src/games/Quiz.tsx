@@ -83,7 +83,7 @@ const Quiz: React.FC = () => {
     };
 
     const startGameViaHost = () => {
-        sendMessage('START_GAME');
+        sendMessage('START_GAME', questions.length);
     };
 
     const startTimer = useCallback(() => {

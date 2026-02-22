@@ -220,11 +220,25 @@ const Home: React.FC = () => {
                 </Grid>
             </Container>
 
-            {/* Footer Statistics Link */}
+            {/* Footer Links */}
             <Box sx={{
-                mt: 12, pb: 2, textAlign: 'center', opacity: 0.5,
-                '&:hover': { opacity: 1, transition: 'opacity 0.3s' }
+                mt: 12, pb: 2, display: 'flex', justifyContent: 'center',
+                gap: 4, opacity: 0.5, '&:hover': { opacity: 1, transition: 'opacity 0.3s' }
             }}>
+                <Box
+                    component="button"
+                    onClick={() => navigate('/ranking')}
+                    sx={{
+                        display: 'inline-flex', alignItems: 'center', gap: 1,
+                        bgcolor: 'transparent', border: 'none', cursor: 'pointer',
+                        color: 'text.secondary', fontSize: '0.75rem', fontWeight: 900,
+                        letterSpacing: 2, textTransform: 'uppercase',
+                        '&:hover': { color: '#f59e0b' }
+                    }}
+                >
+                    <Trophy size={14} />
+                    RANKING GLOBAL
+                </Box>
                 <Box
                     component="button"
                     onClick={() => navigate('/stats')}
@@ -237,7 +251,7 @@ const Home: React.FC = () => {
                     }}
                 >
                     <Activity size={14} />
-                    ESTATÍSTICAS DA PLATAFORMA
+                    ESTATÍSTICAS
                 </Box>
             </Box>
         </Box>

@@ -11,6 +11,7 @@ import jakarta.inject.Inject;
 import org.jboss.logging.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rafael.service.GameHistoryService;
 import com.rafael.service.StatsService;
 import io.vertx.core.Vertx;
 
@@ -36,6 +37,9 @@ public class GameWebSocket {
 
     @Inject
     ObjectMapper mapper;
+
+    @Inject
+    GameHistoryService historyService;
 
     @Inject
     Vertx vertx;
@@ -307,6 +311,21 @@ public class GameWebSocket {
 
     private void broadcastGameState(Room room) {
         try {
+            // Registrar histórico quando o jogo termina (só uma vez)
+            if (room.gameSession.gameOver && !room.historyRecorded) {
+                room.historyRecorded = true;
+                Player winner = room.players.stream()
+                        .filter(p -> !p.isBot)
+                        .max(java.util.Comparator.comparingInt(p -> p.score))
+                        .orElse(null);
+                for (Player p : room.players) {
+                    if (!p.isBot) {
+                        boolean isWinner = winner != null && p.id.equals(winner.id);
+                        historyService.record(p.name, "Roletrando", isWinner ? p.score : 0, isWinner);
+                    }
+                }
+            }
+
             Map<String, Object> state = Map.of(
                     "room", room,
                     "currentPlayerTurnId", room.players.isEmpty() ? "" : room.players.get(room.currentTurnIndex).id);

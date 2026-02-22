@@ -8,7 +8,7 @@ import {
     Container, Typography, Box, Grid, alpha, Paper, Stack,
     IconButton, ButtonBase, Avatar, Chip, CircularProgress
 } from '@mui/material';
-import { dataApi } from '../utils/api';
+import { dataApi, statsApi } from '../utils/api';
 import { useSound } from '../hooks/useSound';
 import { useUser } from '../context/UserContext';
 import { useTheme } from '../context/ThemeContext';
@@ -80,11 +80,20 @@ const Millionaire: React.FC = () => {
             const { correct, correctAnswerIndex } = res.data;
             setCorrectAnswerIndex(correctAnswerIndex);
 
-            setTimeout(() => {
+            setTimeout(async () => {
                 if (correct) {
                     if (currentLevel === sessionQuestions.length - 1) {
                         playSound('win');
                         setGameState('finished');
+                        // Registrar vitória no histórico
+                        try {
+                            await statsApi.post('/history/record', {
+                                playerName: userName || 'Anônimo',
+                                game: 'Millionaire',
+                                score: 10000,
+                                winner: true
+                            });
+                        } catch (e) { console.warn('History record failed', e); }
                     } else {
                         playSound('correct');
                         setGameState('winning');
@@ -92,6 +101,15 @@ const Millionaire: React.FC = () => {
                 } else {
                     playSound('wrong');
                     setGameState('lost');
+                    // Registrar derrota no histórico (score 0, sem vitória)
+                    try {
+                        await statsApi.post('/history/record', {
+                            playerName: userName || 'Anônimo',
+                            game: 'Millionaire',
+                            score: 0,
+                            winner: false
+                        });
+                    } catch (e) { console.warn('History record failed', e); }
                 }
             }, 1500);
         } catch (error) {
