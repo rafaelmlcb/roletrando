@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Roletrando from './games/Roletrando';
 import Millionaire from './games/Millionaire';
 import Quiz from './games/Quiz';
+import GeoHunter from './games/GeoHunter';
 import Statistics from './pages/Statistics';
 import Ranking from './pages/Ranking';
 import { UserProvider } from './context/UserContext';
@@ -21,6 +22,7 @@ const App: React.FC = () => {
               <Route path="/roletrando" element={<Roletrando />} />
               <Route path="/millionaire" element={<Millionaire />} />
               <Route path="/quiz" element={<Quiz />} />
+              <Route path="/geohunter" element={<GeoHunter />} />
               <Route path="/stats" element={<Statistics />} />
               <Route path="/ranking" element={<Ranking />} />
             </Routes>

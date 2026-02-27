@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Gamepad2, Trophy, Zap, User, ChevronRight, CheckCircle2, Palette, Activity } from 'lucide-react';
+import { Gamepad2, Trophy, Zap, User, ChevronRight, CheckCircle2, Palette, Activity, MapPin } from 'lucide-react';
 import {
     Container, Typography, Box, Grid, alpha, TextField,
     InputAdornment, Select, MenuItem, FormControl, Chip, Skeleton
@@ -35,6 +35,14 @@ const games = [
         icon: <Zap size={48} />,
         color: '#3b82f6',
         path: '/quiz'
+    },
+    {
+        id: 'geohunter',
+        title: 'GeoHunter',
+        description: 'Explore o mundo e encontre tesouros ocultos usando pistas geográficas.',
+        icon: <MapPin size={48} />,
+        color: '#10b981',
+        path: '/geohunter'
     }
 ];
 

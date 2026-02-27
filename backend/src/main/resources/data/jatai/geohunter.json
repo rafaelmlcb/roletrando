@@ -1,0 +1,102 @@
+[
+    {
+        "id": "brasilia",
+        "name": "Brasília, Brasil",
+        "location": {
+            "longitude": -47.8828,
+            "latitude": -15.7934
+        },
+        "clues": [
+            "O tesouro está no Hemisfério Sul.",
+            "O tesouro está na América do Sul.",
+            "O tesouro está localizado em um país lusófono.",
+            "O tesouro está no Planalto Central.",
+            "É a capital projetada do maior país da região.",
+            "Procure perto do Eixo Monumental!",
+            "Prepare-se: O PIN está prestes a aparecer!",
+            "Muito perto... Zoom máximo para encontrar o tesouro!",
+            "DICA FINAL: Procure pela Praça dos Três Poderes.",
+            "TEMPO ESGOTADO! Tente novamente na próxima vez."
+        ]
+    },
+    {
+        "id": "paris",
+        "name": "Paris, França",
+        "location": {
+            "longitude": 2.2945,
+            "latitude": 48.8584
+        },
+        "clues": [
+            "O tesouro está no Hemisfério Norte.",
+            "O tesouro está na Europa.",
+            "O tesouro está em um país famoso pelo seu vinho e queijo.",
+            "É a Cidade das Luzes.",
+            "O local é um ícone mundial de ferro.",
+            "Foi construído para a Exposição Universal de 1889.",
+            "Procure no Champ de Mars.",
+            "Você está quase lá! O PIN logo será revelado.",
+            "DICA FINAL: O tesouro está no topo da Torre Eiffel!",
+            "TEMPO ESGOTADO! A luz da cidade se apagou para você."
+        ]
+    },
+    {
+        "id": "tokyo",
+        "name": "Tóquio, Japão",
+        "location": {
+            "longitude": 139.7671,
+            "latitude": 35.6812
+        },
+        "clues": [
+            "O tesouro está no Extremo Oriente.",
+            "O tesouro está na Ásia.",
+            "O tesouro está na maior área metropolitana do mundo.",
+            "Land of the Rising Sun.",
+            "O local é o coração ferroviário da cidade.",
+            "Procure em Chiyoda.",
+            "A arquitetura original é de tijolos vermelhos.",
+            "Quase lá! Zoom total no centro neurálgico.",
+            "DICA FINAL: O tesouro está na Estação de Tóquio!",
+            "TEMPO ESGOTADO! O trem partiu sem você."
+        ]
+    },
+    {
+        "id": "new_york",
+        "name": "Nova York, EUA",
+        "location": {
+            "longitude": -74.0445,
+            "latitude": 40.6892
+        },
+        "clues": [
+            "O tesouro está na América do Norte.",
+            "O tesouro está na costa leste dos Estados Unidos.",
+            "The Big Apple.",
+            "O local é um símbolo de liberdade.",
+            "Fica em uma pequena ilha no porto.",
+            "Foi um presente da França.",
+            "Aproxime-se da tocha.",
+            "O PIN aparecerá em breve, mantenha o foco!",
+            "DICA FINAL: O tesouro está na Estátua da Liberdade!",
+            "TEMPO ESGOTADO! A liberdade escapou pelas mãos."
+        ]
+    },
+    {
+        "id": "sydney",
+        "name": "Sydney, Austrália",
+        "location": {
+            "longitude": 151.2153,
+            "latitude": -33.8568
+        },
+        "clues": [
+            "O tesouro está na Oceania.",
+            "Land Down Under.",
+            "O local é famoso por sua arquitetura em forma de conchas ou velas.",
+            "Fica no Bennelong Point.",
+            "É um dos centros de artes performáticas mais famosos do mundo.",
+            "Procure no porto, perto da ponte.",
+            "Aproxime-se das 'velas' brancas.",
+            "Quase visível! Aumente o zoom no porto.",
+            "DICA FINAL: O tesouro está na Sydney Opera House!",
+            "TEMPO ESGOTADO! O show acabou sem você."
+        ]
+    }
+]

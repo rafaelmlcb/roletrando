@@ -1,6 +1,7 @@
 package com.rafael.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rafael.model.GeoHunterTarget;
 import com.rafael.model.MillionaireData;
 import com.rafael.model.MillionaireLevel;
 import com.rafael.model.QuizData;
@@ -35,6 +36,7 @@ public class DataLoaderService {
         public List<WheelPhrase> wheelPhrases = new ArrayList<>();
         public List<MillionaireLevel> millionaireLevels = new ArrayList<>();
         public List<QuizLevel> quizLevels = new ArrayList<>();
+        public List<GeoHunterTarget> geoHunterTargets = new ArrayList<>();
     }
 
     void onStart(@Observes StartupEvent ev) {
@@ -101,6 +103,7 @@ public class DataLoaderService {
         data.wheelPhrases = loadWheelPhrases(theme);
         data.millionaireLevels = loadMillionaireData(theme);
         data.quizLevels = loadQuizData(theme);
+        data.geoHunterTargets = loadGeoHunterData(theme);
         return data;
     }
 
@@ -153,6 +156,23 @@ public class DataLoaderService {
         }
     }
 
+    private List<GeoHunterTarget> loadGeoHunterData(String theme) {
+        String path = "data/" + theme + "/geohunter.json";
+        try (InputStream is = stream(path)) {
+            if (is == null || is.available() == 0) {
+                LOG.warnf("[%s] geohunter.json not found or empty — will use default fallback.", theme);
+                return new ArrayList<>();
+            }
+            List<GeoHunterTarget> list = mapper.readValue(is, new TypeReference<List<GeoHunterTarget>>() {
+            });
+            LOG.infof("[%s] Loaded %d geohunter targets.", theme, list.size());
+            return list;
+        } catch (Exception e) {
+            LOG.warnf("[%s] Failed to load geohunter.json: %s — will use default fallback.", theme, e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
     private InputStream stream(String path) {
         return Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
     }
@@ -191,6 +211,9 @@ public class DataLoaderService {
         result.quizLevels = (requested.quizLevels == null || requested.quizLevels.isEmpty())
                 ? fallback.quizLevels
                 : requested.quizLevels;
+        result.geoHunterTargets = (requested.geoHunterTargets == null || requested.geoHunterTargets.isEmpty())
+                ? fallback.geoHunterTargets
+                : requested.geoHunterTargets;
         return result;
     }
 
@@ -206,6 +229,10 @@ public class DataLoaderService {
         return resolve(theme).quizLevels;
     }
 
+    public List<GeoHunterTarget> getGeoHunterTargets(String theme) {
+        return resolve(theme).geoHunterTargets;
+    }
+
     // No-arg versions use configured default
     public List<WheelPhrase> getWheelPhrases() {
         return getWheelPhrases(defaultTheme);
@@ -217,5 +244,9 @@ public class DataLoaderService {
 
     public List<QuizLevel> getQuizLevels() {
         return getQuizLevels(defaultTheme);
+    }
+
+    public List<GeoHunterTarget> getGeoHunterTargets() {
+        return getGeoHunterTargets(defaultTheme);
     }
 }

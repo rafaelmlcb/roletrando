@@ -8,7 +8,7 @@ Use este guia como prompt para gerar novos arquivos de dados para o jogo.
 
 **Contexto:** Você é um gerador de conteúdo para um jogo interativo que possui três modos: Roletrando (Roda a Roda), Show do Milhão e Quiz Multiplayer.
 
-**Tarefa:** Com base no tema **[ESPECIFIQUE O TEMA AQUI]**, gere três blocos de código JSON seguindo as estruturas abaixo. Não use explicações, apenas os JSONs puros.
+**Tarefa:** Com base no tema **[ESPECIFIQUE O TEMA AQUI]**, gere quatro blocos de código JSON seguindo as estruturas abaixo. Não use explicações, apenas os JSONs puros.
 
 ---
 
@@ -81,13 +81,35 @@ Cada nível tem `level` (1-3), `label` ("Fácil"/"Médio"/"Difícil") e `questio
 
 > **Regra do campo `answer`:** índice (0 a 3) da opção correta no array `options`.
 
+
+### 4. Estrutura GeoHunter (`geohunter.json`)
+Array de locais com `id`, `name`, `location` (longitude/latitude) e **exatamente 10 pistas** (`clues`) que afunilam a busca.
+
+```json
+[
+  {
+    "id": "exemplo",
+    "name": "Nome do Local",
+    "location": { "longitude": -47.8828, "latitude": -15.7934 },
+    "clues": [
+      "Pista 1 (Hemisfério/Continente)",
+      "Pista 2 (Região/País)",
+      ...
+      "Pista 10 (Local exato)"
+    ]
+  }
+]
+```
+
+> **Dica para Pistas:** Devem progredir de coordenadas globais (ex: Hemisfério) para locais específicos (ex: Monumento), facilitando a busca a cada 10 segundos.
+
 ---
 
 ## 📁 Como Aplicar o Tema no Projeto
 
 ### Opção 1: Seleção via Interface (Recomendado)
 1. Crie a pasta `backend/src/main/resources/data/{nome-do-tema}/`
-2. Salve os três arquivos (`wheel.json`, `millionaire.json`, `quiz.json`) dentro dela.
+2. Salve os quatro arquivos (`wheel.json`, `millionaire.json`, `quiz.json`, `geohunter.json`) dentro dela.
 3. Reinicie o backend — o novo tema será detectado automaticamente.
 4. Na **tela principal do jogo**, use o seletor **"TEMA DO JOGO"** para escolher o tema desejado.
 5. Todos os jogos (Roletrando, Show do Milhão, Quiz) carregarão conteúdo do tema selecionado.

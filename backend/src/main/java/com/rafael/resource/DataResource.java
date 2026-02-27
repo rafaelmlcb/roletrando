@@ -4,6 +4,7 @@ import com.rafael.model.MillionaireLevel;
 import com.rafael.model.MillionaireQuestion;
 import com.rafael.model.QuizLevel;
 import com.rafael.model.QuizQuestion;
+import com.rafael.model.GeoHunterTarget;
 import com.rafael.service.DataLoaderService;
 import org.jboss.logging.Logger;
 
@@ -233,6 +234,20 @@ public class DataResource {
         response.put("correct", correct);
         response.put("correctAnswerIndex", q.answer);
         return Response.ok(response).build();
+    }
+
+    // ============================================================
+    // GEOHUNTER ENDPOINTS
+    // ============================================================
+
+    @GET
+    @Path("/geohunter/targets")
+    public Response getGeoHunterTargets(@QueryParam("theme") String theme) {
+        String t = resolveTheme(theme);
+        List<GeoHunterTarget> targets = dataLoader.getGeoHunterTargets(t);
+        if (targets == null || targets.isEmpty())
+            return Response.status(Response.Status.NOT_FOUND).build();
+        return Response.ok(targets).build();
     }
 
     // ============================================================
